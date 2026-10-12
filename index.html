@@ -458,6 +458,8 @@
         function toggleFaq(element) {
             const faqItem = element;
             const allItems = document.querySelectorAll('.faq-item');
+
+            
             allItems.forEach(item => {
                 if (item !== faqItem) item.classList.remove('active');
             });
