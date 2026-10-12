@@ -24,7 +24,7 @@ if not GROQ_API_KEY:
 client = Groq(api_key=GROQ_API_KEY)
 
 # ✅ ভিশন মডেল (ছবি সাপোর্ট করে)
-GROQ_MODEL = os.getenv("GROQ_MODEL", "meta-llama/llama-4-scout-17b-16e-instruct")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
 
 # ✅ সর্বোচ্চ ফাইল সাইজ: ৫ MB
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
