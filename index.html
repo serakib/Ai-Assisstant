@@ -72,7 +72,6 @@
         
         .nav-right { display: flex; align-items: center; gap: 16px; }
         
-        /* প্রিমিয়াম মোড টগল বাটন */
         .theme-toggle {
             background: transparent; border: 1px solid var(--border);
             color: var(--text-main); width: 42px; height: 42px; border-radius: 50%;
@@ -81,9 +80,7 @@
             position: relative; overflow: hidden;
         }
         .theme-toggle:hover { background: var(--bg-bot); transform: scale(1.05); }
-        .theme-toggle svg {
-            position: absolute; transition: all 0.4s ease;
-        }
+        .theme-toggle svg { position: absolute; transition: all 0.4s ease; }
         .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
         .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
         body.dark-mode .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
@@ -160,6 +157,7 @@
         .message.bot { align-self: flex-start; background-color: var(--bg-bot); color: var(--text-main); border-bottom-left-radius: 4px; }
         .message.user { align-self: flex-end; background-color: var(--bg-user); color: #ffffff; border-bottom-right-radius: 4px; }
 
+        /* টাইপিং ইন্ডিকেটর এখন চ্যাট বক্সের ভেতরে থাকবে */
         .typing-indicator {
             display: none; align-self: flex-start; padding: 16px 20px;
             background: var(--bg-bot); border-radius: 18px; border-bottom-left-radius: 4px;
@@ -224,7 +222,7 @@
         .contact-form button { padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .contact-form button:hover { background: #2563EB; }
 
-        /* ================= নতুন প্রিমিয়াম ফুটার ================= */
+        /* ================= ফুটার ================= */
         footer {
             background-color: var(--footer-bg);
             color: var(--footer-text);
@@ -243,14 +241,9 @@
         .footer-col p { font-size: 0.9rem; line-height: 1.8; }
         .footer-col ul { list-style: none; }
         .footer-col ul li { margin-bottom: 12px; }
-        .footer-col ul li a {
-            color: var(--footer-text); text-decoration: none; transition: 0.2s; font-size: 0.9rem; cursor: pointer;
-        }
+        .footer-col ul li a { color: var(--footer-text); text-decoration: none; transition: 0.2s; font-size: 0.9rem; cursor: pointer; }
         .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
-        .footer-bottom {
-            text-align: center; padding-top: 20px; border-top: 1px solid #1E293B;
-            font-size: 0.85rem; max-width: 1100px; margin: 0 auto;
-        }
+        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1E293B; font-size: 0.85rem; max-width: 1100px; margin: 0 auto; }
 
         /* ================= রেসপন্সিভ ================= */
         @media (max-width: 768px) {
@@ -284,7 +277,6 @@
         </div>
 
         <div class="nav-right">
-            <!-- প্রিমিয়াম মোড টগল বাটন (SVG আইকন সহ) -->
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
                 <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                 <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -308,10 +300,13 @@
                         <p>Preview — trained on your live content</p>
                     </div>
                 </div>
+                
+                <!-- চ্যাট মেসেজ এরিয়া (টাইপিং ইন্ডিকেটর এখন এর ভেতরে) -->
                 <div class="chat-messages" id="chatMessages">
                     <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন।</div>
+                    <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
                 </div>
-                <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
+                
                 <div class="input-area">
                     <input type="text" id="userInput" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
                     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
@@ -387,7 +382,6 @@
         </div>
     </main>
 
-    <!-- ================= নতুন প্রিমিয়াম ফুটার ================= -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
@@ -427,7 +421,7 @@
 
     <script>
         // ==============================================================
-        // ১. থিম টগল (Dark/Light Mode) - ফিক্সড
+        // ১. থিম টগল (Dark/Light Mode)
         // ==============================================================
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
@@ -458,8 +452,6 @@
         function toggleFaq(element) {
             const faqItem = element;
             const allItems = document.querySelectorAll('.faq-item');
-
-            
             allItems.forEach(item => {
                 if (item !== faqItem) item.classList.remove('active');
             });
@@ -467,7 +459,7 @@
         }
 
         // ==============================================================
-        // ৪. চ্যাট লজিক (Gemini API)
+        // ৪. চ্যাট লজিক (Gemini API) - ফিক্সড
         // ==============================================================
         // ⚠️ এখানে আপনার API Key বসান
         const GEMINI_API_KEY = "AQ.Ab8RN6IKOeJKB-8MU98f9-rBNmS75trsuoH42YdlXXDDWkvY3w"; 
@@ -490,6 +482,7 @@
             userInput.value = '';
             sendBtn.disabled = true;
 
+            // টাইপিং ইন্ডিকেটর দেখানো এবং সবার নিচে রাখা
             typingIndicator.style.display = 'flex';
             chatMessages.appendChild(typingIndicator);
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -527,7 +520,13 @@
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', sender);
             msgDiv.innerText = text;
-            chatMessages.insertBefore(msgDiv, typingIndicator);
+            
+            // insertBefore এর পরিবর্তে appendChild ব্যবহার করা হয়েছে
+            chatMessages.appendChild(msgDiv);
+            
+            // টাইপিং ইন্ডিকেটরটিকে সবসময় সবার নিচে রাখা
+            chatMessages.appendChild(typingIndicator);
+            
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
