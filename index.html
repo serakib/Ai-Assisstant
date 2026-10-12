@@ -35,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* ================= হেডার (ফিক্সড লেআউট) ================= */
+        /* ================= হেডার ================= */
         header {
             position: sticky;
             top: 0;
@@ -46,7 +46,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 16px 40px;
-            flex-wrap: wrap; /* রেসপন্সিভের জন্য */
+            flex-wrap: wrap;
         }
         .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
         .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; }
@@ -227,7 +227,7 @@
         .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
         .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1E293B; font-size: 0.85rem; max-width: 1100px; margin: 0 auto; }
 
-        /* ================= রেসপন্সিভ (মোবাইল ফিক্স) ================= */
+        /* ================= রেসপন্সিভ ================= */
         @media (max-width: 600px) {
             header { padding: 16px 20px; }
             .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 15px; gap: 16px; font-size: 0.85rem; }
@@ -288,7 +288,7 @@
                 <div class="suggested-prompts">
                     <button onclick="quickAsk('মেডিকেল ভর্তি পরীক্ষার সিলেবাস কি?')">📚 সিলেবাস</button>
                     <button onclick="quickAsk('ভর্তি পরীক্ষার প্রস্তুতি কিভাবে নিব?')">📝 প্রস্তুতি</button>
-                    <button onclick="quickAsk('কোন বইগুলো ফলো করা উচিত?')">📖 বইয়ের লিস্ট</button>
+                    <button onclick="quickAsk('কোন বইগুলো ফলো করা উচিত?')">📖 বইয়ের লিস্ট</button>
                 </div>
                 
                 <div class="input-area">
@@ -307,7 +307,7 @@
             <div class="about-content">
                 <div class="about-text">
                     <h3>Medical Admission Tracker</h3>
-                    <p>আমরা একটি স্বেচ্ছাসেবী প্ল্যাটফর্ম, যা মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের সঠিক তথ্য ও দিকনির্দেশনা দিতে কাজ করে। আমাদের লক্ষ্য হলো শিক্ষার্থীদের ভর্তি প্রক্রিয়াকে সহজ করা।</p>
+                    <p>আমরা একটি স্বেচ্ছাসেবী প্ল্যাটফর্ম, যা মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের সঠিক তথ্য ও দিকনির্দেশনা দিতে কাজ করে। আমাদের লক্ষ্য হলো শিক্ষার্থীদের ভর্তি প্রক্রিয়াকে সহজ করা।</p>
                     <p>এই AI অ্যাসিস্ট্যান্টটি শিক্ষার্থীদের সাধারণ প্রশ্নের উত্তর দিতে এবং তাদের সঠিক পথে পরিচালিত করতে সাহায্য করবে।</p>
                 </div>
                 <div class="about-image">
@@ -323,15 +323,15 @@
             <div class="faq-container">
                 <div class="faq-item" onclick="toggleFaq(this)">
                     <div class="faq-question"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">হ্যাঁ, এই অ্যাসিস্ট্যান্টটি সম্পূর্ণ ফ্রি। আপনি যেকোনো সময় যেকোনো প্রশ্ন করতে পারেন।</div>
+                    <div class="faq-answer">হ্যাঁ, এই অ্যাসিস্ট্যান্টটি সম্পূর্ণ ফ্রি। আপনি যেকোনো সময় যেকোনো প্রশ্ন করতে পারেন।</div>
                 </div>
                 <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>AI কি সবসময় সঠিক উত্তর দেবে?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">AI সাধারণত সঠিক উত্তর দেয়, তবে মাঝে মাঝে ভুল করতে পারে। অফিসিয়াল নোটিশের জন্য অনুগ্রহ করে মূল ওয়েবসাইটের নোটিশ বোর্ড দেখুন।</div>
+                    <div class="faq-question"><span>AI কি সবসময় সঠিক উত্তর দেবে?</span><span class="faq-icon">▼</span></div>
+                    <div class="faq-answer">AI সাধারণত সঠিক উত্তর দেয়, তবে মাঝে মাঝে ভুল করতে পারে। অফিসিয়াল নোটিশের জন্য অনুগ্রহ করে মূল ওয়েবসাইটের নোটিশ বোর্ড দেখুন।</div>
                 </div>
                 <div class="faq-item" onclick="toggleFaq(this)">
                     <div class="faq-question"><span>আমি কি ইংরেজিতে প্রশ্ন করতে পারব?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">অবশ্যই! আপনি বাংলা বা ইংরেজি যেকোনো ভাষায় প্রশ্ন করতে পারেন। AI আপনার ভাষাতেই উত্তর দেবে।</div>
+                    <div class="faq-answer">অবশ্যই! আপনি বাংলা বা ইংরেজি যেকোনো ভাষায় প্রশ্ন করতে পারেন। AI আপনার ভাষাতেই উত্তর দেবে।</div>
                 </div>
             </div>
         </div>
@@ -405,8 +405,8 @@
 
     <!-- ================= জাভাস্ক্রিপ্ট লজিক (নতুন SDK) ================= -->
     <script type="module">
-        // ১. গুগলের নতুন SDK ইমপোর্ট করা
-        import { GoogleGenAI } from "https://esm.run/@google/genai";
+        // ১. গুগলের নতুন SDK ইমপোর্ট করা (jsDelivr CDN থেকে)
+        import { GoogleGenAI } from "https://cdn.jsdelivr.net/npm/@google/genai@latest/+esm";
 
         // ২. UI এলিমেন্ট
         const chatMessages = document.getElementById('chatMessages');
@@ -415,7 +415,7 @@
         const typingIndicator = document.getElementById('typingIndicator');
 
         // ৩. Gemini AI ইনিশিয়ালাইজ করা
-        // ⚠️ এখানে আপনার AQ. দিয়ে শুরু হওয়া Key টি বসান (কোটেশন সহ)
+        // ⚠️ আপনার প্রদান করা API Key এখানে বসানো হয়েছে
         const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6LMmI9lOdfmynXxpxo1Ptrg9xoNm8Pr9jV0liC-0y0JZw" });
 
         // ৪. Tabbed View System (পেজ পরিবর্তন)
@@ -463,7 +463,7 @@
             try {
                 // গুগলের নতুন SDK দিয়ে রিকোয়েস্ট পাঠানো
                 const response = await ai.models.generateContent({
-                    model: 'gemini-1.5-flash', // মডেলের নাম
+                    model: 'gemini-2.5-flash', // মডেল আপডেট করা হয়েছে
                     contents: text, // ইউজারের প্রশ্ন
                 });
 
@@ -479,8 +479,9 @@
 
             } catch (error) {
                 typingIndicator.style.display = 'none';
-                addMessage("এরর: " + error.message, 'bot');
-                console.error("Actual Error:", error);
+                // চ্যাটেই আসল এরর মেসেজটি দেখাবে
+                addMessage("সিস্টেম এরর: " + error.message, 'bot');
+                console.error("Actual Error Details:", error);
             }
 
             sendBtn.disabled = false;
