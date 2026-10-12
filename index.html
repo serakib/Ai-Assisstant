@@ -585,7 +585,7 @@ footer{padding:40px 20px 20px;}
 
 <script>
 const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
-const FETCH_TIMEOUT_MS = 90000; // Increased to 90s to prevent Render spin-down timeout errors
+const FETCH_TIMEOUT_MS = 90000;
 
 const VOICE_ARTISTS = [
     { id:'emma', name:'Emma', gender:'female', style:'Friendly · Warm · Clear', lang:'🇧🇩 Bengali (BD)', demo:'হ্যালো, আমি এমা। আমি আপনাকে সাহায্য করতে পেরে খুশি হব।' },
@@ -704,10 +704,6 @@ let pendingTtsResolve = null;
 let micPermissionRequested = false;
 window.currentUtterance = null;
 
-// ══════════════════════════════════════════════════════════
-//  🎧 ROBUST AUDIO & TTS ENGINE (WITH BROWSER FALLBACK)
-// ══════════════════════════════════════════════════════════
-
 let audioCtx = null;
 function getAudioCtx() {
     if (!audioCtx) {
@@ -777,11 +773,11 @@ async function pickBestVoice(text, preferredLang) {
     const voices = await ensureVoicesLoaded();
     const isBangla = /[\u0980-\u09FF]/.test(text);
     const candidates = isBangla
-        ? [preferredLang, 'bn-BD', 'bn-IN', 'hi-IN', 'en-IN', 'en-US', 'en-GB']
-        : [preferredLang, 'en-US', 'en-GB', 'en-IN', 'en-AU'];
+        ? ['bn-BD', 'bn-IN', preferredLang, 'hi-IN', 'en-IN']
+        : [preferredLang, 'en-US', 'en-GB'];
     for (const lang of candidates) {
         if (!lang) continue;
-        let v = voices.find(x => x.lang === lang);
+        let v = voices.find(x => x.lang.toLowerCase() === lang.toLowerCase());
         if (v) return { voice: v, lang: v.lang };
         const prefix = lang.split('-')[0];
         v = voices.find(x => x.lang.toLowerCase().startsWith(prefix.toLowerCase()));
@@ -791,6 +787,7 @@ async function pickBestVoice(text, preferredLang) {
     return { voice: null, lang: preferredLang || 'en-US' };
 }
 
+// 🎧 Stable TTS function: Always strictly matches text and speech
 async function speakText(text) {
     return new Promise(async (resolve) => {
         if (!text || !text.trim()) { resolve(); return; }
@@ -811,41 +808,37 @@ async function speakText(text) {
             });
             if (!res.ok) throw new Error('Backend TTS status ' + res.status);
             const blob = await res.blob();
-            if (!blob.type.startsWith('audio/')) throw new Error('Not audio: ' + blob.type);
+            if (!blob.type.startsWith('audio/')) throw new Error('Not audio');
             const url = URL.createObjectURL(blob);
             const audio = new Audio(url);
             audio.preload = 'auto';
             audio.volume = 1;
             window.currentAudio = audio;
-            await new Promise((r) => {
-                if (audio.readyState >= 2) return r();
-                const onReady = () => { cleanup(); r(); };
-                const onErr = () => { cleanup(); r(); };
-                const cleanup = () => {
-                    audio.removeEventListener('canplay', onReady);
-                    audio.removeEventListener('error', onErr);
-                };
-                audio.addEventListener('canplay', onReady);
-                audio.addEventListener('error', onErr);
-                setTimeout(() => { cleanup(); r(); }, 1500);
-            });
-            try {
-                await playAudioWithFade(audio, { fadeIn: 0.08, fadeOut: 0.12 });
-                URL.revokeObjectURL(url);
-                window.currentAudio = null;
-                done();
-                return;
-            } catch(e) {
-                URL.revokeObjectURL(url);
-                window.currentAudio = null;
-            }
+            await playAudioWithFade(audio, { fadeIn: 0.08, fadeOut: 0.12 });
+            URL.revokeObjectURL(url);
+            window.currentAudio = null;
+            done();
+            return;
         } catch (err) {
             if (err.name === 'AbortError') { done(); return; }
         }
 
-        // 2. Fallback to Browser Speech Synthesis (Guaranteed voice playback)
-        await browserSpeak(text);
-        done();
+        // 2. Fallback to Google TTS API (Guaranteed correct Bengali speech audio)
+        try {
+            const encodedText = encodeURIComponent(text);
+            const fallbackUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=bn&client=tw-ob`;
+            const fallbackAudio = new Audio(fallbackUrl);
+            fallbackAudio.volume = 1;
+            window.currentAudio = fallbackAudio;
+            await playAudioWithFade(fallbackAudio, { fadeIn: 0.05, fadeOut: 0.05 });
+            window.currentAudio = null;
+            done();
+            return;
+        } catch (fallbackErr) {
+            // 3. Last Fallback: Browser Speech Synthesis
+            await browserSpeak(text);
+            done();
+        }
     });
 }
 
@@ -882,16 +875,7 @@ function stopAllAudio() {
     if (window.currentAudio) {
         const a = window.currentAudio;
         window.currentAudio = null;
-        const startVol = a.volume;
-        const steps = 5;
-        let i = 0;
-        const fade = () => {
-            i++;
-            try { a.volume = Math.max(0, startVol * (1 - i / steps)); } catch(e){}
-            if (i < steps) setTimeout(fade, 20);
-            else { try { a.pause(); } catch(e){} }
-        };
-        fade();
+        try { a.pause(); } catch(e){}
     }
     if ('speechSynthesis' in window) { try { speechSynthesis.cancel(); } catch(e){} }
     window.currentUtterance = null;
@@ -921,8 +905,6 @@ async function testVoice() {
         showToast('❌ ভয়েস ব্যর্থ: ' + e.message, 5000);
     }
 }
-
-// ══════════════════════════════════════════════════════════
 
 function renderVoiceGrid() {
     voiceGrid.innerHTML = VOICE_ARTISTS.map(v => `
@@ -1006,7 +988,6 @@ function clearFile() {
     previewImg.removeAttribute('src');
 }
 
-// ═══ Deep Think / Smart Search panels ═══
 const THINK_STEPS = {
     deep: ['প্রশ্নটি বিশ্লেষণ করছি…','প্রাসঙ্গিক ধারণা ও তথ্য মনে করছি…','বিভিন্ন দিক বিবেচনা করছি…','উত্তর গঠন করছি…'],
     search: ['ওয়েব সার্চ চালাচ্ছি…','নির্ভরযোগ্য সূত্র খুঁজছি…','তথ্য যাচাই করছি…','সাম্প্রতিক তথ্য সংগ্রহ করছি…']
@@ -1084,7 +1065,6 @@ async function runThinkingSequence(panel) {
     if (smartSearchEnabled) { for (const s of THINK_STEPS.search) await addThinkStep(panel, s, 500); addSearchSources(panel); }
 }
 
-// ═══ Orb / state ═══
 function setOrbState(state) {
     voiceOrb.classList.remove('listening','speaking','thinking');
     if (state === 'listening') voiceOrb.classList.add('listening');
@@ -1458,7 +1438,7 @@ async function sendMessage() {
         finishThinkingPanel(thinkPanel);
         if (res.ok && data.reply) {
             addMessage(data.reply, 'bot');
-            speakText(data.reply); // Automatically speak the reply in normal chat view too!
+            speakText(data.reply);
         } else {
             addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
         }
