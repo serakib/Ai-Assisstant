@@ -1,13 +1,12 @@
-from flask import Flask, request, jsonify
+=from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-import requests
 from dotenv import load_dotenv
+from google import genai  # ✅ গুগলের নতুন SDK ইমপোর্ট
 
 load_dotenv()
-app = Flask(__name__)
 
-# CORS সেটআপ (আপনার GitHub Pages ও লোকালহোস্ট থেকে রিকোয়েস্ট গ্রহণ)
+app = Flask(__name__)
 CORS(app, origins=[
     "https://serakib.github.io",
     "http://localhost:5500",
@@ -16,7 +15,10 @@ CORS(app, origins=[
     "http://127.0.0.1:5000"
 ])
 
+# ✅ নতুন SDK-তে ক্লায়েন্ট তৈরি
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+client = genai.Client(api_key=GEMINI_API_KEY)
+
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 
@@ -25,7 +27,8 @@ def home():
     return jsonify({
         "status": "online",
         "provider": "gemini",
-        "model": GEMINI_MODEL
+        "model": GEMINI_MODEL,
+        "sdk": "google-genai"
     })
 
 
@@ -37,65 +40,17 @@ def chat():
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
 
-        reply = call_gemini(user_message)
-        return jsonify({"reply": reply, "provider": "gemini"})
+        # ✅ নতুন SDK দিয়ে কনটেন্ট জেনারেট
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=user_message
+        )
 
-    except requests.exceptions.HTTPError as e:
-        error_detail = ""
-        try:
-            error_detail = e.response.json().get("error", {}).get("message", str(e))
-        except:
-            error_detail = str(e)
-        print(f"Gemini HTTP Error: {error_detail}")
-        return jsonify({"error": f"Gemini API error: {error_detail}"}), 500
+        return jsonify({"reply": response.text, "provider": "gemini"})
 
     except Exception as e:
         print(f"Server Error: {str(e)}")
         return jsonify({"error": f"Server error: {str(e)}"}), 500
-
-
-def call_gemini(message):
-    """Google Gemini API কল করা"""
-    if not GEMINI_API_KEY:
-        raise ValueError("GEMINI_API_KEY is not set in environment variables")
-
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
-    
-    headers = {
-        "Content-Type": "application/json",
-        "x-goog-api-key": GEMINI_API_KEY   # AQ. key-এর জন্য এটাই সঠিক হেডার
-    }
-
-    payload = {
-        "contents": [
-            {
-                "role": "user",
-                "parts": [
-                    {
-                        "text": (
-                            "You are a helpful AI assistant for medical admission students in Bangladesh. "
-                            "Always answer in the same language the user asks in (Bengali or English). "
-                            "Keep answers concise, accurate, and helpful."
-                        )
-                    }
-                ]
-            },
-            {
-                "role": "user",
-                "parts": [{"text": message}]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.7,
-            "maxOutputTokens": 1024
-        }
-    }
-
-    response = requests.post(url, headers=headers, json=payload, timeout=30)
-    response.raise_for_status()
-
-    data = response.json()
-    return data["candidates"][0]["content"]["parts"][0]["text"]
 
 
 if __name__ == '__main__':
