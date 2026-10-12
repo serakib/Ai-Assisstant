@@ -1,813 +1,955 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Assistant - Medical Admission Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-body: #F8FAFC;
-            --bg-card: #FFFFFF;
-            --bg-header: #FFFFFF;
-            --bg-bot: #F1F5F9;
-            --bg-user: #3B82F6;
-            --text-main: #0F172A;
-            --text-muted: #64748B;
-            --border: #E2E8F0;
-            --primary: #3B82F6;
-            --footer-bg: #0F172A;
-            --footer-text: #94A3B8;
-            --shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
-        body.dark-mode {
-            --bg-body: #0B1120;
-            --bg-card: #111827;
-            --bg-header: #0B1120;
-            --bg-bot: #1E293B;
-            --bg-user: #3B82F6;
-            --text-main: #F3F4F6;
-            --text-muted: #9CA3AF;
-            --border: #374151;
-            --footer-bg: #080C14;
-            --footer-text: #9CA3AF;
-            --shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        header {
-            position: sticky; top: 0; z-index: 1000;
-            background-color: var(--bg-header);
-            border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 40px;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
-        .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; }
-        .nav-links { display: flex; gap: 24px; font-size: 0.95rem; font-weight: 500; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; cursor: pointer; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: 0.2s; }
-        .nav-links a:hover { color: var(--primary); }
-        .nav-links a.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .nav-right { display: flex; align-items: center; gap: 16px; }
-        .theme-toggle {
-            background: transparent; border: 1px solid var(--border);
-            color: var(--text-main); width: 42px; height: 42px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s ease;
-            position: relative; overflow: hidden;
-        }
-        .theme-toggle:hover { background: var(--bg-bot); transform: scale(1.05); }
-        .theme-toggle svg { position: absolute; transition: all 0.4s ease; }
-        .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
-        .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
-        body.dark-mode .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
-        body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: var(--text-muted); text-decoration: none;
-            font-weight: 500; font-size: 0.9rem; padding: 8px 16px;
-            border: 1px solid var(--border); border-radius: 8px;
-            transition: all 0.2s ease; cursor: pointer; background: transparent;
-        }
-        .back-btn:hover { background-color: var(--bg-bot); color: var(--text-main); }
-        main { flex: 1; display: flex; flex-direction: column; padding: 40px 20px; max-width: 1100px; margin: 0 auto; width: 100%; }
-        .view { display: none; animation: fadeIn 0.4s ease; }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .chat-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            display: flex; flex-direction: column;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            height: 640px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .chat-header {
-            padding: 20px 24px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; gap: 16px;
-            background-color: var(--bg-card);
-        }
-        .bot-avatar {
-            width: 44px; height: 44px; border-radius: 50%;
-            background-color: rgba(59, 130, 246, 0.15);
-            color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; font-size: 1.1rem;
-        }
-        .bot-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
-        .bot-info p { font-size: 0.8rem; color: var(--text-muted); }
-        .chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .message {
-            max-width: 80%; padding: 16px 20px; border-radius: 18px;
-            font-size: 0.95rem; line-height: 1.6;
-            animation: fadeIn 0.3s ease forwards;
-            word-wrap: break-word;
-        }
-        .message.bot { align-self: flex-start; background-color: var(--bg-bot); color: var(--text-main); border-bottom-left-radius: 4px; }
-        .message.user { align-self: flex-end; background-color: var(--bg-user); color: #ffffff; border-bottom-right-radius: 4px; }
-        .message img { max-width: 240px; max-height: 240px; border-radius: 10px; margin-bottom: 10px; display: block; }
-        .typing-indicator {
-            display: none; align-self: flex-start; padding: 16px 20px;
-            background: var(--bg-bot); border-radius: 18px; border-bottom-left-radius: 4px;
-            gap: 6px; align-items: center;
-        }
-        .typing-indicator span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
-        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-        .chat-input-wrapper { border-top: 1px solid var(--border); background-color: var(--bg-card); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Assistant - Medical Admission Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-body:#F8FAFC;--bg-card:#FFF;--bg-header:#FFF;--bg-bot:#F1F5F9;--bg-user:#3B82F6;
+    --text-main:#0F172A;--text-muted:#64748B;--border:#E2E8F0;--primary:#3B82F6;
+    --footer-bg:#0F172A;--footer-text:#94A3B8;--shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+body.dark-mode {
+    --bg-body:#0B1120;--bg-card:#111827;--bg-header:#0B1120;--bg-bot:#1E293B;
+    --text-main:#F3F4F6;--text-muted:#9CA3AF;--border:#374151;--footer-bg:#080C14;
+    --footer-text:#9CA3AF;--shadow:0 10px 25px rgba(0,0,0,0.5);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+    font-family:'Inter',sans-serif;background:var(--bg-body);color:var(--text-main);
+    transition:background-color 0.3s,color 0.3s;line-height:1.6;min-height:100vh;
+    display:flex;flex-direction:column;
+}
+header {
+    position:sticky;top:0;z-index:1000;background:var(--bg-header);
+    border-bottom:1px solid var(--border);display:flex;justify-content:space-between;
+    align-items:center;padding:16px 40px;
+}
+.logo-area { display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.2rem; }
+.logo-icon { width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#fff; }
+.nav-links { display:flex;gap:24px;font-size:0.95rem;font-weight:500; }
+.nav-links a { color:var(--text-muted);text-decoration:none;cursor:pointer;padding-bottom:4px;border-bottom:2px solid transparent;transition:0.2s; }
+.nav-links a:hover { color:var(--primary); }
+.nav-links a.active { color:var(--primary);border-bottom:2px solid var(--primary); }
+.nav-right { display:flex;align-items:center;gap:16px; }
+.theme-toggle {
+    background:transparent;border:1px solid var(--border);color:var(--text-main);
+    width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:all 0.3s ease;position:relative;overflow:hidden;
+}
+.theme-toggle:hover { background:var(--bg-bot);transform:scale(1.05); }
+.theme-toggle svg { position:absolute;transition:all 0.4s ease; }
+.sun-icon { opacity:1;transform:rotate(0) scale(1); }
+.moon-icon { opacity:0;transform:rotate(90deg) scale(0.5); }
+body.dark-mode .sun-icon { opacity:0;transform:rotate(-90deg) scale(0.5); }
+body.dark-mode .moon-icon { opacity:1;transform:rotate(0) scale(1); }
+.back-btn {
+    display:inline-flex;align-items:center;gap:8px;color:var(--text-muted);text-decoration:none;
+    font-weight:500;font-size:0.9rem;padding:8px 16px;border:1px solid var(--border);
+    border-radius:8px;transition:all 0.2s ease;background:transparent;cursor:pointer;
+}
+.back-btn:hover { background:var(--bg-bot);color:var(--text-main); }
+main { flex:1;display:flex;flex-direction:column;padding:40px 20px;max-width:1100px;margin:0 auto;width:100%; }
+.view { display:none;animation:fadeIn 0.4s ease; }
+.view.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
 
-        /* ✅ নতুন: লিসেনিং ইন্ডিকেটর */
-        .listening-indicator {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 12px 24px 0 24px;
-            padding: 10px 16px;
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid #EF4444;
-            border-radius: 10px;
-            color: #EF4444;
-            font-size: 0.88rem;
-            font-weight: 600;
-            animation: slideDown 0.3s ease;
-        }
-        .listening-indicator.active { display: flex; }
-        .listening-indicator.preparing {
-            background: rgba(59, 130, 246, 0.08);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        .pulse-dot {
-            width: 10px; height: 10px;
-            background: #EF4444;
-            border-radius: 50%;
-            animation: pulseDot 1s infinite;
-            flex-shrink: 0;
-        }
-        .listening-indicator.preparing .pulse-dot { background: var(--primary); }
-        @keyframes pulseDot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.4); }
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+/* Chat */
+.chat-card {
+    background:var(--bg-card);border:1px solid var(--border);border-radius:20px;
+    display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow);
+    height:680px;max-width:820px;margin:0 auto;
+}
+.chat-header { padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px; }
+.bot-avatar {
+    width:44px;height:44px;border-radius:50%;background:rgba(59,130,246,0.15);color:var(--primary);
+    display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.1rem;
+}
+.bot-info h3 { font-size:1rem;font-weight:600;margin-bottom:4px; }
+.bot-info p { font-size:0.8rem;color:var(--text-muted); }
+.chat-messages { flex:1;padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:20px; }
+.message {
+    max-width:80%;padding:16px 20px;border-radius:18px;font-size:0.95rem;line-height:1.6;
+    animation:fadeIn 0.3s ease forwards;word-wrap:break-word;
+}
+.message.bot { align-self:flex-start;background:var(--bg-bot);color:var(--text-main);border-bottom-left-radius:4px; }
+.message.user { align-self:flex-end;background:var(--bg-user);color:#fff;border-bottom-right-radius:4px; }
+.message img { max-width:240px;max-height:240px;border-radius:10px;margin-bottom:10px;display:block; }
+.typing-indicator {
+    display:none;align-self:flex-start;padding:16px 20px;background:var(--bg-bot);
+    border-radius:18px;border-bottom-left-radius:4px;gap:6px;align-items:center;
+}
+.typing-indicator span { width:6px;height:6px;background:var(--text-muted);border-radius:50%;animation:bounce 1.4s infinite ease-in-out both; }
+.typing-indicator span:nth-child(1) { animation-delay:-0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay:-0.16s; }
+@keyframes bounce { 0%,80%,100%{transform:scale(0);} 40%{transform:scale(1);} }
+.chat-input-wrapper { border-top:1px solid var(--border);background:var(--bg-card); }
 
-        /* ✅ ইনপুট ফিল্ড রেকর্ডিং অবস্থায় */
-        .input-area input[type="text"].listening {
-            border-color: #EF4444;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-            animation: inputPulse 1.5s infinite;
-        }
-        @keyframes inputPulse {
-            0%, 100% { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
-            50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.05); }
-        }
+/* ✅ Voice pill button */
+.voice-pill-row { padding:12px 24px 0 24px;display:flex;justify-content:flex-start; }
+.voice-pill {
+    display:inline-flex;align-items:center;gap:8px;padding:7px 14px;
+    background:var(--bg-bot);border:1px solid var(--border);border-radius:20px;
+    color:var(--text-muted);cursor:pointer;font-size:0.8rem;font-weight:500;
+    transition:all 0.2s ease;font-family:inherit;
+}
+.voice-pill:hover { border-color:var(--primary);color:var(--primary); }
+.voice-pill-avatar { width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;background:var(--primary);color:#fff; }
 
-        .file-preview { display: none; align-items: center; gap: 12px; padding: 12px 24px 0 24px; font-size: 0.85rem; color: var(--text-muted); }
-        .file-preview img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
-        .file-preview .remove-file { margin-left: auto; background: transparent; border: none; color: #EF4444; cursor: pointer; font-size: 1.2rem; font-weight: bold; }
-        .input-area { padding: 16px 24px 20px 24px; display: flex; align-items: center; gap: 10px; }
-        .icon-btn-input {
-            background: transparent; border: 1px solid var(--border);
-            color: var(--text-muted); width: 48px; height: 48px;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
-        }
-        .icon-btn-input:hover { background: var(--bg-bot); color: var(--primary); border-color: var(--primary); }
-        .icon-btn-input.recording { background: #EF4444; color: white; border-color: #EF4444; animation: pulse 1.2s infinite; }
-        .icon-btn-input svg { width: 20px; height: 20px; }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
-            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-        .input-area input[type="text"] {
-            flex: 1; padding: 16px 20px; border: 1px solid var(--border);
-            border-radius: 12px; font-size: 0.95rem; outline: none;
-            font-family: inherit; background-color: var(--bg-body);
-            color: var(--text-main); transition: border-color 0.2s, box-shadow 0.2s;
-            min-width: 0;
-        }
-        .input-area input[type="text"]::placeholder { color: var(--text-muted); }
-        .input-area input[type="text"]:focus { border-color: var(--primary); }
-        .send-btn {
-            background: var(--primary); color: white; border: none;
-            width: 52px; height: 52px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
-        }
-        .send-btn:hover { background: #2563EB; transform: scale(1.05); }
-        .send-btn:disabled { background: #94A3B8; cursor: not-allowed; transform: none; }
-        .send-btn svg { width: 20px; height: 20px; fill: white; }
-        .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-main); }
-        .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 48px auto; }
-        .about-content { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
-        .about-text { flex: 1; min-width: 300px; }
-        .about-text h3 { font-size: 1.5rem; margin-bottom: 16px; }
-        .about-text p { color: var(--text-muted); margin-bottom: 16px; }
-        .about-image { flex: 1; min-width: 300px; height: 250px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--primary); }
-        .faq-container { max-width: 800px; margin: 0 auto; }
-        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
-        .faq-question { padding: 20px 24px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
-        .faq-question:hover { background: var(--bg-bot); }
-        .faq-answer { padding: 0 24px 20px 24px; color: var(--text-muted); display: none; font-size: 0.95rem; }
-        .faq-item.active .faq-answer { display: block; }
-        .faq-item.active .faq-question { color: var(--primary); }
-        .faq-icon { transition: transform 0.3s; }
-        .faq-item.active .faq-icon { transform: rotate(180deg); }
-        .contact-container { display: flex; flex-wrap: wrap; gap: 40px; max-width: 900px; margin: 0 auto; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
-        .contact-info { flex: 1; min-width: 250px; }
-        .contact-info h3 { font-size: 1.2rem; margin-bottom: 20px; }
-        .contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: var(--text-muted); }
-        .contact-item svg { width: 20px; height: 20px; color: var(--primary); }
-        .contact-form { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 16px; }
-        .contact-form input, .contact-form textarea { padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main); font-family: inherit; outline: none; }
-        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--primary); }
-        .contact-form button { padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .contact-form button:hover { background: #2563EB; }
-        footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 60px 40px 20px 40px; margin-top: auto; border-top: 1px solid var(--border); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1100px; margin: 0 auto 40px auto; }
-        .footer-col h4 { color: #FFFFFF; font-size: 1.1rem; margin-bottom: 20px; }
-        .footer-col p { font-size: 0.9rem; line-height: 1.8; }
-        .footer-col ul { list-style: none; }
-        .footer-col ul li { margin-bottom: 12px; }
-        .footer-col ul li a { color: var(--footer-text); text-decoration: none; transition: 0.2s; font-size: 0.9rem; cursor: pointer; }
-        .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
-        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1E293B; font-size: 0.85rem; max-width: 1100px; margin: 0 auto; }
-        @media (max-width: 768px) {
-            header { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
-            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 10px; gap: 16px; font-size: 0.85rem; }
-            .chat-card { height: 580px; }
-            .message { max-width: 90%; }
-            .section-title { font-size: 1.5rem; }
-            .about-content, .contact-container { padding: 20px; }
-            footer { padding: 40px 20px 20px 20px; }
-            .input-area { padding: 14px 16px 16px 16px; gap: 8px; }
-            .icon-btn-input, .send-btn { width: 44px; height: 44px; }
-            .input-area input[type="text"] { padding: 12px 14px; font-size: 0.9rem; }
-            .file-preview { padding: 10px 16px 0 16px; }
-            .listening-indicator { margin: 10px 16px 0 16px; font-size: 0.8rem; }
-        }
-        .chat-messages::-webkit-scrollbar { width: 6px; }
-        .chat-messages::-webkit-scrollbar-track { background: transparent; }
-        .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-    </style>
+/* Listening indicator */
+.listening-indicator {
+    display:none;align-items:center;justify-content:center;gap:10px;margin:12px 24px 0 24px;
+    padding:10px 16px;background:rgba(239,68,68,0.08);border:1px solid #EF4444;
+    border-radius:10px;color:#EF4444;font-size:0.88rem;font-weight:600;
+    animation:slideDown 0.3s ease;
+}
+.listening-indicator.active { display:flex; }
+.listening-indicator.preparing { background:rgba(59,130,246,0.08);border-color:var(--primary);color:var(--primary); }
+.pulse-dot { width:10px;height:10px;background:#EF4444;border-radius:50%;animation:pulseDot 1s infinite;flex-shrink:0; }
+.listening-indicator.preparing .pulse-dot { background:var(--primary); }
+@keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(1.4);} }
+@keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+
+.input-area input[type="text"].listening {
+    border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.15);animation:inputPulse 1.5s infinite;
+}
+@keyframes inputPulse {
+    0%,100%{box-shadow:0 0 0 3px rgba(239,68,68,0.15);}
+    50%{box-shadow:0 0 0 6px rgba(239,68,68,0.05);}
+}
+
+.file-preview { display:none;align-items:center;gap:12px;padding:12px 24px 0 24px;font-size:0.85rem;color:var(--text-muted); }
+.file-preview img { width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--border); }
+.file-preview .remove-file { margin-left:auto;background:transparent;border:none;color:#EF4444;cursor:pointer;font-size:1.2rem;font-weight:bold; }
+.input-area { padding:16px 24px 20px 24px;display:flex;align-items:center;gap:10px; }
+.icon-btn-input {
+    background:transparent;border:1px solid var(--border);color:var(--text-muted);
+    width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:all 0.2s ease;flex-shrink:0;
+}
+.icon-btn-input:hover { background:var(--bg-bot);color:var(--primary);border-color:var(--primary); }
+.icon-btn-input.recording { background:#EF4444;color:#fff;border-color:#EF4444;animation:pulse 1.2s infinite; }
+.icon-btn-input svg { width:20px;height:20px; }
+@keyframes pulse {
+    0%{box-shadow:0 0 0 0 rgba(239,68,68,0.6);}
+    70%{box-shadow:0 0 0 12px rgba(239,68,68,0);}
+    100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}
+}
+.input-area input[type="text"] {
+    flex:1;padding:16px 20px;border:1px solid var(--border);border-radius:12px;
+    font-size:0.95rem;outline:none;font-family:inherit;background:var(--bg-body);
+    color:var(--text-main);transition:border-color 0.2s,box-shadow 0.2s;min-width:0;
+}
+.input-area input[type="text"]::placeholder { color:var(--text-muted); }
+.input-area input[type="text"]:focus { border-color:var(--primary); }
+.send-btn {
+    background:var(--primary);color:#fff;border:none;width:52px;height:52px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:all 0.2s ease;flex-shrink:0;
+}
+.send-btn:hover { background:#2563EB;transform:scale(1.05); }
+.send-btn:disabled { background:#94A3B8;cursor:not-allowed;transform:none; }
+.send-btn svg { width:20px;height:20px;fill:#fff; }
+
+/* Sections */
+.section-title { text-align:center;font-size:2rem;font-weight:700;margin-bottom:16px; }
+.section-subtitle { text-align:center;color:var(--text-muted);max-width:600px;margin:0 auto 48px auto; }
+.about-content { display:flex;flex-wrap:wrap;gap:40px;align-items:center;background:var(--bg-card);padding:40px;border-radius:20px;border:1px solid var(--border); }
+.about-text { flex:1;min-width:300px; }
+.about-text h3 { font-size:1.5rem;margin-bottom:16px; }
+.about-text p { color:var(--text-muted);margin-bottom:16px; }
+.about-image { flex:1;min-width:300px;height:250px;background:var(--bg-body);border:1px solid var(--border);border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--primary); }
+.faq-container { max-width:800px;margin:0 auto; }
+.faq-item { background:var(--bg-card);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden; }
+.faq-question { padding:20px 24px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background 0.2s; }
+.faq-question:hover { background:var(--bg-bot); }
+.faq-answer { padding:0 24px 20px 24px;color:var(--text-muted);display:none;font-size:0.95rem; }
+.faq-item.active .faq-answer { display:block; }
+.faq-item.active .faq-question { color:var(--primary); }
+.faq-icon { transition:transform 0.3s; }
+.faq-item.active .faq-icon { transform:rotate(180deg); }
+.contact-container { display:flex;flex-wrap:wrap;gap:40px;max-width:900px;margin:0 auto;background:var(--bg-card);padding:40px;border-radius:20px;border:1px solid var(--border); }
+.contact-info { flex:1;min-width:250px; }
+.contact-info h3 { font-size:1.2rem;margin-bottom:20px; }
+.contact-item { display:flex;align-items:center;gap:12px;margin-bottom:16px;color:var(--text-muted); }
+.contact-item svg { width:20px;height:20px;color:var(--primary); }
+.contact-form { flex:1;min-width:300px;display:flex;flex-direction:column;gap:16px; }
+.contact-form input,.contact-form textarea { padding:14px 16px;border:1px solid var(--border);border-radius:8px;background:var(--bg-body);color:var(--text-main);font-family:inherit;outline:none; }
+.contact-form input:focus,.contact-form textarea:focus { border-color:var(--primary); }
+.contact-form button { padding:14px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:0.2s; }
+.contact-form button:hover { background:#2563EB; }
+
+/* Footer */
+footer { background:var(--footer-bg);color:var(--footer-text);padding:60px 40px 20px 40px;margin-top:auto;border-top:1px solid var(--border); }
+.footer-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;max-width:1100px;margin:0 auto 40px auto; }
+.footer-col h4 { color:#FFF;font-size:1.1rem;margin-bottom:20px; }
+.footer-col p { font-size:0.9rem;line-height:1.8; }
+.footer-col ul { list-style:none; }
+.footer-col ul li { margin-bottom:12px; }
+.footer-col ul li a { color:var(--footer-text);text-decoration:none;transition:0.2s;font-size:0.9rem;cursor:pointer; }
+.footer-col ul li a:hover { color:#FFF;padding-left:5px; }
+.footer-bottom { text-align:center;padding-top:20px;border-top:1px solid #1E293B;font-size:0.85rem;max-width:1100px;margin:0 auto; }
+
+/* ═══════════════════════════════════════════════════════════
+   🎙️ VOICE MODAL — ChatGPT-এর মতো প্রোফাইল
+   ═══════════════════════════════════════════════════════════ */
+.voice-modal {
+    position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);
+    z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;
+    animation:fadeIn 0.2s ease;
+}
+.voice-modal.open { display:flex; }
+.voice-modal-content {
+    background:var(--bg-card);border:1px solid var(--border);border-radius:20px;
+    max-width:640px;width:100%;max-height:88vh;overflow-y:auto;
+    box-shadow:0 25px 50px rgba(0,0,0,0.3);animation:slideUp 0.3s ease;
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+.voice-modal-header {
+    padding:22px 24px 14px;display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg-card);z-index:1;
+}
+.voice-modal-header h3 { font-size:1.15rem;font-weight:700; }
+.voice-modal-header button {
+    background:transparent;border:none;color:var(--text-muted);cursor:pointer;
+    font-size:1.4rem;line-height:1;padding:4px 8px;border-radius:8px;
+}
+.voice-modal-header button:hover { background:var(--bg-bot); }
+.voice-modal-desc { padding:0 24px 16px;color:var(--text-muted);font-size:0.85rem; }
+.voice-grid {
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 24px 24px;
+}
+.voice-card {
+    background:var(--bg-body);border:2px solid var(--border);border-radius:14px;
+    padding:14px;cursor:pointer;transition:all 0.2s ease;position:relative;
+    display:flex;align-items:center;gap:12px;
+}
+.voice-card:hover { border-color:var(--primary);transform:translateY(-2px); }
+.voice-card.selected {
+    border-color:var(--primary);background:rgba(59,130,246,0.08);
+    box-shadow:0 0 0 3px rgba(59,130,246,0.15);
+}
+.voice-card.selected::after {
+    content:'✓';position:absolute;top:8px;right:10px;
+    width:20px;height:20px;background:var(--primary);color:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;
+}
+.voice-avatar {
+    width:46px;height:46px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;flex-shrink:0;
+    background:linear-gradient(135deg,#3B82F6,#6366F1);
+}
+.voice-avatar.v1 { background:linear-gradient(135deg,#EC4899,#F43F5E); }
+.voice-avatar.v2 { background:linear-gradient(135deg,#3B82F6,#0EA5E9); }
+.voice-avatar.v3 { background:linear-gradient(135deg,#F59E0B,#EF4444); }
+.voice-avatar.v4 { background:linear-gradient(135deg,#10B981,#059669); }
+.voice-avatar.v5 { background:linear-gradient(135deg,#8B5CF6,#A855F7); }
+.voice-avatar.v6 { background:linear-gradient(135deg,#06B6D4,#0891B2); }
+.voice-avatar.v7 { background:linear-gradient(135deg,#F43F5E,#E11D48); }
+.voice-info { flex:1;min-width:0; }
+.voice-info h4 { font-size:0.92rem;font-weight:700;margin-bottom:2px; }
+.voice-info .voice-style { font-size:0.72rem;color:var(--text-muted);line-height:1.3;margin-bottom:2px; }
+.voice-info .voice-lang { font-size:0.68rem;color:var(--text-muted);opacity:0.7; }
+.voice-play-btn {
+    width:34px;height:34px;border-radius:50%;border:none;
+    background:var(--primary);color:#fff;cursor:pointer;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.8rem;transition:all 0.2s ease;
+}
+.voice-play-btn:hover { transform:scale(1.1);background:#2563EB; }
+.voice-play-btn.playing { background:#EF4444;animation:pulse 1.2s infinite; }
+
+@media (max-width:768px) {
+    header { padding:16px 20px;flex-wrap:wrap;gap:10px; }
+    .nav-links { order:3;width:100%;justify-content:center;margin-top:10px;gap:16px;font-size:0.85rem; }
+    .chat-card { height:600px; }
+    .message { max-width:90%; }
+    .section-title { font-size:1.5rem; }
+    .about-content,.contact-container { padding:20px; }
+    footer { padding:40px 20px 20px; }
+    .input-area { padding:14px 16px 16px;gap:8px; }
+    .icon-btn-input,.send-btn { width:44px;height:44px; }
+    .input-area input[type="text"] { padding:12px 14px;font-size:0.9rem; }
+    .file-preview,.voice-pill-row { padding-left:16px;padding-right:16px; }
+    .listening-indicator { margin:10px 16px 0;font-size:0.8rem; }
+    .voice-grid { grid-template-columns:1fr;padding:0 16px 20px; }
+    .voice-modal-header { padding:18px 16px 12px; }
+    .voice-modal-desc { padding:0 16px 12px; }
+}
+.chat-messages::-webkit-scrollbar { width:6px; }
+.chat-messages::-webkit-scrollbar-track { background:transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background:var(--border);border-radius:10px; }
+</style>
 </head>
 <body>
-    <header>
-        <div class="logo-area">
-            <div class="logo-icon">AI</div>
-            MedTracker AI
-        </div>
-        <div class="nav-links">
-            <a id="nav-home" class="active" onclick="switchView('home')">Home</a>
-            <a id="nav-about" onclick="switchView('about')">About</a>
-            <a id="nav-faq" onclick="switchView('faq')">FAQ</a>
-            <a id="nav-contact" onclick="switchView('contact')">Contact</a>
-        </div>
-        <div class="nav-right">
-            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
-                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            </button>
-            <a href="https://serakib.github.io/Medical-Admission-Tracker/" class="back-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Back
-            </a>
-        </div>
-    </header>
-    <main>
-        <div id="view-home" class="view active">
-            <div class="chat-card">
-                <div class="chat-header">
-                    <div class="bot-avatar">AI</div>
-                    <div class="bot-info">
-                        <h3>Your website's AI Assistant</h3>
-                        <p>Powered by Groq — Text, Image & Voice</p>
-                    </div>
+<header>
+    <div class="logo-area"><div class="logo-icon">AI</div>MedTracker AI</div>
+    <div class="nav-links">
+        <a id="nav-home" class="active" onclick="switchView('home')">Home</a>
+        <a id="nav-about" onclick="switchView('about')">About</a>
+        <a id="nav-faq" onclick="switchView('faq')">FAQ</a>
+        <a id="nav-contact" onclick="switchView('contact')">Contact</a>
+    </div>
+    <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <a href="https://serakib.github.io/Medical-Admission-Tracker/" class="back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back
+        </a>
+    </div>
+</header>
+
+<main>
+    <div id="view-home" class="view active">
+        <div class="chat-card">
+            <div class="chat-header">
+                <div class="bot-avatar">AI</div>
+                <div class="bot-info">
+                    <h3>Your website's AI Assistant</h3>
+                    <p id="statusText">Powered by Groq — Text, Image & Voice</p>
                 </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন। 📎 আইকনে ক্লিক করে ছবি পাঠাতে পারেন, 🎤 আইকনে ক্লিক করে কথা বলতে পারেন।</div>
-                    <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন। 📎 আইকনে ক্লিক করে ছবি পাঠাতে পারেন, 🎤 আইকনে ক্লিক করে কথা বলতে পারেন।</div>
+                <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
+            </div>
+
+            <div class="chat-input-wrapper">
+                <!-- ✅ Voice selection pill -->
+                <div class="voice-pill-row">
+                    <button class="voice-pill" onclick="openVoiceModal()">
+                        <span class="voice-pill-avatar" id="currentVoiceAvatar">👩</span>
+                        <span id="currentVoiceName">Emma</span>
+                        <span style="opacity:0.5">▾</span>
+                    </button>
                 </div>
 
-                <div class="chat-input-wrapper">
-                    <!-- ✅ লিসেনিং ইন্ডিকেটর -->
-                    <div class="listening-indicator" id="listeningIndicator">
-                        <span class="pulse-dot"></span>
-                        <span id="listeningText">🎤 শুনছি... কথা বলুন</span>
-                    </div>
+                <div class="listening-indicator" id="listeningIndicator">
+                    <span class="pulse-dot"></span>
+                    <span id="listeningText">🎤 শুনছি... কথা বলুন</span>
+                </div>
 
-                    <div class="file-preview" id="filePreview">
-                        <img id="previewImg" src="" alt="" />
-                        <span id="previewName"></span>
-                        <button class="remove-file" onclick="clearFile()" title="মুছে ফেলুন">✕</button>
-                    </div>
+                <div class="file-preview" id="filePreview">
+                    <img id="previewImg" src="" alt="" />
+                    <span id="previewName"></span>
+                    <button class="remove-file" onclick="clearFile()" title="মুছে ফেলুন">✕</button>
+                </div>
 
-                    <div class="input-area">
-                        <label for="fileInput" class="icon-btn-input" title="ছবি পাঠান">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                            </svg>
-                        </label>
-                        <input type="file" id="fileInput" accept="image/*" hidden />
+                <div class="input-area">
+                    <label for="fileInput" class="icon-btn-input" title="ছবি পাঠান">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                    </label>
+                    <input type="file" id="fileInput" accept="image/*" hidden />
 
-                        <button class="icon-btn-input" id="micBtn" title="কথা বলে প্রশ্ন করুন">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
-                            </svg>
-                        </button>
+                    <button class="icon-btn-input" id="micBtn" title="কথা বলে প্রশ্ন করুন">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                    </button>
 
-                        <input type="text" id="userInput" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
-                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                        </button>
-                    </div>
+                    <input type="text" id="userInput" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div id="view-about" class="view">
-            <h2 class="section-title">About Us</h2>
-            <p class="section-subtitle">আমাদের সম্পর্কে জানুন</p>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Medical Admission Tracker</h3>
-                    <p>আমরা একটি স্বেচ্ছাসেবী প্ল্যাটফর্ম, যা মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের সঠিক তথ্য ও দিকনির্দেশনা দিতে কাজ করে। আমাদের লক্ষ্য হলো শিক্ষার্থীদের ভর্তি প্রক্রিয়াকে সহজ করা।</p>
-                    <p>এই AI অ্যাসিস্ট্যান্টটি শিক্ষার্থীদের সাধারণ প্রশ্নের উত্তর দিতে এবং তাদের সঠিক পথে পরিচালিত করতে সাহায্য করবে।</p>
-                </div>
-                <div class="about-image">
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                </div>
+    <div id="view-about" class="view">
+        <h2 class="section-title">About Us</h2>
+        <p class="section-subtitle">আমাদের সম্পর্কে জানুন</p>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Medical Admission Tracker</h3>
+                <p>আমরা একটি স্বেচ্ছাসেবী প্ল্যাটফর্ম, যা মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের সঠিক তথ্য ও দিকনির্দেশনা দিতে কাজ করে। আমাদের লক্ষ্য হলো শিক্ষার্থীদের ভর্তি প্রক্রিয়াকে সহজ করা।</p>
+                <p>এই AI অ্যাসিস্ট্যান্টটি শিক্ষার্থীদের সাধারণ প্রশ্নের উত্তর দিতে এবং তাদের সঠিক পথে পরিচালিত করতে সাহায্য করবে।</p>
+            </div>
+            <div class="about-image">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             </div>
         </div>
+    </div>
 
-        <div id="view-faq" class="view">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="section-subtitle">আপনার সাধারণ জিজ্ঞাসাগুলোর উত্তর</p>
-            <div class="faq-container">
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">হ্যাঁ, এই অ্যাসিস্ট্যান্টটি সম্পূর্ণ ফ্রি। আপনি যেকোনো সময় যেকোনো প্রশ্ন করতে পারেন।</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>AI কি সবসময় সঠিক উত্তর দেবে?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">AI সাধারণত সঠিক উত্তর দেয়, তবে মাঝে মাঝে ভুল করতে পারে। অফিসিয়াল নোটিশের জন্য অনুগ্রহ করে মূল ওয়েবসাইটের নোটিশ বোর্ড দেখুন।</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>আমি কি ইংরেজিতে প্রশ্ন করতে পারব?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">অবশ্যই! আপনি বাংলা বা ইংরেজি যেকোনো ভাষায় প্রশ্ন করতে পারেন। AI আপনার ভাষাতেই উত্তর দেবে।</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>ছবি পাঠিয়ে প্রশ্ন করা যাবে?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">হ্যাঁ, ইনপুট বক্সের পাশে 📎 আইকনে ক্লিক করে ছবি (JPG, PNG, WEBP) পাঠাতে পারেন। AI ছবিটি বিশ্লেষণ করে উত্তর দেবে। সর্বোচ্চ ৫ MB।</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>ভয়েস দিয়ে প্রশ্ন করা যাবে?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">হ্যাঁ, 🎤 আইকনে ক্লিক করে কথা বলে প্রশ্ন করতে পারেন। আর 🔊 আইকনে ক্লিক করে AI-এর উত্তর শুনতে পারেন।</div>
-                </div>
+    <div id="view-faq" class="view">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">আপনার সাধারণ জিজ্ঞাসাগুলোর উত্তর</p>
+        <div class="faq-container">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div>
+                <div class="faq-answer">হ্যাঁ, এই অ্যাসিস্ট্যান্টটি সম্পূর্ণ ফ্রি। আপনি যেকোনো সময় যেকোনো প্রশ্ন করতে পারেন।</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question"><span>AI কি সবসময় সঠিক উত্তর দেবে?</span><span class="faq-icon">▼</span></div>
+                <div class="faq-answer">AI সাধারণত সঠিক উত্তর দেয়, তবে মাঝে মাঝে ভুল করতে পারে। অফিসিয়াল নোটিশের জন্য মূল ওয়েবসাইটের নোটিশ বোর্ড দেখুন।</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question"><span>আমি কি ইংরেজিতে প্রশ্ন করতে পারব?</span><span class="faq-icon">▼</span></div>
+                <div class="faq-answer">অবশ্যই! আপনি বাংলা বা ইংরেজি যেকোনো ভাষায় প্রশ্ন করতে পারেন। AI আপনার ভাষাতেই উত্তর দেবে।</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question"><span>ছবি পাঠিয়ে প্রশ্ন করা যাবে?</span><span class="faq-icon">▼</span></div>
+                <div class="faq-answer">হ্যাঁ, 📎 আইকনে ক্লিক করে ছবি (JPG, PNG, WEBP) পাঠাতে পারেন। AI ছবিটি বিশ্লেষণ করে উত্তর দেবে। সর্বোচ্চ ৫ MB।</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question"><span>ভয়েস পরিবর্তন করা যাবে?</span><span class="faq-icon">▼</span></div>
+                <div class="faq-answer">হ্যাঁ, ইনপুট বক্সের উপরে ভয়েস পিলে ক্লিক করুন। ৭ জন ভয়েস আর্টিস্টের প্রোফাইল দেখতে পাবেন, ডেমো শুনে পছন্দমতো বেছে নিন।</div>
             </div>
         </div>
+    </div>
 
-        <div id="view-contact" class="view">
-            <h2 class="section-title">Contact Us</h2>
-            <p class="section-subtitle">যেকোনো পরামর্শ বা অভিযোগের জন্য আমাদের সাথে যোগাযোগ করুন</p>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <h3>Get in Touch</h3>
-                    <div class="contact-item">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        <span>serakib@example.com</span>
-                    </div>
-                    <div class="contact-item">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                        <span>+880 1234 567890</span>
-                    </div>
-                    <div class="contact-item">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        <span>Dhaka, Bangladesh</span>
-                    </div>
+    <div id="view-contact" class="view">
+        <h2 class="section-title">Contact Us</h2>
+        <p class="section-subtitle">যেকোনো পরামর্শ বা অভিযোগের জন্য আমাদের সাথে যোগাযোগ করুন</p>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>serakib@example.com</span>
                 </div>
-                <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully!');">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea rows="5" placeholder="Your Message" required></textarea>
-                    <button type="submit">Send Message</button>
-                </form>
+                <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>+880 1234 567890</span>
+                </div>
+                <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Dhaka, Bangladesh</span>
+                </div>
             </div>
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent!');">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
         </div>
-    </main>
+    </div>
+</main>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>MedTracker AI</h4>
-                <p>মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি নির্ভরযোগ্য প্ল্যাটফর্ম। সঠিক তথ্য ও দিকনির্দেশনা আমাদের লক্ষ্য।</p>
-            </div>
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a onclick="switchView('home')">Home</a></li>
-                    <li><a onclick="switchView('about')">About Us</a></li>
-                    <li><a onclick="switchView('faq')">FAQ</a></li>
-                    <li><a onclick="switchView('contact')">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="https://serakib.github.io/Medical-Admission-Tracker/" target="_blank">Main Website</a></li>
-                    <li><a href="#">Admission Guide</a></li>
-                    <li><a href="#">Notice Board</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Follow Us</h4>
-                <ul>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">YouTube</a></li>
-                    <li><a href="#">Telegram</a></li>
-                </ul>
-            </div>
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>MedTracker AI</h4>
+            <p>মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি নির্ভরযোগ্য প্ল্যাটফর্ম। সঠিক তথ্য ও দিকনির্দেশনা আমাদের লক্ষ্য।</p>
         </div>
-        <div class="footer-bottom">
-            &copy; 2026 Medical Admission Tracker. All rights reserved.
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a onclick="switchView('home')">Home</a></li>
+                <li><a onclick="switchView('about')">About Us</a></li>
+                <li><a onclick="switchView('faq')">FAQ</a></li>
+                <li><a onclick="switchView('contact')">Contact</a></li>
+            </ul>
         </div>
-    </footer>
+        <div class="footer-col">
+            <h4>Resources</h4>
+            <ul>
+                <li><a href="https://serakib.github.io/Medical-Admission-Tracker/" target="_blank">Main Website</a></li>
+                <li><a href="#">Admission Guide</a></li>
+                <li><a href="#">Notice Board</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Follow Us</h4>
+            <ul>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">YouTube</a></li>
+                <li><a href="#">Telegram</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Medical Admission Tracker. All rights reserved.</div>
+</footer>
 
-    <script>
-        const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
+<!-- ═══════════════════════════════════════════════════════════
+     🎙️ VOICE MODAL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="voice-modal" id="voiceModal" onclick="if(event.target===this) closeVoiceModal()">
+    <div class="voice-modal-content">
+        <div class="voice-modal-header">
+            <h3>🎙️ Choose Your Voice Artist</h3>
+            <button onclick="closeVoiceModal()">✕</button>
+        </div>
+        <p class="voice-modal-desc">প্রতিটি আর্টিস্টের ডেমো শুনে পছন্দমতো বেছে নিন</p>
+        <div class="voice-grid" id="voiceGrid">
+            <!-- 7 voice cards injected by JS -->
+        </div>
+    </div>
+</div>
 
-        // ===== থিম =====
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
+<script>
+const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 
-        // ===== Tab =====
-        function switchView(viewName) {
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            const targetView = document.getElementById('view-' + viewName);
-            if (targetView) targetView.classList.add('active');
-            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-            const navEl = document.getElementById('nav-' + viewName);
-            if (navEl) navEl.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+// ═══════════════════════════════════════════════════════════
+// 🎙️ ৭ জন ভয়েস আর্টিস্ট — প্রোফাইল
+// ═══════════════════════════════════════════════════════════
+const VOICE_ARTISTS = [
+    {
+        id: 'emma',
+        name: 'Emma',
+        style: 'Friendly · Warm · Clear',
+        lang: '🇧🇩 Bengali (BD)',
+        avatar: '👩',
+        avatarClass: 'v1',
+        demo: 'হ্যালো, আমি এমা। আমি আপনাকে সাহায্য করতে পেরে খুশি হব।'
+    },
+    {
+        id: 'ryan',
+        name: 'Ryan',
+        style: 'Professional · Calm · News',
+        lang: '🇧🇩 Bengali (BD)',
+        avatar: '🧑',
+        avatarClass: 'v2',
+        demo: 'হ্যালো, আমি রায়ান। আপনার যেকোনো প্রশ্ন আমাকে করতে পারেন।'
+    },
+    {
+        id: 'sophia',
+        name: 'Sophia',
+        style: 'Young · Energetic · Sweet',
+        lang: '🇮🇳 Bengali (IN)',
+        avatar: '👧',
+        avatarClass: 'v3',
+        demo: 'হাই, আমি সোফিয়া। চলুন শুরু করি।'
+    },
+    {
+        id: 'david',
+        name: 'David',
+        style: 'Mature · Deep · Authoritative',
+        lang: '🇮🇳 Bengali (IN)',
+        avatar: '👨',
+        avatarClass: 'v4',
+        demo: 'আমি ডেভিড। আপনার প্রশ্নের উত্তর দিতে প্রস্তুত।'
+    },
+    {
+        id: 'olivia',
+        name: 'Olivia',
+        style: 'Elegant · Slow · Storyteller',
+        lang: '🇧🇩 Bengali (BD)',
+        avatar: '👩‍🦰',
+        avatarClass: 'v5',
+        demo: 'আমি অলিভিয়া। ধীরে, স্পষ্টভাবে কথা বলি।'
+    },
+    {
+        id: 'james',
+        name: 'James',
+        style: 'Deep · Serious · Narrator',
+        lang: '🇧🇩 Bengali (BD)',
+        avatar: '🧔',
+        avatarClass: 'v6',
+        demo: 'আমি জেমস। গুরুত্বপূর্ণ বিষয়গুলো বুঝিয়ে দিই।'
+    },
+    {
+        id: 'charlotte',
+        name: 'Charlotte',
+        style: 'British · Elegant · English',
+        lang: '🇬🇧 English (US)',
+        avatar: '👱‍♀️',
+        avatarClass: 'v7',
+        demo: 'Hello, I am Charlotte. I am ready to help you.'
+    }
+];
 
-        // ===== FAQ =====
-        function toggleFaq(element) {
-            document.querySelectorAll('.faq-item').forEach(item => {
-                if (item !== element) item.classList.remove('active');
-            });
-            element.classList.toggle('active');
-        }
+let selectedVoice = localStorage.getItem('voiceArtist') || 'emma';
+let demoAudio = null;
 
-        // ===== DOM =====
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const typingIndicator = document.getElementById('typingIndicator');
-        const fileInput = document.getElementById('fileInput');
-        const filePreview = document.getElementById('filePreview');
-        const previewImg = document.getElementById('previewImg');
-        const previewName = document.getElementById('previewName');
-        const micBtn = document.getElementById('micBtn');
-        const listeningIndicator = document.getElementById('listeningIndicator');
-        const listeningText = document.getElementById('listeningText');
+// ===== থিম =====
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
 
-        let attachedFile = null;
-        let isSending = false;
-        let recognition = null;
-        let silenceTimer = null;
-        let finalTranscript = '';
-        let isRecognitionActive = false;
+// ===== Tab =====
+function switchView(v) {
+    document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+    const t = document.getElementById('view-' + v);
+    if (t) t.classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const n = document.getElementById('nav-' + v);
+    if (n) n.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-        // ===== ছবি হ্যান্ডলিং =====
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            if (file.size > 5 * 1024 * 1024) {
-                alert('ছবির সাইজ ৫ MB এর বেশি হতে পারবে না');
-                fileInput.value = '';
-                return;
-            }
-            attachedFile = file;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                previewImg.src = ev.target.result;
-                previewName.textContent = file.name;
-                filePreview.style.display = 'flex';
-            };
-            reader.readAsDataURL(file);
+// ===== FAQ =====
+function toggleFaq(el) {
+    document.querySelectorAll('.faq-item').forEach(i => { if (i !== el) i.classList.remove('active'); });
+    el.classList.toggle('active');
+}
+
+// ===== DOM =====
+const chatMessages = document.getElementById('chatMessages');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+const typingIndicator = document.getElementById('typingIndicator');
+const fileInput = document.getElementById('fileInput');
+const filePreview = document.getElementById('filePreview');
+const previewImg = document.getElementById('previewImg');
+const previewName = document.getElementById('previewName');
+const micBtn = document.getElementById('micBtn');
+const listeningIndicator = document.getElementById('listeningIndicator');
+const listeningText = document.getElementById('listeningText');
+const statusText = document.getElementById('statusText');
+const voiceModal = document.getElementById('voiceModal');
+const voiceGrid = document.getElementById('voiceGrid');
+const currentVoiceName = document.getElementById('currentVoiceName');
+const currentVoiceAvatar = document.getElementById('currentVoiceAvatar');
+
+let attachedFile = null;
+let isSending = false;
+let recognition = null;
+let silenceTimer = null;
+let finalTranscript = '';
+let isRecognizing = false;
+let voiceModeOn = false;
+let ttsAbortController = null;
+let pendingTtsResolve = null;
+
+// ═══════════════════════════════════════════════════════════
+// 🎙️ VOICE MODAL — Render + Logic
+// ═══════════════════════════════════════════════════════════
+function renderVoiceGrid() {
+    voiceGrid.innerHTML = VOICE_ARTISTS.map(v => `
+        <div class="voice-card ${v.id === selectedVoice ? 'selected' : ''}" data-voice="${v.id}" onclick="selectVoice('${v.id}')">
+            <div class="voice-avatar ${v.avatarClass}">${v.avatar}</div>
+            <div class="voice-info">
+                <h4>${v.name}</h4>
+                <div class="voice-style">${v.style}</div>
+                <div class="voice-lang">${v.lang}</div>
+            </div>
+            <button class="voice-play-btn" onclick="event.stopPropagation(); playDemo('${v.id}', this)" title="ডেমো শুনুন">▶</button>
+        </div>
+    `).join('');
+}
+
+function updateVoicePill() {
+    const artist = VOICE_ARTISTS.find(v => v.id === selectedVoice) || VOICE_ARTISTS[0];
+    currentVoiceName.textContent = artist.name;
+    currentVoiceAvatar.textContent = artist.avatar;
+}
+
+function openVoiceModal() {
+    renderVoiceGrid();
+    voiceModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVoiceModal() {
+    voiceModal.classList.remove('open');
+    document.body.style.overflow = '';
+    stopDemo();
+}
+
+function selectVoice(id) {
+    selectedVoice = id;
+    localStorage.setItem('voiceArtist', id);
+    updateVoicePill();
+    renderVoiceGrid();
+    console.log('🎙️ Voice selected:', id);
+}
+
+async function playDemo(id, btnEl) {
+    // আগের ডেমো বন্ধ
+    stopDemo();
+
+    const artist = VOICE_ARTISTS.find(v => v.id === id);
+    if (!artist) return;
+
+    btnEl.classList.add('playing');
+    btnEl.textContent = '⏸';
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: artist.demo, voice: id })
         });
-        function clearFile() {
-            attachedFile = null;
-            fileInput.value = '';
-            filePreview.style.display = 'none';
-            previewImg.src = '';
+
+        if (!res.ok) throw new Error('TTS failed');
+
+        const blob = await res.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        demoAudio = new Audio(audioUrl);
+
+        demoAudio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            btnEl.classList.remove('playing');
+            btnEl.textContent = '▶';
+            demoAudio = null;
+        };
+        demoAudio.onerror = () => {
+            URL.revokeObjectURL(audioUrl);
+            btnEl.classList.remove('playing');
+            btnEl.textContent = '▶';
+            demoAudio = null;
+        };
+
+        await demoAudio.play();
+    } catch (err) {
+        console.error('Demo error:', err);
+        btnEl.classList.remove('playing');
+        btnEl.textContent = '▶';
+    }
+}
+
+function stopDemo() {
+    if (demoAudio) {
+        try { demoAudio.pause(); } catch(e) {}
+        demoAudio = null;
+    }
+    document.querySelectorAll('.voice-play-btn').forEach(b => {
+        b.classList.remove('playing');
+        b.textContent = '▶';
+    });
+}
+
+// প্রাথমিক সেটআপ
+updateVoicePill();
+
+// ===== ছবি =====
+fileInput.addEventListener('change', (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) { alert('ছবির সাইজ ৫ MB এর বেশি হতে পারবে না'); fileInput.value = ''; return; }
+    attachedFile = f;
+    const r = new FileReader();
+    r.onload = (ev) => { previewImg.src = ev.target.result; previewName.textContent = f.name; filePreview.style.display = 'flex'; };
+    r.readAsDataURL(f);
+});
+function clearFile() { attachedFile = null; fileInput.value = ''; filePreview.style.display = 'none'; previewImg.src = ''; }
+
+// ═══════════════════════════════════════════════════════════
+// 🔊 TTS
+// ═══════════════════════════════════════════════════════════
+function speakText(text) {
+    return new Promise(async (resolve) => {
+        if (!voiceModeOn || !text) { resolve(); return; }
+        stopAllAudio();
+        if (ttsAbortController) ttsAbortController.abort();
+        ttsAbortController = new AbortController();
+        pendingTtsResolve = resolve;
+
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/tts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, voice: selectedVoice }),
+                signal: ttsAbortController.signal
+            });
+            if (!res.ok) { pendingTtsResolve = null; resolve(); return; }
+
+            const blob = await res.blob();
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = new Audio(audioUrl);
+            window.currentAudio = audio;
+
+            audio.onended = () => { URL.revokeObjectURL(audioUrl); window.currentAudio = null; pendingTtsResolve = null; resolve(); };
+            audio.onerror = () => { URL.revokeObjectURL(audioUrl); window.currentAudio = null; pendingTtsResolve = null; resolve(); };
+
+            try { await audio.play(); }
+            catch (e) { URL.revokeObjectURL(audioUrl); window.currentAudio = null; pendingTtsResolve = null; resolve(); }
+        } catch (err) {
+            if (err.name === 'AbortError') { pendingTtsResolve = null; resolve(); return; }
+            pendingTtsResolve = null;
+            resolve();
         }
+    });
+}
 
-        // ===== TTS =====
-        let ttsAbortController = null;
-        async function speakText(text) {
-            if (!text) return;
-            if (window.currentAudio) {
-                window.currentAudio.pause();
-                window.currentAudio.currentTime = 0;
-                window.currentAudio = null;
-            }
-            if ('speechSynthesis' in window) speechSynthesis.cancel();
+function stopAllAudio() {
+    if (window.currentAudio) { try { window.currentAudio.pause(); } catch(e){} window.currentAudio = null; }
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    if (ttsAbortController) { ttsAbortController.abort(); ttsAbortController = null; }
+    if (pendingTtsResolve) { pendingTtsResolve(); pendingTtsResolve = null; }
+}
 
-            if (ttsAbortController) ttsAbortController.abort();
-            ttsAbortController = new AbortController();
-
-            try {
-                const res = await fetch(`${BACKEND_URL}/api/tts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text }),
-                    signal: ttsAbortController.signal
-                });
-                if (!res.ok) { fallbackSpeak(text); return; }
-                const blob = await res.blob();
-                const audioUrl = URL.createObjectURL(blob);
-                const audio = new Audio(audioUrl);
-                window.currentAudio = audio;
-                audio.onended = () => {
-                    URL.revokeObjectURL(audioUrl);
-                    window.currentAudio = null;
-                };
-                audio.onerror = () => {
-                    URL.revokeObjectURL(audioUrl);
-                    window.currentAudio = null;
-                    fallbackSpeak(text);
-                };
-                try { await audio.play(); }
-                catch (playErr) {
-                    URL.revokeObjectURL(audioUrl);
-                    window.currentAudio = null;
-                    fallbackSpeak(text);
-                }
-            } catch (err) {
-                if (err.name === 'AbortError') return;
-                console.error('TTS error:', err);
-                fallbackSpeak(text);
-            }
-        }
-
-        function fallbackSpeak(text) {
-            if (!('speechSynthesis' in window)) return;
-            speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = /[\u0980-\u09FF]/.test(text) ? 'bn-BD' : 'en-US';
-            window.currentUtterance = utterance;
-            speechSynthesis.speak(utterance);
-        }
-
-        // ===== UI Helper =====
-        function showListeningUI(state) {
-            // state: 'preparing' | 'listening' | 'off'
-            if (state === 'off') {
-                listeningIndicator.classList.remove('active', 'preparing');
-                userInput.classList.remove('listening');
-                return;
-            }
-            listeningIndicator.classList.add('active');
-            userInput.classList.add('listening');
-            if (state === 'preparing') {
-                listeningIndicator.classList.add('preparing');
-                listeningText.textContent = '⏳ একটু অপেক্ষা করুন...';
-            } else {
-                listeningIndicator.classList.remove('preparing');
-                listeningText.textContent = '🎤 শুনছি... কথা বলুন';
-            }
-        }
-
-        // ===== ভয়েস ইনপুট =====
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.lang = 'bn-IN';
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.maxAlternatives = 1;
-
-            recognition.onstart = () => {
-                isRecognitionActive = true;
-                finalTranscript = '';
-                micBtn.classList.add('recording');
-                showListeningUI('listening');
-                userInput.focus();
-            };
-
-            recognition.onresult = (event) => {
-                let interim = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        finalTranscript += transcript + ' ';
-                    } else {
-                        interim += transcript;
-                    }
-                }
-                // ✅ লাইভ আপডেট — আপনার কথা সাথে সাথে দেখা যাবে
-                userInput.value = (finalTranscript + interim).trim();
-
-                // টাইমার রিসেট — কথা বললে
-                clearTimeout(silenceTimer);
-                silenceTimer = setTimeout(() => {
-                    if (isRecognitionActive) recognition.stop();
-                }, 2500);
-            };
-
-            recognition.onspeechend = () => {
-                clearTimeout(silenceTimer);
-                silenceTimer = setTimeout(() => {
-                    if (isRecognitionActive) recognition.stop();
-                }, 2500);
-            };
-
-            recognition.onerror = (event) => {
-                console.error('Speech error:', event.error);
-                if (event.error === 'not-allowed') {
-                    alert('মাইক্রোফোন ব্যবহারের অনুমতি দিন');
-                } else if (event.error === 'no-speech') {
-                    console.warn('কোনো কথা শোনা যায়নি');
-                } else if (event.error === 'audio-capture') {
-                    alert('মাইক্রোফোন পাওয়া যাচ্ছে না। চেক করুন।');
-                } else if (event.error === 'network') {
-                    alert('ইন্টারনেট সমস্যা। চেক করুন।');
-                }
-            };
-
-            recognition.onend = () => {
-                isRecognitionActive = false;
-                micBtn.classList.remove('recording');
-                showListeningUI('off');
-                clearTimeout(silenceTimer);
-
-                const text = userInput.value.trim();
-                if (text && !isSending) {
-                    // ✅ অটো-সেন্ড
-                    setTimeout(() => sendMessage(), 200);
-                }
-            };
-
-            micBtn.addEventListener('click', () => {
-                if (isRecognitionActive) {
-                    // বন্ধ করুন
-                    if (window.currentAudio) {
-                        window.currentAudio.pause();
-                        window.currentAudio = null;
-                    }
-                    if ('speechSynthesis' in window) speechSynthesis.cancel();
-                    recognition.stop();
-                } else {
-                    // শুরু করুন
-                    try {
-                        finalTranscript = '';
-                        userInput.value = '';
-
-                        // আগের সব অডিও বন্ধ
-                        if (window.currentAudio) {
-                            window.currentAudio.pause();
-                            window.currentAudio = null;
+async function speakAndListen(text) {
+    if (isRecognizing) { try { recognition.stop(); } catch(e){} await new Promise(r => setTimeout(r, 250)); }
+    await speakText(text);
+    if (voiceModeOn && !isRecognizing) {
+        setTimeout(() => {
+            if (voiceModeOn && !isRecognizing) {
+                try { finalTranscript = ''; userInput.value = ''; recognition.start(); }
+                catch (e) {
+                    setTimeout(() => {
+                        if (voiceModeOn && !isRecognizing) {
+                            try { recognition.start(); } catch(e2) {}
                         }
-                        if ('speechSynthesis' in window) speechSynthesis.cancel();
-
-                        // ✅ প্রস্তুতি অবস্থা দেখান
-                        showListeningUI('preparing');
-                        micBtn.classList.add('recording');
-
-                        // ✅ Greeting চালান, তারপর মাইক চালু
-                        const greetingText = 'আমি আপনাকে কীভাবে সাহায্য করতে পারি?';
-                        speakText(greetingText).then(() => {
-                            // Greeting শেষ — এখন মাইক চালু
-                            setTimeout(() => {
-                                try { recognition.start(); }
-                                catch (err) { console.error('start err:', err); }
-                            }, 300);
-                        }).catch(() => {
-                            // Greeting fail হলেও মাইক চালু করুন
-                            try { recognition.start(); }
-                            catch (err) { console.error(err); }
-                        });
-
-                    } catch (err) {
-                        console.error(err);
-                        showListeningUI('off');
-                        micBtn.classList.remove('recording');
-                    }
+                    }, 600);
                 }
-            });
+            }
+        }, 400);
+    }
+}
+
+function showListeningUI(state) {
+    if (state === 'off') {
+        listeningIndicator.classList.remove('active', 'preparing');
+        userInput.classList.remove('listening');
+        statusText.textContent = voiceModeOn ? '🎙️ ভয়েস মোড চালু' : 'Powered by Groq — Text, Image & Voice';
+        return;
+    }
+    listeningIndicator.classList.add('active');
+    userInput.classList.add('listening');
+    if (state === 'preparing') {
+        listeningIndicator.classList.add('preparing');
+        listeningText.textContent = '⏳ AI উত্তর দিচ্ছে...';
+        statusText.textContent = '🎙️ AI কথা বলছে...';
+    } else {
+        listeningIndicator.classList.remove('preparing');
+        listeningText.textContent = '🎤 শুনছি... কথা বলুন';
+        statusText.textContent = '🎙️ শুনছি — কথা বলুন';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 🎤 ভয়েস ইনপুট
+// ═══════════════════════════════════════════════════════════
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'bn-IN';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+        isRecognizing = true;
+        finalTranscript = '';
+        micBtn.classList.add('recording');
+        showListeningUI('listening');
+    };
+
+    recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const t = event.results[i][0].transcript;
+            if (event.results[i].isFinal) finalTranscript += t + ' ';
+            else interim += t;
+        }
+        userInput.value = (finalTranscript + interim).trim();
+        clearTimeout(silenceTimer);
+        silenceTimer = setTimeout(() => { if (isRecognizing) recognition.stop(); }, 2500);
+    };
+
+    recognition.onspeechend = () => {
+        clearTimeout(silenceTimer);
+        silenceTimer = setTimeout(() => { if (isRecognizing) recognition.stop(); }, 2500);
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Speech error:', event.error);
+        if (event.error === 'not-allowed') {
+            alert('⚠️ মাইক্রোফোন ব্যবহারের অনুমতি দিন।');
+            voiceModeOn = false;
+            showListeningUI('off');
+        } else if (event.error === 'audio-capture') {
+            alert('⚠️ মাইক্রোফোন পাওয়া যাচ্ছে না।');
+        }
+    };
+
+    recognition.onend = () => {
+        isRecognizing = false;
+        micBtn.classList.remove('recording');
+        showListeningUI('off');
+        clearTimeout(silenceTimer);
+        const text = userInput.value.trim();
+        if (text && !isSending) setTimeout(() => sendMessage(), 250);
+    };
+
+    micBtn.addEventListener('click', async () => {
+        if (voiceModeOn) {
+            voiceModeOn = false;
+            stopAllAudio();
+            if (isRecognizing) try { recognition.stop(); } catch(e){}
+            micBtn.classList.remove('recording');
+            showListeningUI('off');
         } else {
-            micBtn.addEventListener('click', () => {
-                alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।');
-            });
-        }
-
-        // ===== মেসেজ পাঠানো =====
-        async function sendMessage() {
-            if (isSending) return;
-            const text = userInput.value.trim();
-            if (!text && !attachedFile) return;
-
-            isSending = true;
-            sendBtn.disabled = true;
-
-            addMessage(text, 'user', attachedFile);
+            voiceModeOn = true;
+            finalTranscript = '';
             userInput.value = '';
-            userInput.classList.remove('listening');
-            listeningIndicator.classList.remove('active', 'preparing');
-
-            const fileToSend = attachedFile;
-            clearFile();
-
-            typingIndicator.style.display = 'flex';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            try {
-                const formData = new FormData();
-                formData.append('message', text || '');
-                if (fileToSend) formData.append('image', fileToSend);
-
-                const response = await fetch(`${BACKEND_URL}/api/chat`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const data = await response.json();
-                typingIndicator.style.display = 'none';
-
-                if (response.ok && data.reply) {
-                    addMessage(data.reply, 'bot');
-                    speakText(data.reply);
-                } else {
-                    addMessage("❌ এরর: " + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
-                }
-            } catch (error) {
-                typingIndicator.style.display = 'none';
-                addMessage("❌ নেটওয়ার্ক সমস্যা। ৩০ সেকেন্ড পর আবার চেষ্টা করুন।", 'bot');
-                console.error(error);
-            }
-
-            isSending = false;
-            sendBtn.disabled = false;
-            userInput.focus();
+            stopAllAudio();
+            showListeningUI('preparing');
+            micBtn.classList.add('recording');
+            const artist = VOICE_ARTISTS.find(v => v.id === selectedVoice) || VOICE_ARTISTS[0];
+            await speakAndListen('আমি আপনাকে কীভাবে সাহায্য করতে পারি?');
         }
+    });
+} else {
+    micBtn.addEventListener('click', () => alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।'));
+}
 
-        function addMessage(text, sender, file) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', sender);
+// ═══════════════════════════════════════════════════════════
+// 📤 মেসেজ পাঠানো
+// ═══════════════════════════════════════════════════════════
+async function sendMessage() {
+    if (isSending) return;
+    const text = userInput.value.trim();
+    if (!text && !attachedFile) return;
 
-            if (file) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                msgDiv.appendChild(img);
-            }
-            if (text) {
-                const p = document.createElement('div');
-                p.innerText = text;
-                msgDiv.appendChild(p);
-            }
+    isSending = true;
+    sendBtn.disabled = true;
+    if (isRecognizing) try { recognition.stop(); } catch(e){}
 
-            if (typingIndicator && typingIndicator.parentNode === chatMessages) {
-                chatMessages.insertBefore(msgDiv, typingIndicator);
-            } else {
-                chatMessages.appendChild(msgDiv);
+    addMessage(text, 'user', attachedFile);
+    userInput.value = '';
+    userInput.classList.remove('listening');
+    listeningIndicator.classList.remove('active', 'preparing');
+
+    const fileToSend = attachedFile;
+    clearFile();
+    typingIndicator.style.display = 'flex';
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    try {
+        const formData = new FormData();
+        formData.append('message', text || '');
+        if (fileToSend) formData.append('image', fileToSend);
+
+        const response = await fetch(`${BACKEND_URL}/api/chat`, { method: 'POST', body: formData });
+        const data = await response.json();
+        typingIndicator.style.display = 'none';
+
+        if (response.ok && data.reply) {
+            addMessage(data.reply, 'bot');
+            if (voiceModeOn) {
+                isSending = false; sendBtn.disabled = false;
+                speakAndListen(data.reply);
+                return;
             }
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        } else {
+            addMessage("❌ এরর: " + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
         }
+    } catch (error) {
+        typingIndicator.style.display = 'none';
+        addMessage("❌ নেটওয়ার্ক সমস্যা। ৩০ সেকেন্ড পর আবার চেষ্টা করুন।", 'bot');
+    }
 
-        userInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
+    isSending = false;
+    sendBtn.disabled = false;
+    userInput.focus();
+}
+
+function addMessage(text, sender, file) {
+    const d = document.createElement('div');
+    d.classList.add('message', sender);
+    if (file) { const i = document.createElement('img'); i.src = URL.createObjectURL(file); d.appendChild(i); }
+    if (text) { const p = document.createElement('div'); p.innerText = text; d.appendChild(p); }
+    if (typingIndicator && typingIndicator.parentNode === chatMessages) chatMessages.insertBefore(d, typingIndicator);
+    else chatMessages.appendChild(d);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+userInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(() => console.log('✅ Mic granted'))
+        .catch(err => console.warn('⚠️ Mic:', err.message));
+}
+</script>
 </body>
 </html>
