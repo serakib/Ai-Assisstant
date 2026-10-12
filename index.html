@@ -676,15 +676,31 @@ let finalTranscript = '';
     };
 
     micBtn.addEventListener('click', () => {
-        if (micBtn.classList.contains('recording')) {
-            recognition.stop();
-        } else {
-            try {
-                finalTranscript = '';
-                recognition.start();
-            } catch (err) { console.error(err); }
-        }
-    });
+    if (micBtn.classList.contains('recording')) {
+        // মাইক বন্ধ
+        speechSynthesis.cancel();
+        recognition.stop();
+    } else {
+        try {
+            finalTranscript = '';
+
+            // ✅ প্রথমে AI বলবে "আমি আপনাকে কীভাবে সাহায্য করতে পারি?"
+            const greeting = new SpeechSynthesisUtterance('আমি আপনাকে কীভাবে সাহায্য করতে পারি?');
+            greeting.lang = 'bn-BD';
+            greeting.rate = 1.0;
+            greeting.pitch = 1.0;
+            greeting.onend = () => {
+                // ✅ ভয়েস শেষ হলে মাইক চালু করুন
+                try {
+                    recognition.start();
+                } catch (err) { console.error(err); }
+            };
+            speechSynthesis.cancel();
+            speechSynthesis.speak(greeting);
+
+        } catch (err) { console.error(err); }
+    }
+});
 } else {
     micBtn.addEventListener('click', () => {
         alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।');
