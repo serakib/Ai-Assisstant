@@ -6,7 +6,7 @@
     <title>AI Assistant - Medical Admission Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ================= থিম ভেরিয়েবল (ডার্ক মোড) ================= */
+        /* ================= থিম ভেরিয়েবল (প্রিমিয়াম ডার্ক মোড) ================= */
         :root {
             --bg-body: #0B1120;
             --bg-card: #111827;
@@ -35,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* ================= হেডার ================= */
+        /* ================= হেডার (ফিক্সড লেআউট) ================= */
         header {
             position: sticky;
             top: 0;
@@ -46,6 +46,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 16px 40px;
+            flex-wrap: wrap; /* রেসপন্সিভের জন্য */
         }
         .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
         .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; }
@@ -65,7 +66,7 @@
         }
         .back-btn:hover { background-color: var(--bg-bot); color: var(--text-main); }
 
-        /* ================= মূল কন্টেন্ট এরিয়া (Tabbed System) ================= */
+        /* ================= মূল কন্টেন্ট এরিয়া ================= */
         main {
             flex: 1;
             display: flex;
@@ -90,9 +91,10 @@
             flex-direction: column;
             overflow: hidden;
             box-shadow: var(--shadow);
-            height: 600px;
+            height: 650px;
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
         }
 
         .chat-header {
@@ -136,6 +138,17 @@
         .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
         .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+        /* সাজেস্টেড প্রশ্ন (Suggested Prompts) */
+        .suggested-prompts {
+            display: flex; gap: 10px; padding: 0 24px 15px 24px; flex-wrap: wrap;
+        }
+        .suggested-prompts button {
+            background: var(--bg-body); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 8px 14px; border-radius: 20px;
+            font-size: 0.8rem; cursor: pointer; transition: 0.2s; font-family: inherit;
+        }
+        .suggested-prompts button:hover { border-color: var(--primary); color: var(--primary); }
 
         .input-area {
             padding: 20px 24px; border-top: 1px solid var(--border);
@@ -214,11 +227,12 @@
         .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
         .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1E293B; font-size: 0.85rem; max-width: 1100px; margin: 0 auto; }
 
-        /* ================= রেসপন্সিভ ================= */
-        @media (max-width: 768px) {
-            header { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
-            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 10px; gap: 16px; font-size: 0.85rem; }
-            .chat-card { height: 500px; }
+        /* ================= রেসপন্সিভ (মোবাইল ফিক্স) ================= */
+        @media (max-width: 600px) {
+            header { padding: 16px 20px; }
+            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 15px; gap: 16px; font-size: 0.85rem; }
+            .nav-right { margin-left: auto; }
+            .chat-card { height: 550px; }
             .message { max-width: 90%; }
             .section-title { font-size: 1.5rem; }
             .about-content, .contact-container { padding: 20px; }
@@ -268,6 +282,13 @@
                 <div class="chat-messages" id="chatMessages">
                     <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন।</div>
                     <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
+                </div>
+
+                <!-- সাজেস্টেড প্রশ্ন -->
+                <div class="suggested-prompts">
+                    <button onclick="quickAsk('মেডিকেল ভর্তি পরীক্ষার সিলেবাস কি?')">📚 সিলেবাস</button>
+                    <button onclick="quickAsk('ভর্তি পরীক্ষার প্রস্তুতি কিভাবে নিব?')">📝 প্রস্তুতি</button>
+                    <button onclick="quickAsk('কোন বইগুলো ফলো করা উচিত?')">📖 বইয়ের লিস্ট</button>
                 </div>
                 
                 <div class="input-area">
@@ -418,7 +439,13 @@
             faqItem.classList.toggle('active');
         }
 
-        // ৬. চ্যাট লজিক (নতুন SDK)
+        // ৬. কুইক অ্যাম্বেডেড প্রশ্ন (Suggested Prompts)
+        window.quickAsk = function(text) {
+            userInput.value = text;
+            sendMessage();
+        }
+
+        // ৭. চ্যাট লজিক (নতুন SDK)
         async function sendMessage() {
             const text = userInput.value.trim();
             if (!text) return;
@@ -434,7 +461,7 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
-                // ৭. গুগলের নতুন SDK দিয়ে রিকোয়েস্ট পাঠানো
+                // গুগলের নতুন SDK দিয়ে রিকোয়েস্ট পাঠানো
                 const response = await ai.models.generateContent({
                     model: 'gemini-1.5-flash', // মডেলের নাম
                     contents: text, // ইউজারের প্রশ্ন
@@ -443,7 +470,7 @@
                 // টাইপিং ইন্ডিকেটর লুকানো
                 typingIndicator.style.display = 'none';
 
-                // ৮. AI-এর উত্তর দেখানো
+                // AI-এর উত্তর দেখানো
                 if (response.text) {
                     addMessage(response.text, 'bot');
                 } else {
@@ -460,7 +487,7 @@
             userInput.focus();
         }
 
-        // ৯. মেসেজ DOM-এ যোগ করার ফাংশন
+        // ৮. মেসেজ DOM-এ যোগ করার ফাংশন
         function addMessage(text, sender) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', sender);
@@ -471,7 +498,7 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // ১০. Enter চাপলে মেসেজ পাঠানো
+        // ৯. Enter চাপলে মেসেজ পাঠানো
         userInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') sendMessage();
         });
