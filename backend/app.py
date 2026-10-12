@@ -1,37 +1,26 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
-import os
-import base64
+import os, io, asyncio, base64
 from dotenv import load_dotenv
 from groq import Groq
+import edge_tts
 
 load_dotenv()
-
 app = Flask(__name__)
-
-# ✅ CORS — সব প্রয়োজনীয় origin
 CORS(app, origins=[
     "https://serakib.github.io",
-    "http://localhost:5500",
-    "http://127.0.0.1:5500",
-    "http://localhost:5000",
-    "http://127.0.0.1:5000"
+    "http://localhost:5500", "http://127.0.0.1:5500",
+    "http://localhost:5000", "http://127.0.0.1:5000"
 ])
 
-# ✅ Groq ক্লায়েন্ট
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is not set!")
 
 client = Groq(api_key=GROQ_API_KEY)
-
-# ✅ ভিশন মডেল
 GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
-
-# ✅ সর্বোচ্চ ফাইল সাইজ: ৫ MB
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
-# ✅ System Prompt — LaTeX নিষিদ্ধ
 SYSTEM_PROMPT = (
     "তুমি Medical Admission Tracker-এর একজন সহায়ক AI। "
     "মেডিকেল ভর্তি, প্রশ্নপত্র, সিলেবাস, প্রস্তুতি সংক্রান্ত প্রশ্নের উত্তর দাও। "
@@ -40,10 +29,23 @@ SYSTEM_PROMPT = (
     "\n\nগুরুত্বপূর্ণ নিয়ম:\n"
     "১. কোনো LaTeX বা গাণিতিক চিহ্ন ($, \\, \\frac, \\int, ^, _) ব্যবহার করবে না। "
     "২. অঙ্ক বা সূত্র সাধারণ বাংলা লেখায় লিখবে। "
-    "৩. উদাহরণ: 'x এর বর্গ' বা 'x²' লিখবে, '$x^2$' নয়। "
-    "৪. ভগ্নাংশ লিখতে '২/৩' বা '২ ভাগ ৩' লিখবে, '\\frac{2}{3}' নয়। "
-    "৫. উত্তর হবে সহজ, একজন সাধারণ শিক্ষার্থী যেন বুঝতে পারে।"
+    "৩. উত্তর হবে সহজ, একজন সাধারণ শিক্ষার্থী যেন বুঝতে পারে।"
 )
+
+# ═══════════════════════════════════════════════════════════
+# 🎙️ ৭ জন ভয়েস আর্টিস্ট — ChatGPT-এর মতো
+# ═══════════════════════════════════════════════════════════
+VOICE_PRESETS = {
+    "emma":      {"voice": "bn-BD-NabanitaNeural",  "rate": "+0%",  "pitch": "+0Hz"},
+    "ryan":      {"voice": "bn-BD-PradeepNeural",   "rate": "+0%",  "pitch": "+0Hz"},
+    "sophia":    {"voice": "bn-IN-TanishaaNeural",  "rate": "+8%",  "pitch": "+5Hz"},
+    "david":     {"voice": "bn-IN-BashkarNeural",   "rate": "+0%",  "pitch": "+0Hz"},
+    "olivia":    {"voice": "bn-BD-NabanitaNeural",  "rate": "-12%", "pitch": "-15Hz"},
+    "james":     {"voice": "bn-BD-PradeepNeural",   "rate": "-10%", "pitch": "-20Hz"},
+    "charlotte": {"voice": "en-US-AriaNeural",      "rate": "+0%",  "pitch": "+0Hz"},
+}
+
+VOICE_FALLBACK = "emma"
 
 
 @app.route('/')
@@ -52,8 +54,8 @@ def home():
         "status": "online",
         "provider": "groq",
         "model": GROQ_MODEL,
-        "features": ["text", "image"],
-        "routes": ["/api/chat"]
+        "tts": "edge-tts",
+        "voices": list(VOICE_PRESETS.keys())
     })
 
 
@@ -62,35 +64,23 @@ def chat():
     try:
         user_message = request.form.get('message', '').strip()
         image_file = request.files.get('image')
-
         if not user_message and not image_file:
             return jsonify({"error": "Message or image required"}), 400
 
         content_parts = []
-
         if user_message:
             content_parts.append({"type": "text", "text": user_message})
         else:
-            content_parts.append({
-                "type": "text",
-                "text": "এই ছবিটি বিশ্লেষণ করে বাংলায় সংক্ষেপে বলো।"
-            })
+            content_parts.append({"type": "text", "text": "এই ছবিটি বিশ্লেষণ করে বাংলায় সংক্ষেপে বলো।"})
 
         if image_file:
-            mime_type = image_file.mimetype
-            allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-
-            if mime_type not in allowed:
-                return jsonify({"error": "শুধু JPG, PNG, WEBP, GIF ছবি সাপোর্ট করে"}), 400
-
-            image_bytes = image_file.read()
-            image_b64 = base64.b64encode(image_bytes).decode('utf-8')
-
+            mime = image_file.mimetype
+            if mime not in ['image/jpeg','image/png','image/webp','image/gif']:
+                return jsonify({"error": "শুধু JPG, PNG, WEBP, GIF"}), 400
+            image_b64 = base64.b64encode(image_file.read()).decode('utf-8')
             content_parts.append({
                 "type": "image_url",
-                "image_url": {
-                    "url": f"data:{mime_type};base64,{image_b64}"
-                }
+                "image_url": {"url": f"data:{mime};base64,{image_b64}"}
             })
 
         response = client.chat.completions.create(
@@ -99,61 +89,61 @@ def chat():
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": content_parts}
             ],
-            temperature=0.5,
-            max_tokens=1024
+            temperature=0.5, max_tokens=1024
         )
-
-        reply = response.choices[0].message.content
-        return jsonify({"reply": reply, "provider": "groq"})
-
+        return jsonify({"reply": response.choices[0].message.content, "provider": "groq"})
     except Exception as e:
-        print(f"Server Error: {str(e)}")
-        return jsonify({"error": f"Server error: {str(e)}"}), 500
+        print(f"Chat Error: {e}")
+        return jsonify({"error": str(e)}), 500
 
-
-@app.errorhandler(413)
-def too_large(e):
-    return jsonify({"error": "ফাইল অনেক বড়, সর্বোচ্চ ৫ MB"}), 413
-
-
-if __name__ == '__main__':
-    port = int(os.getenv("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
-
-
-
-
-
-
-
-from gtts import gTTS
-from flask import send_file
-import io
 
 @app.route('/api/tts', methods=['POST'])
 def tts():
     try:
         data = request.get_json()
         text = data.get('text', '').strip()
+        voice_key = data.get('voice', VOICE_FALLBACK)
         if not text:
             return jsonify({"error": "Text required"}), 400
 
-        # ✅ ভাষা ডিটেক্ট: বাংলা অক্ষর থাকলে বাংলা, নাহলে ইংরেজি
-        lang = 'bn' if any('\u0980' <= c <= '\u09FF' for c in text) else 'en'
+        is_bangla = any('\u0980' <= c <= '\u09FF' for c in text)
+        if voice_key not in VOICE_PRESETS:
+            voice_key = VOICE_FALLBACK
+        preset = VOICE_PRESETS[voice_key]
 
-        # ✅ max 500 অক্ষর (gTTS-এ বেশি বড় টেক্সটে সমস্যা হয়)
+        if is_bangla and preset['voice'].startswith('en-'):
+            preset = VOICE_PRESETS['emma']
+        if not is_bangla and preset['voice'].startswith('bn-'):
+            preset = VOICE_PRESETS['charlotte']
+
         text = text[:500]
 
-        tts = gTTS(text=text, lang=lang, slow=False)
-        audio_buffer = io.BytesIO()
-        tts.write_to_fp(audio_buffer)
-        audio_buffer.seek(0)
+        async def generate():
+            communicate = edge_tts.Communicate(
+                text, preset['voice'],
+                rate=preset['rate'], pitch=preset['pitch']
+            )
+            audio = b""
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    audio += chunk["data"]
+            return audio
 
-        return send_file(
-            audio_buffer,
-            mimetype='audio/mpeg',
-            as_attachment=False
-        )
+        audio_bytes = asyncio.run(generate())
+        if not audio_bytes:
+            return jsonify({"error": "No audio generated"}), 500
+
+        return send_file(io.BytesIO(audio_bytes), mimetype='audio/mpeg', as_attachment=False)
     except Exception as e:
-        print(f"TTS Error: {str(e)}")
+        print(f"TTS Error: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+@app.errorhandler(413)
+def too_large(e):
+    return jsonify({"error": "ফাইল ৫ MB এর বেশি"}), 413
+
+
+if __name__ == '__main__':
+    port = int(os.getenv("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
