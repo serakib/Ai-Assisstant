@@ -67,181 +67,52 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 .msg-action.active-like{color:#10B981;}
 .msg-action.active-dislike{color:#EF4444;}
 .msg-action svg{width:14px;height:14px;}
+.msg-action.playing{background:rgba(37,99,235,.15);color:#2563EB !important;animation:speakerPulse 1.2s infinite;}
+body.light-mode .msg-action.playing{background:rgba(37,99,235,.12);}
+@keyframes speakerPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.4);}70%{box-shadow:0 0 0 8px rgba(37,99,235,0);}}
+.v-action.playing{background:rgba(37,99,235,.2) !important;color:#2563EB !important;animation:speakerPulse 1.2s infinite;}
 .message.user .msg-actions{justify-content:flex-end;margin-top:6px;}
 .message.user .msg-action{color:rgba(255,255,255,.8);}
 .message.user .msg-action:hover{background:rgba(255,255,255,.15);color:#fff;}
 
-/* ═══ DEEP THINKING PANEL (DeepSeek style) ═══ */
-.think-panel{
-    max-width:82%;align-self:flex-start;
-    background:var(--bg-elev);
-    border:1px solid var(--border);
-    border-radius:16px;
-    overflow:hidden;
-    animation:fadeIn .3s ease;
-    transition:all .3s ease;
-}
-.think-panel.search-panel{
-    border-color:rgba(37,99,235,.4);
-    background:linear-gradient(180deg,rgba(37,99,235,.06),var(--bg-elev));
-}
-.think-header{
-    display:flex;align-items:center;gap:10px;
-    padding:12px 16px;
-    cursor:pointer;
-    user-select:none;
-    font-size:.85rem;font-weight:600;
-    color:var(--text-muted);
-    transition:color .2s;
-}
+.think-panel{max-width:82%;align-self:flex-start;background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;overflow:hidden;animation:fadeIn .3s ease;transition:all .3s ease;}
+.think-panel.search-panel{border-color:rgba(37,99,235,.4);background:linear-gradient(180deg,rgba(37,99,235,.06),var(--bg-elev));}
+.think-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;font-size:.85rem;font-weight:600;color:var(--text-muted);transition:color .2s;}
 .think-header:hover{color:var(--text);}
-.think-header .think-icon{
-    width:20px;height:20px;
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;
-}
-.think-header .think-icon svg{
-    width:16px;height:16px;
-    animation:spinSlow 3s linear infinite;
-}
+.think-header .think-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.think-header .think-icon svg{width:16px;height:16px;animation:spinSlow 3s linear infinite;}
 @keyframes spinSlow{from{transform:rotate(0);}to{transform:rotate(360deg);}}
 .think-panel.done .think-header .think-icon svg{animation:none;}
-.think-panel.done .think-header{color:var(--text-muted);}
-.think-header .chev{
-    margin-left:auto;
-    transition:transform .3s;
-    width:14px;height:14px;
-}
+.think-header .chev{margin-left:auto;transition:transform .3s;width:14px;height:14px;}
 .think-panel.open .think-header .chev{transform:rotate(180deg);}
-.think-title{
-    display:flex;align-items:center;gap:8px;
-}
-.think-title .dot-stream{
-    display:inline-flex;gap:3px;
-}
-.think-title .dot-stream span{
-    width:4px;height:4px;border-radius:50%;
-    background:currentColor;opacity:.5;
-    animation:dotStream 1.4s infinite;
-}
+.think-title{display:flex;align-items:center;gap:8px;}
+.think-title .dot-stream{display:inline-flex;gap:3px;}
+.think-title .dot-stream span{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.5;animation:dotStream 1.4s infinite;}
 .think-title .dot-stream span:nth-child(2){animation-delay:.2s;}
 .think-title .dot-stream span:nth-child(3){animation-delay:.4s;}
 @keyframes dotStream{0%,80%,100%{opacity:.3;transform:scale(.8);}40%{opacity:1;transform:scale(1.1);}}
 .think-panel.done .think-title .dot-stream{display:none;}
-
-.think-body{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height .4s ease;
-    padding:0 16px;
-}
-.think-panel.open .think-body{
-    max-height:500px;
-    padding:0 16px 14px;
-}
-.think-step{
-    display:flex;gap:10px;
-    padding:8px 0;
-    font-size:.83rem;
-    color:var(--text-muted);
-    line-height:1.5;
-    opacity:0;
-    transform:translateY(4px);
-    animation:stepIn .35s ease forwards;
-}
+.think-body{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 16px;}
+.think-panel.open .think-body{max-height:500px;padding:0 16px 14px;}
+.think-step{display:flex;gap:10px;padding:8px 0;font-size:.83rem;color:var(--text-muted);line-height:1.5;opacity:0;transform:translateY(4px);animation:stepIn .35s ease forwards;}
 @keyframes stepIn{to{opacity:1;transform:translateY(0);}}
-.think-step .step-bullet{
-    width:6px;height:6px;border-radius:50%;
-    background:var(--primary);
-    margin-top:8px;flex-shrink:0;
-    box-shadow:0 0 8px rgba(37,99,235,.6);
-}
-.think-panel.search-panel .think-step .step-bullet{
-    background:#06B6D4;
-    box-shadow:0 0 8px rgba(6,182,212,.6);
-}
+.think-step .step-bullet{width:6px;height:6px;border-radius:50%;background:var(--primary);margin-top:8px;flex-shrink:0;box-shadow:0 0 8px rgba(37,99,235,.6);}
+.think-panel.search-panel .think-step .step-bullet{background:#06B6D4;box-shadow:0 0 8px rgba(6,182,212,.6);}
 .think-step.active{color:var(--text);font-weight:500;}
-.think-step.active .step-bullet{
-    animation:pulseBullet 1.2s infinite;
-}
-@keyframes pulseBullet{
-    0%,100%{transform:scale(1);opacity:1;}
-    50%{transform:scale(1.5);opacity:.5;}
-}
-.think-step.done .step-bullet{
-    background:#10B981;
-    box-shadow:0 0 8px rgba(16,185,129,.5);
-}
-.think-sources{
-    display:flex;flex-wrap:wrap;gap:6px;
-    margin-top:8px;
-    padding-top:10px;
-    border-top:1px dashed var(--border);
-}
-.think-sources .src-chip{
-    display:inline-flex;align-items:center;gap:5px;
-    padding:5px 10px;
-    background:var(--bg-input);
-    border:1px solid var(--border);
-    border-radius:20px;
-    font-size:.72rem;
-    color:var(--text-muted);
-    text-decoration:none;
-    transition:all .2s;
-    max-width:200px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-.think-sources .src-chip:hover{
-    border-color:var(--primary);
-    color:var(--text);
-    background:rgba(37,99,235,.08);
-}
-.think-sources .src-chip svg{
-    width:11px;height:11px;
-    flex-shrink:0;
-    color:#60A5FA;
-}
-.think-sources .src-favicon{
-    width:14px;height:14px;border-radius:50%;
-    background:linear-gradient(135deg,#2563EB,#1D4ED8);
-    display:inline-flex;align-items:center;justify-content:center;
-    font-size:.6rem;font-weight:700;color:#fff;
-    flex-shrink:0;
-}
+.think-step.active .step-bullet{animation:pulseBullet 1.2s infinite;}
+@keyframes pulseBullet{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.5;}}
+.think-step.done .step-bullet{background:#10B981;box-shadow:0 0 8px rgba(16,185,129,.5);}
+.think-sources{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--border);}
+.think-sources .src-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text-muted);text-decoration:none;transition:all .2s;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.think-sources .src-chip:hover{border-color:var(--primary);color:var(--text);background:rgba(37,99,235,.08);}
+.think-sources .src-favicon{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0;}
 
-/* Toggle pills row */
-.mode-toggle-row{
-    display:flex;gap:8px;
-    padding:0 0 10px;
-    flex-wrap:wrap;
-}
-.mode-toggle{
-    display:inline-flex;align-items:center;gap:6px;
-    padding:7px 14px;
-    background:var(--bg-input);
-    border:1px solid var(--border);
-    border-radius:20px;
-    color:var(--text-muted);
-    font-size:.78rem;font-weight:600;
-    cursor:pointer;font-family:inherit;
-    transition:all .2s ease;
-}
+.mode-toggle-row{display:flex;gap:8px;padding:0 0 10px;flex-wrap:wrap;}
+.mode-toggle{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s ease;}
 .mode-toggle:hover{border-color:var(--text-dim);color:var(--text);}
 .mode-toggle svg{width:14px;height:14px;}
-.mode-toggle.active.think-mode{
-    background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(124,58,237,.12));
-    border-color:#8B5CF6;
-    color:#A78BFA;
-    box-shadow:0 0 0 3px rgba(139,92,246,.1);
-}
-.mode-toggle.active.search-mode{
-    background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(14,116,144,.12));
-    border-color:#06B6D4;
-    color:#22D3EE;
-    box-shadow:0 0 0 3px rgba(6,182,212,.1);
-}
+.mode-toggle.active.think-mode{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(124,58,237,.12));border-color:#8B5CF6;color:#A78BFA;box-shadow:0 0 0 3px rgba(139,92,246,.1);}
+.mode-toggle.active.search-mode{background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(14,116,144,.12));border-color:#06B6D4;color:#22D3EE;box-shadow:0 0 0 3px rgba(6,182,212,.1);}
 body.light-mode .mode-toggle.active.think-mode{color:#7C3AED;}
 body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
 
@@ -253,7 +124,7 @@ body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
 
 .chat-input-wrapper{margin-top:auto;background:var(--bg);padding-top:12px;}
 
-.voice-pill-row{padding:0 0 8px;display:flex;justify-content:flex-start;}
+.voice-pill-row{padding:0 0 8px;display:flex;justify-content:flex-start;gap:8px;align-items:center;}
 .voice-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s ease;font-family:inherit;}
 .voice-pill:hover{border-color:var(--text-dim);color:var(--text);}
 .voice-pill-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#fff;font-weight:700;flex-shrink:0;position:relative;overflow:hidden;text-shadow:0 1px 1px rgba(0,0,0,.3);box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 -2px 3px rgba(0,0,0,.2),inset 0 1px 2px rgba(255,255,255,.3);background:linear-gradient(160deg,#3B82F6,#1E40AF);}
@@ -266,6 +137,12 @@ body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
 .voice-pill-avatar.v-olivia{background:linear-gradient(160deg,#A78BFA,#7C3AED);}
 .voice-pill-avatar.v-james{background:linear-gradient(160deg,#22D3EE,#0E7490);}
 .voice-pill-avatar.v-charlotte{background:linear-gradient(160deg,#FB7185,#BE123C);}
+
+.test-voice-btn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--bg-input);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all .2s ease;font-family:inherit;flex-shrink:0;}
+.test-voice-btn:hover{background:var(--bg-elev2);color:var(--text);border-color:var(--text-dim);}
+.test-voice-btn:active{transform:scale(.92);}
+.test-voice-btn svg{width:15px;height:15px;}
+.test-voice-btn.playing{background:#EF4444;color:#fff;border-color:#EF4444;animation:pulse 1.2s infinite;}
 
 .listening-indicator{display:none;align-items:center;justify-content:center;gap:10px;padding:10px 16px;margin-bottom:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:12px;color:#EF4444;font-size:.85rem;font-weight:600;}
 .listening-indicator.active{display:flex;}
@@ -346,7 +223,6 @@ footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margi
 .voice-card.selected::after{content:'✓';position:absolute;top:8px;right:10px;width:20px;height:20px;background:#2563EB;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;z-index:2;}
 .voice-avatar{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;font-weight:700;color:#fff;letter-spacing:0.5px;position:relative;overflow:hidden;text-shadow:0 2px 3px rgba(0,0,0,.35);box-shadow:0 6px 16px rgba(0,0,0,0.25),0 2px 4px rgba(0,0,0,0.15),inset 0 -6px 10px rgba(0,0,0,0.28),inset 0 4px 8px rgba(255,255,255,0.28),inset 0 0 0 1px rgba(255,255,255,0.1);background:linear-gradient(160deg,#3B82F6,#1E40AF);}
 .voice-avatar::before{content:'';position:absolute;top:5%;left:12%;width:48%;height:48%;background:radial-gradient(ellipse at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,0) 65%);border-radius:50%;pointer-events:none;}
-.voice-avatar::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 70% 85%, rgba(255,255,255,.18), transparent 40%),radial-gradient(circle at 50% 120%, rgba(0,0,0,.35), transparent 60%);pointer-events:none;}
 .voice-avatar > span{position:relative;z-index:1;}
 .voice-avatar.v-emma{background:linear-gradient(160deg,#F472B6 0%,#EC4899 45%,#BE185D 100%);}
 .voice-avatar.v-ryan{background:linear-gradient(160deg,#60A5FA 0%,#3B82F6 45%,#1D4ED8 100%);}
@@ -380,16 +256,7 @@ body.light-mode .voice-overlay{
 .voice-topbtn:hover{background:var(--v-bg-hover);color:var(--v-text);}
 .voice-topbtn svg{width:18px;height:18px;}
 
-.dev-btn{
-    display:inline-flex;align-items:center;gap:7px;
-    padding:9px 18px;border-radius:22px;
-    background:linear-gradient(135deg,#2563EB 0%,#3B82F6 100%);
-    color:#fff;font-size:.83rem;font-weight:600;
-    text-decoration:none;font-family:inherit;
-    box-shadow:0 4px 16px rgba(37,99,235,.45),inset 0 1px 0 rgba(255,255,255,.25);
-    transition:all .25s cubic-bezier(.4,0,.2,1);
-    border:none;cursor:pointer;position:relative;overflow:hidden;
-}
+.dev-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:22px;background:linear-gradient(135deg,#2563EB 0%,#3B82F6 100%);color:#fff;font-size:.83rem;font-weight:600;text-decoration:none;font-family:inherit;box-shadow:0 4px 16px rgba(37,99,235,.45),inset 0 1px 0 rgba(255,255,255,.25);transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;position:relative;overflow:hidden;}
 .dev-btn::before{content:'';position:absolute;inset:0;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.25),transparent 60%);opacity:0;transition:opacity .25s ease;}
 .dev-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.6),inset 0 1px 0 rgba(255,255,255,.35);}
 .dev-btn:hover::before{opacity:1;}
@@ -417,29 +284,9 @@ body.light-mode .voice-overlay{
 .v-msg.user .v-actions{justify-content:flex-end;}
 .v-msg.user .v-action:hover{background:rgba(255,255,255,.2);color:#FFF;}
 
-/* Voice thinking badge (compact) */
-.v-think-badge{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:7px 14px;border-radius:20px;
-    background:rgba(139,92,246,.12);
-    border:1px solid rgba(139,92,246,.35);
-    color:#A78BFA;
-    font-size:.78rem;font-weight:600;
-    margin-bottom:8px;
-    animation:fadeIn .3s ease;
-}
-.v-think-badge.search{
-    background:rgba(6,182,212,.12);
-    border-color:rgba(6,182,212,.35);
-    color:#22D3EE;
-}
-.v-think-badge .spin{
-    width:12px;height:12px;
-    border:2px solid currentColor;
-    border-top-color:transparent;
-    border-radius:50%;
-    animation:spinSlow .8s linear infinite;
-}
+.v-think-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);color:#A78BFA;font-size:.78rem;font-weight:600;margin-bottom:8px;animation:fadeIn .3s ease;}
+.v-think-badge.search{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.35);color:#22D3EE;}
+.v-think-badge .spin{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spinSlow .8s linear infinite;}
 
 .voice-bottom{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:20px;padding:0 20px 24px;pointer-events:none;background:linear-gradient(to top,var(--v-bg) 60%,transparent);}
 .voice-bottom > *{pointer-events:auto;}
@@ -447,7 +294,7 @@ body.light-mode .voice-overlay{
 .voice-orb-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
 .voice-orb-tooltip{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--v-bg-elev);color:var(--v-text);padding:8px 16px;border-radius:20px;font-size:.82rem;font-weight:500;white-space:nowrap;border:1px solid var(--v-border);box-shadow:0 4px 16px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;}
 .voice-orb-wrap:hover .voice-orb-tooltip{opacity:1;transform:translateX(-50%) translateY(0);}
-.voice-orb{width:130px;height:130px;border-radius:50%;position:relative;cursor:pointer;transition:transform .3s ease;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#E0E7FF 18%,#93C5FD 40%,#3B82F6 70%,#1E40AF 100%);box-shadow:0 0 60px rgba(59,130,246,.5),0 0 100px rgba(59,130,246,.3),inset 0 -20px 40px rgba(30,64,175,.4),inset 0 20px 30px rgba(255,255,255,.15);animation:orbIdle 4s ease-in-out infinite;overflow:hidden;}
+.voice-orb{width:130px;height:130px;border-radius:50%;position:relative;cursor:pointer;transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .4s ease,background .4s ease,filter .4s ease;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#E0E7FF 18%,#93C5FD 40%,#3B82F6 70%,#1E40AF 100%);box-shadow:0 0 60px rgba(59,130,246,.5),0 0 100px rgba(59,130,246,.3),inset 0 -20px 40px rgba(30,64,175,.4),inset 0 20px 30px rgba(255,255,255,.15);animation:orbIdle 4s ease-in-out infinite;overflow:hidden;}
 .voice-orb::before{content:'';position:absolute;inset:-10%;border-radius:50%;background:radial-gradient(circle at 25% 25%,rgba(255,255,255,.7) 0%,transparent 35%),radial-gradient(circle at 75% 60%,rgba(147,197,253,.6) 0%,transparent 45%),radial-gradient(circle at 50% 80%,rgba(59,130,246,.5) 0%,transparent 50%);animation:orbWaves 6s ease-in-out infinite;mix-blend-mode:screen;}
 .voice-orb::after{content:'';position:absolute;inset:-15%;border-radius:50%;background:radial-gradient(circle at 60% 40%,rgba(96,165,250,.7) 0%,transparent 60%);animation:orbWaves2 5s ease-in-out infinite reverse;mix-blend-mode:soft-light;}
 @keyframes orbIdle{0%,100%{transform:scale(1);filter:brightness(1);}50%{transform:scale(1.03);filter:brightness(1.08);}}
@@ -477,7 +324,7 @@ body.light-mode .voice-overlay{
 .voice-inputbar{display:flex;align-items:center;gap:10px;background:var(--v-input-bg);border:1px solid var(--v-border);border-radius:30px;padding:8px 12px;width:100%;max-width:700px;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:background-color .3s,border-color .3s;}
 .voice-inputbar input{flex:1;background:transparent;border:none;outline:none;color:var(--v-text);font-family:inherit;font-size:.95rem;padding:8px 4px;min-width:0;}
 .voice-inputbar input::placeholder{color:var(--v-text-muted);}
-.voice-inputbar .vib-mic{background:#10B981;color:#fff;border:none;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .25s ease;flex-shrink:0;box-shadow:0 0 0 0 rgba(16,185,129,.5);animation:micPulse 2s infinite;}
+.voice-inputbar .vib-mic{background:#10B981;color:#fff;border:none;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .35s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;box-shadow:0 0 0 0 rgba(16,185,129,.5);animation:micPulse 2s infinite;}
 @keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5);}70%{box-shadow:0 0 0 10px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
 .voice-inputbar .vib-mic:hover{transform:scale(1.08);}
 .voice-inputbar .vib-mic.muted{background:#EF4444;animation:none;box-shadow:0 0 0 0 rgba(239,68,68,.4);}
@@ -492,6 +339,9 @@ body.light-mode .voice-overlay{
 
 .chat-messages::-webkit-scrollbar{width:6px;}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+
+.voice-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1F2937;color:#F9FAFB;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:500;z-index:10000;box-shadow:0 10px 30px rgba(0,0,0,.5);border:1px solid #374151;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .3s;opacity:0;pointer-events:none;max-width:90%;text-align:center;}
+.voice-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
 @media(max-width:768px){
 header{padding:12px 16px;flex-wrap:wrap;gap:10px;}
@@ -564,6 +414,9 @@ footer{padding:40px 20px 20px;}
                         <span id="currentVoiceName">Emma</span>
                         <span style="opacity:.5">▾</span>
                     </button>
+                    <button class="test-voice-btn" id="testVoiceBtn" onclick="testVoice()" title="টেস্ট ভয়েস — AI কথা বলছে কিনা যাচাই করুন">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    </button>
                 </div>
 
                 <div class="mode-toggle-row">
@@ -625,6 +478,7 @@ footer{padding:40px 20px 20px;}
             <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, সম্পূর্ণ ফ্রি। যেকোনো প্রশ্ন করতে পারেন।</div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Deep Think কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Deep Think চালু করলে AI উত্তর দেওয়ার আগে ধাপে ধাপে চিন্তা করে — ঠিক DeepSeek-এর মতো। কঠিন প্রশ্নে বেশি নির্ভুল উত্তর পাবেন।</div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Smart Search কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Smart Search চালু করলে AI ওয়েব থেকে সাম্প্রতিক তথ্য খুঁজে উত্তর দেবে। মেডিকেল নোটিশ, পরীক্ষার তারিখ ইত্যাদির জন্য দারুণ।</div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>AI কথা বলছে না কেন?</span><span class="faq-icon">▼</span></div><div class="faq-answer">ভয়েস পিলের পাশে 🔊 বাটনে ক্লিক করে টেস্ট করুন। যদি শব্দ না আসে — আপনার ব্রাউজারে বাংলা ভয়েস ইনস্টল নেই। Chrome → Settings → Languages → Text-to-speech এ গিয়ে বাংলা ভয়েস যোগ করুন। অথবা Windows/Android-এ Google TTS-এ Bengali ডাউনলোড করুন।</div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>ভয়েস পরিবর্তন করা যাবে?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, ইনপুট বক্সের উপরে ভয়েস পিলে ক্লিক করুন। ৭ জন ভয়েস আর্টিস্টের ডেমো শুনে পছন্দমতো বেছে নিন।</div></div>
         </div>
     </div>
@@ -727,6 +581,8 @@ footer{padding:40px 20px 20px;}
     </div>
 </div>
 
+<div class="voice-toast" id="voiceToast"></div>
+
 <script>
 const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 const FETCH_TIMEOUT_MS = 60000;
@@ -755,12 +611,9 @@ let selectedVoice = localStorage.getItem('voiceArtist') || 'emma';
 let demoAudio = null;
 let returnToView = 'home';
 let msgIdCounter = 0;
-
-// ===== New mode state =====
 let deepThinkEnabled = localStorage.getItem('deepThink') === 'true';
 let smartSearchEnabled = localStorage.getItem('smartSearch') === 'true';
 
-// Default dark
 if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light-mode');
 } else {
@@ -785,7 +638,6 @@ function toggleFaq(el) {
     el.classList.toggle('active');
 }
 
-// ===== Deep Think / Smart Search toggles =====
 const deepThinkBtn = document.getElementById('deepThinkBtn');
 const smartSearchBtn = document.getElementById('smartSearchBtn');
 
@@ -835,6 +687,8 @@ const voiceMessages = document.getElementById('voiceMessages');
 const voiceOrb = document.getElementById('voiceOrb');
 const vibMic = document.getElementById('vibMic');
 const voiceTextInput = document.getElementById('voiceTextInput');
+const testVoiceBtn = document.getElementById('testVoiceBtn');
+const voiceToast = document.getElementById('voiceToast');
 
 let attachedFile = null;
 let isSending = false;
@@ -848,6 +702,232 @@ let isSpeaking = false;
 let ttsAbortController = null;
 let pendingTtsResolve = null;
 let micPermissionRequested = false;
+
+// ══════════════════════════════════════════════════════════
+//  🎧 SMOOTH AUDIO ENGINE
+// ══════════════════════════════════════════════════════════
+
+let audioCtx = null;
+function getAudioCtx() {
+    if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch(e) { audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+    return audioCtx;
+}
+
+function playAudioWithFade(audioEl, { fadeIn = 0.08, fadeOut = 0.12 } = {}) {
+    return new Promise((resolve) => {
+        const ctx = getAudioCtx();
+        if (!ctx) {
+            audioEl.onended = resolve;
+            audioEl.play().catch(resolve);
+            return;
+        }
+        let srcNode = null;
+        try {
+            srcNode = ctx.createMediaElementSource(audioEl);
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(1, ctx.currentTime + fadeIn);
+            srcNode.connect(gain).connect(ctx.destination);
+            const dur = isFinite(audioEl.duration) ? audioEl.duration : 0;
+            const fadeOutAt = Math.max(fadeIn + 0.05, dur - fadeOut);
+            const finish = () => { try { srcNode.disconnect(); } catch(e){} resolve(); };
+            audioEl.onended = finish;
+            audioEl.onerror = finish;
+            audioEl.play().then(() => {
+                if (dur > 0) {
+                    const t = ctx.currentTime + fadeOutAt;
+                    try {
+                        gain.gain.setValueAtTime(1, t);
+                        gain.gain.linearRampToValueAtTime(0, t + fadeOut);
+                    } catch(e) {}
+                }
+            }).catch(finish);
+        } catch (e) {
+            audioEl.onended = resolve;
+            audioEl.play().catch(resolve);
+        }
+    });
+}
+
+let voicesReady = null;
+function ensureVoicesLoaded() {
+    if (voicesReady) return voicesReady;
+    voicesReady = new Promise((resolve) => {
+        if (!('speechSynthesis' in window)) { resolve([]); return; }
+        let resolved = false;
+        const finish = () => {
+            if (resolved) return;
+            resolved = true;
+            resolve(speechSynthesis.getVoices() || []);
+        };
+        const list = speechSynthesis.getVoices();
+        if (list && list.length > 0) { resolve(list); return; }
+        speechSynthesis.onvoiceschanged = finish;
+        setTimeout(finish, 1500);
+    });
+    return voicesReady;
+}
+
+async function pickBestVoice(text, preferredLang) {
+    const voices = await ensureVoicesLoaded();
+    const isBangla = /[\u0980-\u09FF]/.test(text);
+    const candidates = isBangla
+        ? [preferredLang, 'bn-BD', 'bn-IN', 'hi-IN', 'en-IN', 'en-US', 'en-GB']
+        : [preferredLang, 'en-US', 'en-GB', 'en-IN', 'en-AU'];
+    for (const lang of candidates) {
+        if (!lang) continue;
+        let v = voices.find(x => x.lang === lang);
+        if (v) return { voice: v, lang: v.lang };
+        const prefix = lang.split('-')[0];
+        v = voices.find(x => x.lang.toLowerCase().startsWith(prefix.toLowerCase()));
+        if (v) return { voice: v, lang: v.lang };
+    }
+    if (voices.length > 0) return { voice: voices[0], lang: voices[0].lang };
+    return { voice: null, lang: preferredLang || 'en-US' };
+}
+
+function speakText(text) {
+    return new Promise(async (resolve) => {
+        if (!text || !text.trim()) { resolve(); return; }
+        stopAllAudio();
+        if (ttsAbortController) { try { ttsAbortController.abort(); } catch(e){} }
+        ttsAbortController = new AbortController();
+        pendingTtsResolve = resolve;
+        let resolved = false;
+        const done = () => { if (!resolved) { resolved = true; pendingTtsResolve = null; resolve(); } };
+
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/tts`, {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ text, voice: selectedVoice }),
+                signal: ttsAbortController.signal
+            });
+            if (!res.ok) throw new Error('Backend TTS status ' + res.status);
+            const blob = await res.blob();
+            if (!blob.type.startsWith('audio/')) throw new Error('Not audio: ' + blob.type);
+            const url = URL.createObjectURL(blob);
+            const audio = new Audio(url);
+            audio.preload = 'auto';
+            audio.volume = 1;
+            window.currentAudio = audio;
+            await new Promise((r) => {
+                if (audio.readyState >= 2) return r();
+                const onReady = () => { cleanup(); r(); };
+                const onErr = () => { cleanup(); r(); };
+                const cleanup = () => {
+                    audio.removeEventListener('canplay', onReady);
+                    audio.removeEventListener('error', onErr);
+                };
+                audio.addEventListener('canplay', onReady);
+                audio.addEventListener('error', onErr);
+                setTimeout(() => { cleanup(); r(); }, 1500);
+            });
+            try {
+                await playAudioWithFade(audio, { fadeIn: 0.08, fadeOut: 0.12 });
+                URL.revokeObjectURL(url);
+                window.currentAudio = null;
+                done();
+                return;
+            } catch(e) {
+                URL.revokeObjectURL(url);
+                window.currentAudio = null;
+            }
+        } catch (err) {
+            if (err.name === 'AbortError') { done(); return; }
+        }
+        await browserSpeak(text);
+        done();
+    });
+}
+
+async function browserSpeak(text) {
+    return new Promise(async (resolve) => {
+        if (!('speechSynthesis' in window)) { resolve(); return; }
+        try { speechSynthesis.cancel(); } catch(e){}
+        const cfg = BROWSER_VOICE_MAP[selectedVoice] || BROWSER_VOICE_MAP.emma;
+        const best = await pickBestVoice(text, cfg.lang);
+        const isBangla = /[\u0980-\u09FF]/.test(text);
+        if (isBangla && best.voice && !best.voice.lang.toLowerCase().startsWith('bn')) {
+            showToast('⚠️ বাংলা ভয়েস পাওয়া যায়নি — ডিফল্ট ভয়েসে চেষ্টা হচ্ছে।', 5000);
+        }
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = best.lang;
+        u.pitch = cfg.pitch;
+        u.rate = cfg.rate;
+        u.volume = 0;
+        if (best.voice) u.voice = best.voice;
+        const safety = setTimeout(() => resolve(), Math.max(6000, text.length * 180));
+        u.onstart = () => {
+            let v = 0;
+            const step = () => {
+                v = Math.min(1, v + 0.15);
+                try { u.volume = v; } catch(e){}
+                if (v < 1) setTimeout(step, 20);
+            };
+            step();
+        };
+        u.onend = () => { clearTimeout(safety); resolve(); };
+        u.onerror = () => { clearTimeout(safety); resolve(); };
+        try { speechSynthesis.speak(u); } catch(e) { clearTimeout(safety); resolve(); }
+    });
+}
+
+function stopAllAudio() {
+    if (window.currentAudio) {
+        const a = window.currentAudio;
+        window.currentAudio = null;
+        const startVol = a.volume;
+        const steps = 5;
+        let i = 0;
+        const fade = () => {
+            i++;
+            try { a.volume = Math.max(0, startVol * (1 - i / steps)); } catch(e){}
+            if (i < steps) setTimeout(fade, 20);
+            else { try { a.pause(); } catch(e){} }
+        };
+        fade();
+    }
+    if ('speechSynthesis' in window) { try { speechSynthesis.cancel(); } catch(e){} }
+    if (ttsAbortController) { try { ttsAbortController.abort(); } catch(e){} ttsAbortController = null; }
+    if (pendingTtsResolve) { const r = pendingTtsResolve; pendingTtsResolve = null; r(); }
+}
+
+let toastTimer = null;
+function showToast(msg, ms = 3000) {
+    if (!voiceToast) return;
+    voiceToast.textContent = msg;
+    voiceToast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => voiceToast.classList.remove('show'), ms);
+}
+
+async function testVoice() {
+    testVoiceBtn.classList.add('playing');
+    showToast('🔊 ভয়েস টেস্ট চলছে…', 2500);
+    const artist = VOICE_ARTISTS.find(v => v.id === selectedVoice) || VOICE_ARTISTS[0];
+    const testText = artist.demo;
+    const voices = await ensureVoicesLoaded();
+    const hasBangla = voices.some(v => v.lang.toLowerCase().startsWith('bn'));
+    try {
+        await speakText(testText);
+        testVoiceBtn.classList.remove('playing');
+        if (!hasBangla && /[\u0980-\u09FF]/.test(testText)) {
+            showToast('⚠️ বাংলা ভয়েস নেই — Chrome Settings → Languages → Text-to-speech এ Bengali ইনস্টল করুন।', 6000);
+        } else {
+            showToast('✅ ভয়েস কাজ করছে!', 2000);
+        }
+    } catch (e) {
+        testVoiceBtn.classList.remove('playing');
+        showToast('❌ ভয়েস ব্যর্থ: ' + e.message, 5000);
+    }
+}
+
+// ══════════════════════════════════════════════════════════
 
 function renderVoiceGrid() {
     voiceGrid.innerHTML = VOICE_ARTISTS.map(v => `
@@ -886,41 +966,22 @@ async function playDemo(id, btnEl) {
     const artist = VOICE_ARTISTS.find(v => v.id === id);
     if (!artist) return;
     btnEl.classList.add('playing'); btnEl.textContent = '⏸';
+    const prev = selectedVoice;
+    selectedVoice = id;
     try {
-        const res = await fetchWithTimeout(`${BACKEND_URL}/api/tts`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ text: artist.demo, voice: id })
-        }, 20000);
-        if (!res.ok) throw new Error('TTS fail');
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        demoAudio = new Audio(url);
-        demoAudio.onended = () => { URL.revokeObjectURL(url); resetDemoBtn(btnEl); };
-        demoAudio.onerror = () => { URL.revokeObjectURL(url); browserDemo(id, btnEl); };
-        await demoAudio.play();
-    } catch (err) { browserDemo(id, btnEl); }
-}
-function browserDemo(id, btnEl) {
-    if (!('speechSynthesis' in window)) { resetDemoBtn(btnEl); return; }
-    speechSynthesis.cancel();
-    const cfg = BROWSER_VOICE_MAP[id] || BROWSER_VOICE_MAP.emma;
-    const artist = VOICE_ARTISTS.find(v => v.id === id);
-    const voices = speechSynthesis.getVoices();
-    let voice = voices.find(v => v.lang === cfg.lang) || voices.find(v => v.lang.startsWith(cfg.lang.slice(0,2)));
-    const u = new SpeechSynthesisUtterance(artist.demo);
-    u.lang = cfg.lang; u.pitch = cfg.pitch; u.rate = cfg.rate;
-    if (voice) u.voice = voice;
-    u.onend = () => resetDemoBtn(btnEl);
-    u.onerror = () => resetDemoBtn(btnEl);
-    speechSynthesis.speak(u);
+        await speakText(artist.demo);
+        resetDemoBtn(btnEl);
+    } catch (err) { resetDemoBtn(btnEl); }
+    finally { selectedVoice = prev; }
 }
 function resetDemoBtn(b) { if (!b) return; b.classList.remove('playing'); b.textContent = '▶'; demoAudio = null; }
 function stopDemo() {
     if (demoAudio) { try { demoAudio.pause(); } catch(e){} demoAudio = null; }
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    if ('speechSynthesis' in window) { try { speechSynthesis.cancel(); } catch(e){} }
     document.querySelectorAll('.voice-play-btn').forEach(b => { b.classList.remove('playing'); b.textContent = '▶'; });
 }
-if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }
+
+ensureVoicesLoaded();
 
 async function fetchWithTimeout(url, options = {}, timeout = FETCH_TIMEOUT_MS) {
     const ctrl = new AbortController();
@@ -950,22 +1011,11 @@ function clearFile() {
     previewImg.removeAttribute('src');
 }
 
-// ===== THINKING PANEL (DeepSeek style) =====
+// ═══ Deep Think / Smart Search panels ═══
 const THINK_STEPS = {
-    deep: [
-        'প্রশ্নটি বিশ্লেষণ করছি…',
-        'প্রাসঙ্গিক ধারণা ও তথ্য মনে করছি…',
-        'বিভিন্ন দিক বিবেচনা করছি…',
-        'উত্তর গঠন করছি…'
-    ],
-    search: [
-        'ওয়েব সার্চ চালাচ্ছি…',
-        'নির্ভরযোগ্য সূত্র খুঁজছি…',
-        'তথ্য যাচাই করছি…',
-        'সাম্প্রতিক তথ্য সংগ্রহ করছি…'
-    ]
+    deep: ['প্রশ্নটি বিশ্লেষণ করছি…','প্রাসঙ্গিক ধারণা ও তথ্য মনে করছি…','বিভিন্ন দিক বিবেচনা করছি…','উত্তর গঠন করছি…'],
+    search: ['ওয়েব সার্চ চালাচ্ছি…','নির্ভরযোগ্য সূত্র খুঁজছি…','তথ্য যাচাই করছি…','সাম্প্রতিক তথ্য সংগ্রহ করছি…']
 };
-
 const MOCK_SOURCES = [
     { name: 'dgme.gov.bd', label: 'DGME Bangladesh' },
     { name: 'medical.gov.bd', label: 'Medical Education' },
@@ -981,35 +1031,23 @@ function createThinkingPanel() {
     const isSearch = smartSearchEnabled && !deepThinkEnabled;
     if (isSearch) panel.classList.add('search-panel');
     panel.dataset.startTime = Date.now();
-
     const header = document.createElement('div');
     header.className = 'think-header';
     header.onclick = () => panel.classList.toggle('open');
-
     const icon = document.createElement('span');
     icon.className = 'think-icon';
     icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
-
     const title = document.createElement('span');
     title.className = 'think-title';
     title.innerHTML = '<span class="think-text">' + (deepThinkEnabled && smartSearchEnabled ? 'Thinking & Searching' : (deepThinkEnabled ? 'Deep Thinking' : 'Searching the web')) + '</span><span class="dot-stream"><span></span><span></span><span></span></span>';
-
     const chev = document.createElement('span');
     chev.className = 'chev';
     chev.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
-
-    header.appendChild(icon);
-    header.appendChild(title);
-    header.appendChild(chev);
-
-    const body = document.createElement('div');
-    body.className = 'think-body';
-
-    panel.appendChild(header);
-    panel.appendChild(body);
+    header.appendChild(icon); header.appendChild(title); header.appendChild(chev);
+    const body = document.createElement('div'); body.className = 'think-body';
+    panel.appendChild(header); panel.appendChild(body);
     return panel;
 }
-
 function addThinkStep(panel, text, delayMs = 600) {
     return new Promise(resolve => {
         const body = panel.querySelector('.think-body');
@@ -1018,19 +1056,11 @@ function addThinkStep(panel, text, delayMs = 600) {
         step.innerHTML = '<span class="step-bullet"></span><span class="step-text"></span>';
         step.querySelector('.step-text').textContent = text;
         body.appendChild(step);
-        // remove active from previous
-        body.querySelectorAll('.think-step').forEach((s, i, arr) => {
-            if (i < arr.length - 1) s.classList.remove('active');
-        });
-        setTimeout(() => {
-            step.classList.remove('active');
-            step.classList.add('done');
-            resolve();
-        }, delayMs);
+        body.querySelectorAll('.think-step').forEach((s, i, arr) => { if (i < arr.length - 1) s.classList.remove('active'); });
+        setTimeout(() => { step.classList.remove('active'); step.classList.add('done'); resolve(); }, delayMs);
     });
 }
-
-function addSearchSources(panel, query) {
+function addSearchSources(panel) {
     const body = panel.querySelector('.think-body');
     const sourcesWrap = document.createElement('div');
     sourcesWrap.className = 'think-sources';
@@ -1046,7 +1076,6 @@ function addSearchSources(panel, query) {
     });
     body.appendChild(sourcesWrap);
 }
-
 function finishThinkingPanel(panel) {
     if (!panel) return;
     const elapsed = Math.max(1, Math.round((Date.now() - parseInt(panel.dataset.startTime || '0')) / 1000));
@@ -1054,89 +1083,19 @@ function finishThinkingPanel(panel) {
     if (title) title.textContent = 'Thought for ' + elapsed + 's';
     panel.classList.add('done');
     panel.classList.remove('open');
-    const header = panel.querySelector('.think-header');
-    if (header) header.style.cursor = 'pointer';
+}
+async function runThinkingSequence(panel) {
+    if (deepThinkEnabled) { for (const s of THINK_STEPS.deep) await addThinkStep(panel, s, 550); }
+    if (smartSearchEnabled) { for (const s of THINK_STEPS.search) await addThinkStep(panel, s, 500); addSearchSources(panel); }
 }
 
-async function runThinkingSequence(panel, text) {
-    if (deepThinkEnabled) {
-        for (const s of THINK_STEPS.deep) {
-            await addThinkStep(panel, s, 550);
-        }
-    }
-    if (smartSearchEnabled) {
-        for (const s of THINK_STEPS.search) {
-            await addThinkStep(panel, s, 500);
-        }
-        addSearchSources(panel, text);
-    }
-}
-
-// ===== TTS =====
-function speakText(text) {
-    return new Promise(async (resolve) => {
-        if (!text || micMuted) { resolve(); return; }
-        stopAllAudio();
-        if (ttsAbortController) ttsAbortController.abort();
-        ttsAbortController = new AbortController();
-        pendingTtsResolve = resolve;
-        let resolved = false;
-        const done = () => { if (!resolved) { resolved = true; pendingTtsResolve = null; resolve(); } };
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/tts`, {
-                method:'POST', headers:{'Content-Type':'application/json'},
-                body: JSON.stringify({ text, voice: selectedVoice }),
-                signal: ttsAbortController.signal
-            });
-            if (!res.ok) throw new Error('TTS status ' + res.status);
-            const blob = await res.blob();
-            if (!blob.type.startsWith('audio/')) throw new Error('not audio');
-            const url = URL.createObjectURL(blob);
-            const audio = new Audio(url);
-            window.currentAudio = audio;
-            audio.onended = () => { URL.revokeObjectURL(url); window.currentAudio = null; done(); };
-            audio.onerror = async () => { URL.revokeObjectURL(url); window.currentAudio = null; await browserSpeak(text); done(); };
-            try { await audio.play(); }
-            catch(e) { URL.revokeObjectURL(url); window.currentAudio = null; await browserSpeak(text); done(); }
-        } catch (err) {
-            if (err.name === 'AbortError') { done(); return; }
-            await browserSpeak(text);
-            done();
-        }
-    });
-}
-function browserSpeak(text) {
-    return new Promise((resolve) => {
-        if (!('speechSynthesis' in window) || micMuted) { resolve(); return; }
-        speechSynthesis.cancel();
-        const cfg = BROWSER_VOICE_MAP[selectedVoice] || BROWSER_VOICE_MAP.emma;
-        const isBangla = /[\u0980-\u09FF]/.test(text);
-        const targetLang = isBangla ? cfg.lang : 'en-US';
-        const voices = speechSynthesis.getVoices();
-        let voice = voices.find(v => v.lang === targetLang) || voices.find(v => v.lang.startsWith(targetLang.slice(0,2)));
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = targetLang; u.pitch = cfg.pitch; u.rate = cfg.rate;
-        if (voice) u.voice = voice;
-        const safety = setTimeout(() => resolve(), Math.max(5000, text.length * 150));
-        u.onend = () => { clearTimeout(safety); resolve(); };
-        u.onerror = () => { clearTimeout(safety); resolve(); };
-        speechSynthesis.speak(u);
-    });
-}
-function stopAllAudio() {
-    if (window.currentAudio) { try { window.currentAudio.pause(); } catch(e){} window.currentAudio = null; }
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
-    if (ttsAbortController) { try { ttsAbortController.abort(); } catch(e){} ttsAbortController = null; }
-    if (pendingTtsResolve) { const r = pendingTtsResolve; pendingTtsResolve = null; r(); }
-}
-
+// ═══ Orb / state ═══
 function setOrbState(state) {
     voiceOrb.classList.remove('listening','speaking','thinking');
     if (state === 'listening') voiceOrb.classList.add('listening');
     else if (state === 'speaking') voiceOrb.classList.add('speaking');
     else if (state === 'thinking') voiceOrb.classList.add('thinking');
 }
-
 function safeStartRecognition() {
     if (!recognition || micMuted || isRecognizing || !voiceModeOn) return;
     try {
@@ -1150,19 +1109,19 @@ function safeStartRecognition() {
 }
 
 async function speakAndListen(text) {
-    if (micMuted) { setOrbState('idle'); return; }
     isSpeaking = true;
     if (isRecognizing) {
         try { recognition.stop(); } catch(e){}
-        await new Promise(r => setTimeout(r, 350));
+        await new Promise(r => setTimeout(r, 280));
     }
     setOrbState('speaking');
+    await new Promise(r => setTimeout(r, 60));
     await speakText(text);
     isSpeaking = false;
     if (micMuted || !voiceModeOn) { setOrbState('idle'); return; }
     setTimeout(() => {
         if (voiceModeOn && !micMuted && !isRecognizing) safeStartRecognition();
-    }, 450);
+    }, 420);
 }
 
 function openVoiceMode() {
@@ -1204,18 +1163,21 @@ function toggleOrbMic() {
     micMuted = !micMuted;
     vibMic.classList.toggle('muted', micMuted);
     if (micMuted) {
-        stopAllAudio();
-        if (isRecognizing) try { recognition.stop(); } catch(e){}
-        setOrbState('idle');
+        if (isRecognizing) { try { recognition.stop(); } catch(e){} }
+        if (!isSpeaking) setOrbState('idle');
+        showToast('🔇 মাইক বন্ধ — AI কথা শেষ করবে', 1800);
     } else {
-        if (!isRecognizing && voiceModeOn) safeStartRecognition();
+        showToast('🎤 মাইক চালু', 1400);
+        if (!isRecognizing && voiceModeOn && !isSpeaking) {
+            setTimeout(() => safeStartRecognition(), 150);
+        }
     }
 }
 
 function shareVoiceMode() {
     const text = 'MedTracker AI — Voice Mode';
     if (navigator.share) navigator.share({ title: 'MedTracker AI', text, url: location.href }).catch(()=>{});
-    else navigator.clipboard.writeText(location.href).then(() => alert('লিংক কপি হয়েছে!'));
+    else navigator.clipboard.writeText(location.href).then(() => showToast('✅ লিংক কপি হয়েছে!', 1800));
 }
 
 function addVoiceMsg(text, role) {
@@ -1247,16 +1209,38 @@ function addVoiceMsg(text, role) {
     voiceMessages.scrollTop = voiceMessages.scrollHeight;
 }
 
+const ICON_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>';
+const ICON_STOP = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg>';
+let currentPlayingBtn = null;
+
 function copyVoiceText(btn) {
     const txt = btn.closest('.v-msg').querySelector('.v-bubble').innerText;
-    navigator.clipboard.writeText(txt).then(() => {
-        btn.style.color = '#10B981';
-        setTimeout(() => btn.style.color = '', 1200);
-    });
+    navigator.clipboard.writeText(txt).then(() => { btn.style.color = '#10B981'; setTimeout(() => btn.style.color = '', 1200); });
 }
-function replayVoice(btn) {
-    const txt = btn.closest('.v-msg').querySelector('.v-bubble').innerText;
-    speakText(txt);
+async function replayVoice(btn) {
+    if (btn.classList.contains('playing')) {
+        stopAllAudio();
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
+        if (currentPlayingBtn === btn) currentPlayingBtn = null;
+        return;
+    }
+    if (currentPlayingBtn && currentPlayingBtn !== btn) {
+        currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn.innerHTML = ICON_SPEAKER;
+    }
+    stopAllAudio();
+    const txt = btn.closest('.v-msg').querySelector('.v-bubble').innerText.trim();
+    if (!txt) return;
+    btn.classList.add('playing');
+    btn.innerHTML = ICON_STOP;
+    currentPlayingBtn = btn;
+    try { await speakText(txt); } catch(e) {}
+    finally {
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
+        if (currentPlayingBtn === btn) currentPlayingBtn = null;
+    }
 }
 function rateMsg(btn, type) {
     const msgEl = btn.closest('.v-msg');
@@ -1277,10 +1261,7 @@ function rateMsg(btn, type) {
 function shareVoiceMsg(btn) {
     const text = btn.closest('.v-msg').querySelector('.v-bubble').innerText;
     if (navigator.share) navigator.share({ title: 'MedTracker AI', text }).catch(() => {});
-    else navigator.clipboard.writeText(text).then(() => {
-        btn.style.color = '#10B981';
-        setTimeout(() => btn.style.color = '', 1200);
-    });
+    else navigator.clipboard.writeText(text).then(() => { btn.style.color = '#10B981'; setTimeout(() => btn.style.color = '', 1200); });
 }
 async function regenerateMsg(btn) {
     const msgEl = btn.closest('.v-msg');
@@ -1303,7 +1284,7 @@ async function regenerateMsg(btn) {
         const data = await res.json();
         if (res.ok && data.reply) {
             addVoiceMsg(data.reply, 'bot');
-            if (voiceModeOn && !micMuted) await speakAndListen(data.reply);
+            if (voiceModeOn) await speakAndListen(data.reply);
             else setOrbState('idle');
         } else setOrbState('idle');
     } catch(e) { setOrbState('idle'); }
@@ -1319,7 +1300,6 @@ function editUserMsg(btn) {
     msgEl.dataset.edited = 'true';
 }
 
-// ===== VOICE MODE thinking badge =====
 function showVoiceThinkingBadge() {
     if (!deepThinkEnabled && !smartSearchEnabled) return null;
     const wrap = document.createElement('div');
@@ -1327,16 +1307,13 @@ function showVoiceThinkingBadge() {
     const label = deepThinkEnabled && smartSearchEnabled ? '🧠 Thinking & 🌐 Searching…' :
                   (deepThinkEnabled ? '🧠 Deep thinking…' : '🌐 Searching the web…');
     wrap.innerHTML = '<span class="spin"></span><span>' + label + '</span>';
-    // attach to the latest user message
     const lastUser = voiceMessages.querySelector('.v-msg.user:last-of-type');
     if (lastUser) lastUser.appendChild(wrap);
     else voiceMessages.appendChild(wrap);
     voiceMessages.scrollTop = voiceMessages.scrollHeight;
     return wrap;
 }
-function removeVoiceThinkingBadge(badge) {
-    if (badge && badge.parentNode) badge.parentNode.removeChild(badge);
-}
+function removeVoiceThinkingBadge(badge) { if (badge && badge.parentNode) badge.parentNode.removeChild(badge); }
 
 async function sendFromVoice(text) {
     if (!text || isSending) return;
@@ -1347,10 +1324,7 @@ async function sendFromVoice(text) {
     voiceTextInput.value = '';
     userInput.value = '';
     const badge = showVoiceThinkingBadge();
-    // small visual delay if modes enabled
-    if (deepThinkEnabled || smartSearchEnabled) {
-        await new Promise(r => setTimeout(r, 900));
-    }
+    if (deepThinkEnabled || smartSearchEnabled) await new Promise(r => setTimeout(r, 900));
     try {
         const formData = new FormData();
         formData.append('message', text);
@@ -1362,11 +1336,10 @@ async function sendFromVoice(text) {
         if (res.ok && data.reply) {
             addVoiceMsg(data.reply, 'bot');
             addMessage(data.reply, 'bot', null, { silent: true });
-            if (voiceModeOn && !micMuted) await speakAndListen(data.reply);
+            if (voiceModeOn) await speakAndListen(data.reply);
             else setOrbState('idle');
         } else {
-            const errMsg = '❌ ' + (data.error || 'উত্তর পাওয়া যায়নি');
-            addVoiceMsg(errMsg, 'bot');
+            addVoiceMsg('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
             setOrbState('idle');
         }
     } catch (e) {
@@ -1393,11 +1366,7 @@ if (SpeechRecognition) {
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
-    recognition.onstart = () => {
-        isRecognizing = true;
-        finalTranscript = '';
-        setOrbState('listening');
-    };
+    recognition.onstart = () => { isRecognizing = true; finalTranscript = ''; setOrbState('listening'); };
     recognition.onresult = (event) => {
         if (micMuted) return;
         let interim = '';
@@ -1427,12 +1396,10 @@ if (SpeechRecognition) {
     recognition.onend = () => {
         isRecognizing = false;
         clearTimeout(silenceTimer);
-        if (micMuted) { setOrbState('idle'); return; }
+        if (micMuted) { if (!isSpeaking) setOrbState('idle'); return; }
         if (isSpeaking) return;
-
         const inVoice = voiceOverlay.classList.contains('open');
         const text = (inVoice ? voiceTextInput.value : userInput.value).trim();
-
         if (text && !isSending) {
             if (inVoice && voiceModeOn) sendFromVoice(text);
             else if (!inVoice) sendMessage();
@@ -1452,9 +1419,7 @@ if (SpeechRecognition) {
                     stream.getTracks().forEach(t => t.stop());
                 }
             } catch (e) {
-                alert('⚠️ মাইক্রোফোনের অনুমতি প্রয়োজন।');
-                micPermissionRequested = false;
-                return;
+                showToast('⚠️ মাইক ছাড়া চলবে — শুধু কথা শুনতে পাবেন না', 2500);
             }
         }
         if (voiceOverlay.classList.contains('open')) closeVoiceMode();
@@ -1464,7 +1429,6 @@ if (SpeechRecognition) {
     micBtn.addEventListener('click', () => alert('Chrome বা Edge ব্যবহার করুন — ভয়েস সাপোর্ট নেই।'));
 }
 
-// ===== MAIN SEND with Deep Think & Smart Search =====
 async function sendMessage() {
     if (isSending) return;
     const text = userInput.value.trim();
@@ -1476,15 +1440,11 @@ async function sendMessage() {
     userInput.value = '';
     clearFile();
 
-    // ═══ Deep Think / Smart Search panel ═══
     let thinkPanel = null;
     if (deepThinkEnabled || smartSearchEnabled) {
         thinkPanel = createThinkingPanel();
-        if (typingIndicator && typingIndicator.parentNode === chatMessages) {
-            chatMessages.insertBefore(thinkPanel, typingIndicator);
-        } else {
-            chatMessages.appendChild(thinkPanel);
-        }
+        if (typingIndicator && typingIndicator.parentNode === chatMessages) chatMessages.insertBefore(thinkPanel, typingIndicator);
+        else chatMessages.appendChild(thinkPanel);
         chatMessages.scrollTop = chatMessages.scrollHeight;
         await runThinkingSequence(thinkPanel, text);
     }
@@ -1516,10 +1476,8 @@ function addMessage(text, sender, file, opts = {}) {
     const d = document.createElement('div');
     d.classList.add('message', sender);
     d.dataset.msgId = 'cmsg-' + (++msgIdCounter);
-
     const content = document.createElement('div');
     content.classList.add('msg-content');
-
     if (file) {
         const i = document.createElement('img');
         const objUrl = URL.createObjectURL(file);
@@ -1527,11 +1485,7 @@ function addMessage(text, sender, file, opts = {}) {
         i.onload = () => setTimeout(() => URL.revokeObjectURL(objUrl), 60000);
         content.appendChild(i);
     }
-    if (text) {
-        const p = document.createElement('div');
-        p.innerText = text;
-        content.appendChild(p);
-    }
+    if (text) { const p = document.createElement('div'); p.innerText = text; content.appendChild(p); }
     d.appendChild(content);
 
     const actions = document.createElement('div');
@@ -1562,9 +1516,30 @@ function copyChatMsg(btn) {
         setTimeout(() => btn.style.color = '', 1200);
     });
 }
-function replayChatMsg(btn) {
-    const txt = btn.closest('.message').querySelector('.msg-content').innerText;
-    speakText(txt);
+async function replayChatMsg(btn) {
+    if (btn.classList.contains('playing')) {
+        stopAllAudio();
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
+        if (currentPlayingBtn === btn) currentPlayingBtn = null;
+        return;
+    }
+    if (currentPlayingBtn && currentPlayingBtn !== btn) {
+        currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn.innerHTML = ICON_SPEAKER;
+    }
+    stopAllAudio();
+    const txt = btn.closest('.message').querySelector('.msg-content').innerText.trim();
+    if (!txt) return;
+    btn.classList.add('playing');
+    btn.innerHTML = ICON_STOP;
+    currentPlayingBtn = btn;
+    try { await speakText(txt); } catch(e) {}
+    finally {
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
+        if (currentPlayingBtn === btn) currentPlayingBtn = null;
+    }
 }
 function rateChatMsg(btn, type) {
     const msgEl = btn.closest('.message');
