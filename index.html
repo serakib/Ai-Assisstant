@@ -34,17 +34,19 @@
     transition: background 0.3s, color 0.3s;
   }
 
-  /* Header */
+  /* ===== Header ===== */
   header {
     background: var(--card);
     border-bottom: 1px solid var(--border);
-    padding: 14px 20px;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 100;
+    gap: 16px;
+    flex-wrap: wrap;
   }
   .logo {
     display: flex;
@@ -54,15 +56,41 @@
     font-size: 18px;
   }
   .logo-icon {
-    width: 34px; height: 34px;
+    width: 36px; height: 36px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 9px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 18px;
   }
+
+  /* ===== Nav Menu ===== */
+  nav.nav-menu {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .nav-link {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 8px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .nav-link:hover { color: var(--text); background: var(--card2); }
+  .nav-link.active {
+    color: white;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+  }
+
   .header-actions { display: flex; gap: 10px; }
   .icon-btn {
     background: var(--card2);
@@ -79,10 +107,22 @@
   }
   .icon-btn:hover { border-color: var(--accent); }
 
-  /* Chat area */
+  /* Mobile Menu Toggle */
+  .mobile-menu-btn {
+    display: none;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 38px; height: 38px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  /* ===== Main ===== */
   main {
     flex: 1;
-    max-width: 900px;
+    max-width: 1000px;
     width: 100%;
     margin: 0 auto;
     padding: 20px;
@@ -91,17 +131,24 @@
     gap: 16px;
   }
 
+  /* ===== Tabs (Views) ===== */
+  .view { display: none; animation: fadeIn 0.3s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Chat View ===== */
   .chat-card {
-    flex: 1;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 16px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    min-height: 60vh;
+    min-height: 65vh;
   }
-
   .chat-messages {
     flex: 1;
     padding: 20px;
@@ -111,21 +158,16 @@
     gap: 14px;
     scroll-behavior: smooth;
   }
-
   .msg {
     display: flex;
     gap: 10px;
     max-width: 85%;
     animation: fadeIn 0.25s ease;
   }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
   .msg.user { align-self: flex-end; flex-direction: row-reverse; }
 
   .avatar {
-    width: 34px; height: 34px;
+    width: 36px; height: 36px;
     border-radius: 50%;
     flex-shrink: 0;
     display: flex;
@@ -140,10 +182,10 @@
 
   .bubble {
     background: var(--card2);
-    padding: 11px 15px;
+    padding: 12px 16px;
     border-radius: 14px;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.7;
     word-wrap: break-word;
     white-space: pre-wrap;
     border: 1px solid var(--border);
@@ -154,19 +196,15 @@
     border: none;
   }
   .bubble img {
-    max-width: 240px;
-    max-height: 240px;
+    max-width: 260px;
+    max-height: 260px;
     border-radius: 10px;
     margin-bottom: 8px;
     display: block;
   }
 
-  /* Typing indicator */
-  .typing {
-    display: inline-flex;
-    gap: 4px;
-    padding: 4px 0;
-  }
+  /* Typing */
+  .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
   .typing span {
     width: 7px; height: 7px;
     background: var(--muted);
@@ -191,10 +229,11 @@
     background: var(--card2);
     border: 1px solid var(--border);
     color: var(--text);
-    padding: 7px 13px;
+    padding: 8px 14px;
     border-radius: 20px;
     font-size: 13px;
     cursor: pointer;
+    font-family: inherit;
     transition: all 0.2s;
   }
   .sugg-btn:hover { border-color: var(--accent); color: var(--accent); }
@@ -217,7 +256,7 @@
     font-size: 13px;
   }
   .file-preview img {
-    width: 44px; height: 44px;
+    width: 48px; height: 48px;
     object-fit: cover;
     border-radius: 8px;
   }
@@ -282,58 +321,481 @@
   }
   .attach-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* Responsive */
+  /* ===== Section Cards (About, FAQ, Contact) ===== */
+  .section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .section-subtitle {
+    color: var(--muted);
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .about-item {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .about-item:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+  .about-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .about-item h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .about-item p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* FAQ Accordion */
+  .faq-item {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .faq-item:hover { border-color: var(--accent); }
+  .faq-question {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 15px;
+    user-select: none;
+  }
+  .faq-question::after {
+    content: '+';
+    font-size: 22px;
+    color: var(--accent);
+    transition: transform 0.3s;
+    font-weight: 400;
+  }
+  .faq-item.open .faq-question::after {
+    transform: rotate(45deg);
+  }
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 20px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .faq-item.open .faq-answer {
+    max-height: 300px;
+    padding: 0 20px 18px;
+  }
+
+  /* Contact */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .contact-item {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .contact-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .contact-item h4 {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .contact-item p {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 14px;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .contact-form input:focus,
+  .contact-form textarea:focus { border-color: var(--accent); }
+  .contact-form textarea { resize: vertical; min-height: 100px; }
+  .contact-form button {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .contact-form button:hover { transform: scale(1.02); }
+
+  /* ===== Footer ===== */
+  footer {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 40px 24px 20px;
+    margin-top: 20px;
+  }
+  .footer-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  .footer-col h4 {
+    font-size: 15px;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .footer-col p,
+  .footer-col a {
+    display: block;
+    color: var(--muted);
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 9px;
+    transition: color 0.2s;
+    line-height: 1.6;
+  }
+  .footer-col a:hover { color: var(--accent); }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .footer-social {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .footer-social a {
+    width: 36px; height: 36px;
+    background: var(--card2);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin: 0;
+  }
+  .footer-social a:hover { background: var(--accent); color: white; }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px) {
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+    nav.nav-menu {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    nav.nav-menu.open { display: flex; }
+    .nav-link { width: 100%; text-align: left; }
+    .section-card { padding: 24px 20px; }
+  }
   @media (max-width: 640px) {
     main { padding: 12px; }
     .msg { max-width: 92%; }
     .bubble { font-size: 14px; }
     .logo span { font-size: 15px; }
+    header { padding: 12px 14px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
   }
 </style>
 </head>
 <body>
 
+<!-- ===== Header ===== -->
 <header>
   <div class="logo">
     <div class="logo-icon">🩺</div>
     <span>MedTracker AI</span>
   </div>
+
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-link active" data-view="home">হোম</button>
+    <button class="nav-link" data-view="about">সম্পর্কে</button>
+    <button class="nav-link" data-view="faq">FAQ</button>
+    <button class="nav-link" data-view="contact">যোগাযোগ</button>
+  </nav>
+
   <div class="header-actions">
     <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন">🌙</button>
     <button class="icon-btn" onclick="window.location.href='https://serakib.github.io/Medical-Admission-Tracker/'" title="ফিরে যান">←</button>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" title="মেনু">☰</button>
   </div>
 </header>
 
+<!-- ===== Main ===== -->
 <main>
-  <div class="chat-card">
-    <div class="chat-messages" id="messages">
-      <div class="msg bot">
-        <div class="avatar bot">AI</div>
-        <div class="bubble">আসসালামু আলাইকুম! 👋<br>আমি MedTracker AI। মেডিকেল ভর্তি সম্পর্কিত যেকোনো প্রশ্ন করতে পারেন। ছবি পাঠিয়ে প্রশ্নও করতে পারেন (📎 আইকনে ক্লিক করে)।</div>
+
+  <!-- Home / Chat View -->
+  <section class="view active" id="view-home">
+    <div class="chat-card">
+      <div class="chat-messages" id="messages">
+        <div class="msg bot">
+          <div class="avatar bot">AI</div>
+          <div class="bubble">আসসালামু আলাইকুম! 👋<br>আমি MedTracker AI। মেডিকেল ভর্তি সম্পর্কিত যেকোনো প্রশ্ন করতে পারেন। ছবি পাঠিয়ে প্রশ্নও করতে পারেন (📎 আইকনে ক্লিক করে)।</div>
+        </div>
+      </div>
+
+      <div class="suggestions" id="suggestions">
+        <button class="sugg-btn" onclick="askSuggestion('মেডিকেল ভর্তি পরীক্ষার সিলেবাস কী?')">📚 সিলেবাস</button>
+        <button class="sugg-btn" onclick="askSuggestion('ভর্তি পরীক্ষার জন্য কীভাবে প্রস্তুতি নেব?')">✍️ প্রস্তুতি</button>
+        <button class="sugg-btn" onclick="askSuggestion('মেডিকেল কলেজের লিস্ট দাও')">🏥 কলেজ লিস্ট</button>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="file-preview" id="filePreview">
+          <img id="previewImg" src="" alt="" />
+          <span id="previewName"></span>
+          <button onclick="clearFile()" title="মুছে ফেলুন">✕</button>
+        </div>
+        <div class="input-row">
+          <label for="fileInput" class="attach-btn" title="ছবি পাঠান">📎</label>
+          <input type="file" id="fileInput" accept="image/*" hidden />
+          <textarea id="userInput" rows="1" placeholder="আপনার প্রশ্ন লিখুন..."></textarea>
+          <button class="send-btn" id="sendBtn" title="পাঠান">➤</button>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="suggestions" id="suggestions">
-      <button class="sugg-btn" onclick="askSuggestion('মেডিকেল ভর্তি পরীক্ষার সিলেবাস কী?')">📚 সিলেবাস</button>
-      <button class="sugg-btn" onclick="askSuggestion('ভর্তি পরীক্ষার জন্য কীভাবে প্রস্তুতি নেব?')">✍️ প্রস্তুতি</button>
-      <button class="sugg-btn" onclick="askSuggestion('মেডিকেল কলেজের লিস্ট দাও')">🏥 কলেজ লিস্ট</button>
+  <!-- About View -->
+  <section class="view" id="view-about">
+    <div class="section-card">
+      <h2 class="section-title">MedTracker AI সম্পর্কে</h2>
+      <p class="section-subtitle">মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি স্মার্ট সহায়ক</p>
+
+      <p style="line-height: 1.8; color: var(--muted); font-size: 15px;">
+        MedTracker AI হলো Medical Admission Tracker-এর একটি অংশ, যা মেডিকেল ভর্তি পরীক্ষার প্রস্তুতিতে শিক্ষার্থীদের সাহায্য করে।
+        এটি Groq-এর অত্যাধুনিক AI মডেল দ্বারা চালিত, যা বাংলা ও ইংরেজি উভয় ভাষায় প্রশ্নের উত্তর দিতে সক্ষম।
+        আপনি টেক্সট, ছবি — যেকোনোভাবে প্রশ্ন করতে পারেন।
+      </p>
+
+      <div class="about-grid">
+        <div class="about-item">
+          <div class="about-icon">⚡</div>
+          <h3>দ্রুত উত্তর</h3>
+          <p>Groq-এর অত্যাধুনিক প্রসেসরে চলে, তাই রেসপন্স মিলিসেকেন্ডে আসে।</p>
+        </div>
+        <div class="about-item">
+          <div class="about-icon">🎯</div>
+          <h3>নির্ভুল তথ্য</h3>
+          <p>মেডিকেল ভর্তি সম্পর্কিত নির্ভরযোগ্য ও সঠিক তথ্য প্রদান করে।</p>
+        </div>
+        <div class="about-item">
+          <div class="about-icon">🖼️</div>
+          <h3>ছবি বিশ্লেষণ</h3>
+          <p>প্রশ্নের ছবি পাঠালে AI সেটি বিশ্লেষণ করে উত্তর দিতে পারে।</p>
+        </div>
+        <div class="about-item">
+          <div class="about-icon">🆓</div>
+          <h3>সম্পূর্ণ ফ্রি</h3>
+          <p>কোনো সাবস্ক্রিপশন বা পেমেন্ট ছাড়াই সব ফিচার ব্যবহার করা যায়।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ View -->
+  <section class="view" id="view-faq">
+    <div class="section-card">
+      <h2 class="section-title">সাধারণ জিজ্ঞাসা</h2>
+      <p class="section-subtitle">আপনার প্রশ্নের উত্তর এখানে পেতে পারেন</p>
+
+      <div class="faq-item">
+        <div class="faq-question">MedTracker AI কী?</div>
+        <div class="faq-answer">MedTracker AI হলো একটি কৃত্রিম বুদ্ধিমত্তা চালিত সহায়ক, যা মেডিকেল ভর্তি পরীক্ষা সংক্রান্ত প্রশ্নের উত্তর দেয়। এটি Medical Admission Tracker-এর একটি অবিচ্ছেদ্য অংশ।</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">এটি কি ফ্রি?</div>
+        <div class="faq-answer">হ্যাঁ, MedTracker AI সম্পূর্ণ ফ্রি। কোনো সাবস্ক্রিপশন, লগইন বা পেমেন্টের প্রয়োজন নেই। আপনি সরাসরি প্রশ্ন করতে পারেন।</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">ছবি পাঠিয়ে প্রশ্ন করা যাবে?</div>
+        <div class="faq-answer">হ্যাঁ, ইনপুট বক্সের পাশে 📎 আইকনে ক্লিক করে ছবি (JPG, PNG, WEBP, GIF) পাঠাতে পারেন। ছবিটি AI বিশ্লেষণ করে উত্তর দেবে। সর্বোচ্চ ৫ MB সাইজ।</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">AI কি বাংলায় উত্তর দেয়?</div>
+        <div class="faq-answer">হ্যাঁ, MedTracker AI বাংলা ও ইংরেজি উভয় ভাষায় প্রশ্ন বুঝতে এবং উত্তর দিতে সক্ষম। আপনি যে ভাষায় প্রশ্ন করবেন, সেই ভাষায় উত্তর পাবেন।</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">উত্তর কতটা নির্ভরযোগ্য?</div>
+        <div class="faq-answer">AI যতটা সম্ভব নির্ভুল উত্তর দেওয়ার চেষ্টা করে, তবে গুরুত্বপূর্ণ সিদ্ধান্তের আগে অফিসিয়াল সূত্র যাচাই করা উচিত। এটি একটি সহায়ক টুল, চূড়ান্ত পরামর্শ নয়।</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact View -->
+  <section class="view" id="view-contact">
+    <div class="section-card">
+      <h2 class="section-title">যোগাযোগ করুন</h2>
+      <p class="section-subtitle">যেকোনো প্রশ্ন বা পরামর্শের জন্য আমাদের সাথে যোগাযোগ করুন</p>
+
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div>
+            <h4>ইমেইল</h4>
+            <p>serakib@example.com</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div>
+            <h4>ফোন</h4>
+            <p>+৮৮০ ১৭XX-XXXXXX</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h4>ঠিকানা</h4>
+            <p>ঢাকা, বাংলাদেশ</p>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-form" onsubmit="event.preventDefault(); alert('ধন্যবাদ! আপনার বার্তা পাঠানো হয়েছে।');">
+        <input type="text" placeholder="আপনার নাম" required />
+        <input type="email" placeholder="আপনার ইমেইল" required />
+        <textarea placeholder="আপনার বার্তা লিখুন..." required></textarea>
+        <button type="submit">বার্তা পাঠান</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <div class="footer-logo">
+        <div class="logo-icon" style="width:30px;height:30px;font-size:15px;">🩺</div>
+        <span>MedTracker AI</span>
+      </div>
+      <p>মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি স্মার্ট AI সহায়ক। প্রশ্ন করুন, শিখুন, এগিয়ে যান।</p>
     </div>
 
-    <div class="chat-input-area">
-      <div class="file-preview" id="filePreview">
-        <img id="previewImg" src="" alt="" />
-        <span id="previewName"></span>
-        <button onclick="clearFile()" title="মুছে ফেলুন">✕</button>
-      </div>
-      <div class="input-row">
-        <label for="fileInput" class="attach-btn" title="ছবি পাঠান">📎</label>
-        <input type="file" id="fileInput" accept="image/*" hidden />
-        <textarea id="userInput" rows="1" placeholder="আপনার প্রশ্ন লিখুন..."></textarea>
-        <button class="send-btn" id="sendBtn" title="পাঠান">➤</button>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="#" onclick="switchView('home'); return false;">হোম</a>
+      <a href="#" onclick="switchView('about'); return false;">সম্পর্কে</a>
+      <a href="#" onclick="switchView('faq'); return false;">FAQ</a>
+      <a href="#" onclick="switchView('contact'); return false;">যোগাযোগ</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="https://serakib.github.io/Medical-Admission-Tracker/" target="_blank">মূল সাইট</a>
+      <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
+      <a href="https://console.groq.com" target="_blank">Groq Console</a>
+      <a href="https://render.com" target="_blank">Render.com</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Follow Us</h4>
+      <p>সোশ্যাল মিডিয়ায় আমাদের অনুসরণ করুন</p>
+      <div class="footer-social">
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="YouTube">▶</a>
+        <a href="#" title="Twitter">𝕏</a>
+        <a href="#" title="GitHub">⚙</a>
       </div>
     </div>
   </div>
-</main>
+
+  <div class="footer-bottom">
+    © ২০২৬ MedTracker AI। সর্বস্বত্ব সংরক্ষিত। | Made with 💜 for Medical Students
+  </div>
+</footer>
 
 <script>
 // ⚙️ Render-এর URL
@@ -348,6 +810,8 @@ const previewImg = document.getElementById('previewImg');
 const previewName = document.getElementById('previewName');
 const themeBtn = document.getElementById('themeBtn');
 const suggestionsEl = document.getElementById('suggestions');
+const navMenu = document.getElementById('navMenu');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 
 let attachedFile = null;
 let isSending = false;
@@ -363,6 +827,45 @@ themeBtn.addEventListener('click', () => {
   document.documentElement.setAttribute('data-theme', next);
   themeBtn.textContent = next === 'dark' ? '🌙' : '☀️';
   localStorage.setItem('theme', next);
+});
+
+/* ===== Tabbed View System ===== */
+function switchView(viewName) {
+  // সব view লুকান
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  // নির্বাচিত view দেখান
+  const target = document.getElementById('view-' + viewName);
+  if (target) target.classList.add('active');
+
+  // Nav active state
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.view === viewName);
+  });
+
+  // Mobile menu বন্ধ করুন
+  navMenu.classList.remove('open');
+}
+
+// Nav links ইভেন্ট
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => switchView(link.dataset.view));
+});
+
+// Mobile menu toggle
+mobileMenuBtn.addEventListener('click', () => {
+  navMenu.classList.toggle('open');
+});
+
+/* ===== FAQ Accordion ===== */
+document.querySelectorAll('.faq-question').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const isOpen = item.classList.contains('open');
+    // সব বন্ধ করুন
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    // যদি বন্ধ ছিল, খুলুন
+    if (!isOpen) item.classList.add('open');
+  });
 });
 
 /* ===== ফাইল হ্যান্ডলিং ===== */
@@ -402,7 +905,6 @@ async function sendMessage() {
   isSending = true;
   sendBtn.disabled = true;
 
-  // ইউজার মেসেজ দেখান
   addMessage('user', text, attachedFile);
   inputEl.value = '';
   inputEl.style.height = 'auto';
@@ -411,7 +913,6 @@ async function sendMessage() {
   clearFile();
   suggestionsEl.style.display = 'none';
 
-  // টাইপিং ইন্ডিকেটর
   const typingEl = addTyping();
 
   try {
