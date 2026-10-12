@@ -1,560 +1,512 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Assistant - Medical Admission Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* ================= লাইট মোড (ডিফল্ট) ================= */
-        :root {
-            --bg-body: #F8FAFC;
-            --bg-card: #FFFFFF;
-            --bg-header: #FFFFFF;
-            --bg-bot: #F1F5F9;
-            --bg-user: #3B82F6;
-            --text-main: #0F172A;
-            --text-muted: #64748B;
-            --border: #E2E8F0;
-            --primary: #3B82F6;
-            --footer-bg: #0F172A;
-            --footer-text: #94A3B8;
-            --shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MedTracker AI — অ্যাসিস্ট্যান্ট</title>
+<style>
+  :root {
+    --bg: #0B1120;
+    --card: #111827;
+    --card2: #1E293B;
+    --text: #E5E7EB;
+    --muted: #94A3B8;
+    --accent: #8B5CF6;
+    --accent2: #6366F1;
+    --border: #1F2937;
+  }
+  [data-theme="light"] {
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --card2: #F1F5F9;
+    --text: #0F172A;
+    --muted: #64748B;
+    --border: #E2E8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Noto Sans Bengali', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.3s, color 0.3s;
+  }
 
-        /* ================= ডার্ক মোড ================= */
-        body.dark-mode {
-            --bg-body: #0B1120;
-            --bg-card: #111827;
-            --bg-header: #0B1120;
-            --bg-bot: #1E293B;
-            --bg-user: #3B82F6;
-            --text-main: #F3F4F6;
-            --text-muted: #9CA3AF;
-            --border: #374151;
-            --primary: #3B82F6;
-            --footer-bg: #080C14;
-            --footer-text: #9CA3AF;
-            --shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
+  /* Header */
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+  }
+  .header-actions { display: flex; gap: 10px; }
+  .icon-btn {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 38px; height: 38px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .icon-btn:hover { border-color: var(--accent); }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Chat area */
+  main {
+    flex: 1;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            transition: background-color 0.3s, color 0.3s;
-        }
+  .chat-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 60vh;
+  }
 
-        /* ================= হেডার ================= */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: var(--bg-header);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 40px;
-            flex-wrap: wrap;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
-        .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; }
-        
-        .nav-links { display: flex; gap: 24px; font-size: 0.95rem; font-weight: 500; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; cursor: pointer; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: 0.2s; }
-        .nav-links a:hover { color: var(--primary); }
-        .nav-links a.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        
-        .nav-right { display: flex; align-items: center; gap: 16px; }
+  .chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+  }
 
-        /* থিম টগল বাটন */
-        .theme-toggle {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .theme-toggle:hover { background: var(--bg-bot); transform: scale(1.05); }
-        .theme-toggle svg { position: absolute; transition: all 0.4s ease; }
-        .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
-        .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
-        body.dark-mode .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
-        body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+  .msg {
+    display: flex;
+    gap: 10px;
+    max-width: 85%;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
 
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: var(--text-muted); text-decoration: none;
-            font-weight: 500; font-size: 0.9rem; padding: 8px 16px;
-            border: 1px solid var(--border); border-radius: 8px;
-            transition: all 0.2s ease; cursor: pointer; background: transparent;
-        }
-        .back-btn:hover { background-color: var(--bg-bot); color: var(--text-main); }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+  }
+  .avatar.bot { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .avatar.user { background: linear-gradient(135deg, #10B981, #059669); }
 
-        /* ================= মূল কন্টেন্ট ================= */
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 40px 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-            width: 100%;
-        }
+  .bubble {
+    background: var(--card2);
+    padding: 11px 15px;
+    border-radius: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    border: 1px solid var(--border);
+  }
+  .msg.user .bubble {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    border: none;
+  }
+  .bubble img {
+    max-width: 240px;
+    max-height: 240px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    display: block;
+  }
 
-        .view { display: none; animation: fadeIn 0.4s ease; }
-        .view.active { display: block; }
+  /* Typing indicator */
+  .typing {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px 0;
+  }
+  .typing span {
+    width: 7px; height: 7px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-7px); opacity: 1; }
+  }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  /* Suggestions */
+  .suggestions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 0 20px 12px;
+  }
+  .sugg-btn {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sugg-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* ================= চ্যাট ইন্টারফেস ================= */
-        .chat-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            height: 650px;
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
+  /* Input area */
+  .chat-input-area {
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    background: var(--card);
+  }
+  .file-preview {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .file-preview img {
+    width: 44px; height: 44px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .file-preview button {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #EF4444;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .input-row textarea {
+    flex: 1;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    resize: none;
+    max-height: 120px;
+    min-height: 44px;
+    outline: none;
+    transition: border 0.2s;
+  }
+  .input-row textarea:focus { border-color: var(--accent); }
 
-        .chat-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background-color: var(--bg-card);
-        }
-        .bot-avatar {
-            width: 44px; height: 44px; border-radius: 50%;
-            background-color: rgba(59, 130, 246, 0.15);
-            color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; font-size: 1.1rem;
-        }
-        .bot-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
-        .bot-info p { font-size: 0.8rem; color: var(--text-muted); }
+  .send-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s;
+  }
+  .send-btn:hover { transform: scale(1.05); }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .chat-messages {
-            flex: 1; padding: 24px; overflow-y: auto;
-            display: flex; flex-direction: column; gap: 20px;
-        }
+  .attach-btn {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .attach-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        .message {
-            max-width: 80%; padding: 16px 20px; border-radius: 18px;
-            font-size: 0.95rem; line-height: 1.6;
-            animation: fadeIn 0.3s ease forwards;
-        }
-
-        .message.bot { align-self: flex-start; background-color: var(--bg-bot); color: var(--text-main); border-bottom-left-radius: 4px; }
-        .message.user { align-self: flex-end; background-color: var(--bg-user); color: #ffffff; border-bottom-right-radius: 4px; }
-
-        .typing-indicator {
-            display: none; align-self: flex-start; padding: 16px 20px;
-            background: var(--bg-bot); border-radius: 18px; border-bottom-left-radius: 4px;
-            gap: 6px; align-items: center;
-        }
-        .typing-indicator span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
-        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-
-        .suggested-prompts { display: flex; gap: 10px; padding: 0 24px 15px 24px; flex-wrap: wrap; }
-        .suggested-prompts button {
-            background: var(--bg-body); border: 1px solid var(--border);
-            color: var(--text-muted); padding: 8px 14px; border-radius: 20px;
-            font-size: 0.8rem; cursor: pointer; transition: 0.2s; font-family: inherit;
-        }
-        .suggested-prompts button:hover { border-color: var(--primary); color: var(--primary); }
-
-        .input-area {
-            padding: 20px 24px; border-top: 1px solid var(--border);
-            display: flex; align-items: center; gap: 12px; background-color: var(--bg-card);
-        }
-        .input-area input {
-            flex: 1; padding: 16px 20px; border: 1px solid var(--border);
-            border-radius: 12px; font-size: 0.95rem; outline: none;
-            font-family: inherit; background-color: var(--bg-body);
-            color: var(--text-main); transition: border-color 0.2s;
-        }
-        .input-area input::placeholder { color: var(--text-muted); }
-        .input-area input:focus { border-color: var(--primary); }
-
-        .send-btn {
-            background: var(--primary); color: white; border: none;
-            width: 52px; height: 52px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
-        }
-        .send-btn:hover { background: #2563EB; transform: scale(1.05); }
-        .send-btn:disabled { background: #94A3B8; cursor: not-allowed; transform: none; }
-        .send-btn svg { width: 20px; height: 20px; fill: white; }
-
-        /* ================= অন্যান্য সেকশন ================= */
-        .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-main); }
-        .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 48px auto; }
-
-        .about-content { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
-        .about-text { flex: 1; min-width: 300px; }
-        .about-text h3 { font-size: 1.5rem; margin-bottom: 16px; }
-        .about-text p { color: var(--text-muted); margin-bottom: 16px; }
-        .about-image { flex: 1; min-width: 300px; height: 250px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--primary); }
-
-        .faq-container { max-width: 800px; margin: 0 auto; }
-        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
-        .faq-question { padding: 20px 24px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
-        .faq-question:hover { background: var(--bg-bot); }
-        .faq-answer { padding: 0 24px 20px 24px; color: var(--text-muted); display: none; font-size: 0.95rem; }
-        .faq-item.active .faq-answer { display: block; }
-        .faq-item.active .faq-question { color: var(--primary); }
-        .faq-icon { transition: transform 0.3s; }
-        .faq-item.active .faq-icon { transform: rotate(180deg); }
-
-        .contact-container { display: flex; flex-wrap: wrap; gap: 40px; max-width: 900px; margin: 0 auto; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
-        .contact-info { flex: 1; min-width: 250px; }
-        .contact-info h3 { font-size: 1.2rem; margin-bottom: 20px; }
-        .contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: var(--text-muted); }
-        .contact-item svg { width: 20px; height: 20px; color: var(--primary); }
-        .contact-form { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 16px; }
-        .contact-form input, .contact-form textarea { padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main); font-family: inherit; outline: none; }
-        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--primary); }
-        .contact-form button { padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .contact-form button:hover { background: #2563EB; }
-
-        /* ================= ফুটার (৪ কলাম) ================= */
-        footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-            padding: 60px 40px 20px 40px;
-            margin-top: auto;
-            border-top: 1px solid var(--border);
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            max-width: 1100px;
-            margin: 0 auto 40px auto;
-        }
-        .footer-col h4 { color: #FFFFFF; font-size: 1.1rem; margin-bottom: 20px; }
-        .footer-col p { font-size: 0.9rem; line-height: 1.8; }
-        .footer-col ul { list-style: none; }
-        .footer-col ul li { margin-bottom: 12px; }
-        .footer-col ul li a { color: var(--footer-text); text-decoration: none; transition: 0.2s; font-size: 0.9rem; cursor: pointer; }
-        .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
-        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1E293B; font-size: 0.85rem; max-width: 1100px; margin: 0 auto; }
-
-        /* ================= রেসপন্সিভ ================= */
-        @media (max-width: 600px) {
-            header { padding: 16px 20px; }
-            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 15px; gap: 16px; font-size: 0.85rem; }
-            .nav-right { margin-left: auto; }
-            .chat-card { height: 550px; }
-            .message { max-width: 90%; }
-            .section-title { font-size: 1.5rem; }
-            .about-content, .contact-container { padding: 20px; }
-            footer { padding: 40px 20px 20px 20px; }
-        }
-
-        .chat-messages::-webkit-scrollbar { width: 6px; }
-        .chat-messages::-webkit-scrollbar-track { background: transparent; }
-        .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-    </style>
+  /* Responsive */
+  @media (max-width: 640px) {
+    main { padding: 12px; }
+    .msg { max-width: 92%; }
+    .bubble { font-size: 14px; }
+    .logo span { font-size: 15px; }
+  }
+</style>
 </head>
 <body>
 
-    <!-- ================= হেডার ================= -->
-    <header>
-        <div class="logo-area">
-            <div class="logo-icon">AI</div>
-            MedTracker AI
-        </div>
-        
-        <div class="nav-links">
-            <a id="nav-home" class="active" onclick="switchView('home')">Home</a>
-            <a id="nav-about" onclick="switchView('about')">About</a>
-            <a id="nav-faq" onclick="switchView('faq')">FAQ</a>
-            <a id="nav-contact" onclick="switchView('contact')">Contact</a>
-        </div>
+<header>
+  <div class="logo">
+    <div class="logo-icon">🩺</div>
+    <span>MedTracker AI</span>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন">🌙</button>
+    <button class="icon-btn" onclick="window.location.href='https://serakib.github.io/Medical-Admission-Tracker/'" title="ফিরে যান">←</button>
+  </div>
+</header>
 
-        <div class="nav-right">
-            <button class="theme-toggle" onclick="toggleTheme()" title="Dark/Light Mode">
-                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            </button>
-            
-            <a href="https://serakib.github.io/Medical-Admission-Tracker/" class="back-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Back
-            </a>
-        </div>
-    </header>
+<main>
+  <div class="chat-card">
+    <div class="chat-messages" id="messages">
+      <div class="msg bot">
+        <div class="avatar bot">AI</div>
+        <div class="bubble">আসসালামু আলাইকুম! 👋<br>আমি MedTracker AI। মেডিকেল ভর্তি সম্পর্কিত যেকোনো প্রশ্ন করতে পারেন। ছবি পাঠিয়ে প্রশ্নও করতে পারেন (📎 আইকনে ক্লিক করে)।</div>
+      </div>
+    </div>
 
-    <!-- ================= মূল কন্টেন্ট ================= -->
-    <main>
-        <!-- Home View -->
-        <div id="view-home" class="view active">
-            <div class="chat-card">
-                <div class="chat-header">
-                    <div class="bot-avatar">AI</div>
-                    <div class="bot-info">
-                        <h3>Your website's AI Assistant</h3>
-                        <p>Powered by Python Backend</p>
-                    </div>
-                </div>
-                
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন।</div>
-                    <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
-                </div>
+    <div class="suggestions" id="suggestions">
+      <button class="sugg-btn" onclick="askSuggestion('মেডিকেল ভর্তি পরীক্ষার সিলেবাস কী?')">📚 সিলেবাস</button>
+      <button class="sugg-btn" onclick="askSuggestion('ভর্তি পরীক্ষার জন্য কীভাবে প্রস্তুতি নেব?')">✍️ প্রস্তুতি</button>
+      <button class="sugg-btn" onclick="askSuggestion('মেডিকেল কলেজের লিস্ট দাও')">🏥 কলেজ লিস্ট</button>
+    </div>
 
-                <div class="suggested-prompts">
-                    <button onclick="quickAsk('মেডিকেল ভর্তি পরীক্ষার সিলেবাস কি?')">📚 সিলেবাস</button>
-                    <button onclick="quickAsk('ভর্তি পরীক্ষার প্রস্তুতি কিভাবে নিব?')">📝 প্রস্তুতি</button>
-                    <button onclick="quickAsk('কোন বইগুলো ফলো করা উচিত?')">📖 বইয়ের লিস্ট</button>
-                </div>
-                
-                <div class="input-area">
-                    <input type="text" id="userInput" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
-                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                    </button>
-                </div>
-            </div>
-        </div>
+    <div class="chat-input-area">
+      <div class="file-preview" id="filePreview">
+        <img id="previewImg" src="" alt="" />
+        <span id="previewName"></span>
+        <button onclick="clearFile()" title="মুছে ফেলুন">✕</button>
+      </div>
+      <div class="input-row">
+        <label for="fileInput" class="attach-btn" title="ছবি পাঠান">📎</label>
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <textarea id="userInput" rows="1" placeholder="আপনার প্রশ্ন লিখুন..."></textarea>
+        <button class="send-btn" id="sendBtn" title="পাঠান">➤</button>
+      </div>
+    </div>
+  </div>
+</main>
 
-        <!-- About View -->
-        <div id="view-about" class="view">
-            <h2 class="section-title">About Us</h2>
-            <p class="section-subtitle">আমাদের সম্পর্কে জানুন</p>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Medical Admission Tracker</h3>
-                    <p>আমরা একটি স্বেচ্ছাসেবী প্ল্যাটফর্ম, যা মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের সঠিক তথ্য ও দিকনির্দেশনা দিতে কাজ করে। আমাদের লক্ষ্য হলো শিক্ষার্থীদের ভর্তি প্রক্রিয়াকে সহজ করা।</p>
-                    <p>এই AI অ্যাসিস্ট্যান্টটি শিক্ষার্থীদের সাধারণ প্রশ্নের উত্তর দিতে এবং তাদের সঠিক পথে পরিচালিত করতে সাহায্য করবে।</p>
-                </div>
-                <div class="about-image">
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                </div>
-            </div>
-        </div>
+<script>
+// ⚙️ Render-এর URL
+const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 
-        <!-- FAQ View -->
-        <div id="view-faq" class="view">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="section-subtitle">আপনার সাধারণ জিজ্ঞাসাগুলোর উত্তর</p>
-            <div class="faq-container">
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">হ্যাঁ, এই অ্যাসিস্ট্যান্টটি সম্পূর্ণ ফ্রি। আপনি যেকোনো সময় যেকোনো প্রশ্ন করতে পারেন।</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>AI কি সবসময় সঠিক উত্তর দেবে?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">AI সাধারণত সঠিক উত্তর দেয়, তবে মাঝে মাঝে ভুল করতে পারে। অফিসিয়াল নোটিশের জন্য অনুগ্রহ করে মূল ওয়েবসাইটের নোটিশ বোর্ড দেখুন।</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question"><span>আমি কি ইংরেজিতে প্রশ্ন করতে পারব?</span><span class="faq-icon">▼</span></div>
-                    <div class="faq-answer">অবশ্যই! আপনি বাংলা বা ইংরেজি যেকোনো ভাষায় প্রশ্ন করতে পারেন। AI আপনার ভাষাতেই উত্তর দেবে।</div>
-                </div>
-            </div>
-        </div>
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+const fileInput = document.getElementById('fileInput');
+const filePreview = document.getElementById('filePreview');
+const previewImg = document.getElementById('previewImg');
+const previewName = document.getElementById('previewName');
+const themeBtn = document.getElementById('themeBtn');
+const suggestionsEl = document.getElementById('suggestions');
 
-        <!-- Contact View -->
-        <div id="view-contact" class="view">
-            <h2 class="section-title">Contact Us</h2>
-            <p class="section-subtitle">যেকোনো পরামর্শ বা অভিযোগের জন্য আমাদের সাথে যোগাযোগ করুন</p>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <h3>Get in Touch</h3>
-                    <div class="contact-item">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        <span>serakib@example.com</span>
-                    </div>
-                    <div class="contact-item">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                        <span>+880 1234 567890</span>
-                    </div>
-                    <div class="contact-item">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        <span>Dhaka, Bangladesh</span>
-                    </div>
-                </div>
-                <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully!');">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea rows="5" placeholder="Your Message" required></textarea>
-                    <button type="submit">Send Message</button>
-                </form>
-            </div>
-        </div>
-    </main>
+let attachedFile = null;
+let isSending = false;
 
-    <!-- ================= ফুটার (৪ কলাম) ================= -->
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>MedTracker AI</h4>
-                <p>মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি নির্ভরযোগ্য প্ল্যাটফর্ম। সঠিক তথ্য ও দিকনির্দেশনা আমাদের লক্ষ্য।</p>
-            </div>
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a onclick="switchView('home')">Home</a></li>
-                    <li><a onclick="switchView('about')">About Us</a></li>
-                    <li><a onclick="switchView('faq')">FAQ</a></li>
-                    <li><a onclick="switchView('contact')">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="https://serakib.github.io/Medical-Admission-Tracker/" target="_blank">Main Website</a></li>
-                    <li><a href="#">Admission Guide</a></li>
-                    <li><a href="#">Notice Board</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Follow Us</h4>
-                <ul>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">YouTube</a></li>
-                    <li><a href="#">Telegram</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 Medical Admission Tracker. All rights reserved.
-        </div>
-    </footer>
+/* ===== থিম টগল ===== */
+const savedTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+themeBtn.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
 
-    <!-- ================= জাভাস্ক্রিপ্ট ================= -->
-    <script>
-        // ==========================================================
-        // 🔗 Python ব্যাকএন্ডের URL
-        // Localhost: "http://127.0.0.1:5000"
-        // Render ডিপ্লয়ের পর: "https://your-app-name.onrender.com"
-        // ==========================================================
-        const BACKEND_URL = "https://ai-assisstant-2.onrender.com/";
+themeBtn.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  themeBtn.textContent = next === 'dark' ? '🌙' : '☀️';
+  localStorage.setItem('theme', next);
+});
 
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const typingIndicator = document.getElementById('typingIndicator');
+/* ===== ফাইল হ্যান্ডলিং ===== */
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-        // ================= ডার্ক/লাইট মোড =================
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
+  if (file.size > 5 * 1024 * 1024) {
+    alert('ছবির সাইজ ৫ MB এর বেশি হতে পারবে না');
+    fileInput.value = '';
+    return;
+  }
 
-        window.toggleTheme = function() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
+  attachedFile = file;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    previewImg.src = ev.target.result;
+    previewName.textContent = file.name;
+    filePreview.style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+});
 
-        // ================= Tabbed View System =================
-        window.switchView = function(viewName) {
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            document.getElementById('view-' + viewName).classList.add('active');
-            
-            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-            document.getElementById('nav-' + viewName).classList.add('active');
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+function clearFile() {
+  attachedFile = null;
+  fileInput.value = '';
+  filePreview.style.display = 'none';
+  previewImg.src = '';
+}
 
-        // ================= FAQ Accordion =================
-        window.toggleFaq = function(element) {
-            const faqItem = element;
-            const allItems = document.querySelectorAll('.faq-item');
-            allItems.forEach(item => {
-                if (item !== faqItem) item.classList.remove('active');
-            });
-            faqItem.classList.toggle('active');
-        }
+/* ===== মেসেজ পাঠানো ===== */
+async function sendMessage() {
+  if (isSending) return;
+  const text = inputEl.value.trim();
+  if (!text && !attachedFile) return;
 
-        // ================= Quick Ask =================
-        window.quickAsk = function(text) {
-            userInput.value = text;
-            sendMessage();
-        }
+  isSending = true;
+  sendBtn.disabled = true;
 
-        // ================= চ্যাট লজিক (Python Backend) =================
-        async function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text) return;
+  // ইউজার মেসেজ দেখান
+  addMessage('user', text, attachedFile);
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
 
-            addMessage(text, 'user');
-            userInput.value = '';
-            sendBtn.disabled = true;
+  const fileToSend = attachedFile;
+  clearFile();
+  suggestionsEl.style.display = 'none';
 
-            typingIndicator.style.display = 'flex';
-            chatMessages.appendChild(typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+  // টাইপিং ইন্ডিকেটর
+  const typingEl = addTyping();
 
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
-                });
+  try {
+    const formData = new FormData();
+    formData.append('message', text || '');
+    if (fileToSend) formData.append('image', fileToSend);
 
-                const data = await response.json();
-                typingIndicator.style.display = 'none';
+    const res = await fetch(`${BACKEND_URL}/api/chat`, {
+      method: 'POST',
+      body: formData
+    });
 
-                if (data.reply) {
-                    addMessage(data.reply, 'bot');
-                } else if (data.error) {
-                    addMessage("এরর: " + data.error, 'bot');
-                    console.error("Backend Error:", data.error);
-                } else {
-                    addMessage("দুঃখিত, উত্তর পাওয়া যায়নি।", 'bot');
-                }
-            } catch (error) {
-                typingIndicator.style.display = 'none';
-                addMessage("সার্ভারের সাথে সংযোগ করা যাচ্ছে না। পরে আবার চেষ্টা করুন।", 'bot');
-                console.error("Network Error:", error);
-            }
+    const data = await res.json();
+    typingEl.remove();
 
-            sendBtn.disabled = false;
-            userInput.focus();
-        }
+    if (!res.ok) {
+      addMessage('bot', '❌ এরর: ' + (data.error || 'অজানা সমস্যা'));
+    } else {
+      addMessage('bot', data.reply);
+    }
+  } catch (err) {
+    typingEl.remove();
+    addMessage('bot', '❌ সার্ভারে সংযোগ করা যাচ্ছে না। কিছুক্ষণ পর চেষ্টা করুন।');
+  } finally {
+    isSending = false;
+    sendBtn.disabled = false;
+    inputEl.focus();
+  }
+}
 
-        function addMessage(text, sender) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', sender);
-            msgDiv.innerText = text;
-            chatMessages.appendChild(msgDiv);
-            chatMessages.appendChild(typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+function addMessage(role, text, file) {
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
 
-        userInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
+  const avatar = document.createElement('div');
+  avatar.className = `avatar ${role === 'user' ? 'user' : 'bot'}`;
+  avatar.textContent = role === 'user' ? '👤' : 'AI';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+
+  if (file) {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    bubble.appendChild(img);
+  }
+
+  if (text) {
+    const p = document.createElement('div');
+    p.textContent = text;
+    bubble.appendChild(p);
+  }
+
+  wrap.appendChild(avatar);
+  wrap.appendChild(bubble);
+  messagesEl.appendChild(wrap);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return wrap;
+}
+
+function addTyping() {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg bot';
+  wrap.innerHTML = `
+    <div class="avatar bot">AI</div>
+    <div class="bubble">
+      <div class="typing"><span></span><span></span><span></span></div>
+    </div>`;
+  messagesEl.appendChild(wrap);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return wrap;
+}
+
+function askSuggestion(text) {
+  inputEl.value = text;
+  sendMessage();
+}
+
+/* ===== ইভেন্ট ===== */
+sendBtn.addEventListener('click', sendMessage);
+
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+});
+
+inputEl.focus();
+</script>
+
 </body>
 </html>
