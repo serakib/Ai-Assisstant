@@ -17,6 +17,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is not set!")
 
+
 client = Groq(api_key=GROQ_API_KEY)
 GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
@@ -89,7 +90,7 @@ def chat():
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": content_parts}
             ],
-            temperature=0.5, max_tokens=1024
+            temperature=0.5, max_tokens=200
         )
         return jsonify({"reply": response.choices[0].message.content, "provider": "groq"})
     except Exception as e:
