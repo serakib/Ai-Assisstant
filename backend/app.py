@@ -1,38 +1,118 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
+import base64
 from dotenv import load_dotenv
 from groq import Groq
 
 load_dotenv()
-app = Flask(__name__)
-CORS(app, origins=["https://serakib.github.io", "http://127.0.0.1:5000"])
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+app = Flask(__name__)
+CORS(app, origins=[
+    "https://serakib.github.io",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "http://localhost:5000",
+    "http://127.0.0.1:5000"
+])
+
+# ✅ Groq ক্লায়েন্ট
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+if not GROQ_API_KEY:
+    raise ValueError("GROQ_API_KEY is not set!")
+
+client = Groq(api_key=GROQ_API_KEY)
+
+# ✅ ভিশন মডেল (ছবি সাপোর্ট করে)
+GROQ_MODEL = os.getenv("GROQ_MODEL", "meta-llama/llama-4-scout-17b-16e-instruct")
+
+# ✅ সর্বোচ্চ ফাইল সাইজ: ৫ MB
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+
+SYSTEM_PROMPT = (
+    "তুমি Medical Admission Tracker-এর একজন সহায়ক AI। "
+    "মেডিকেল ভর্তি, প্রশ্নপত্র, সিলেবাস, প্রস্তুতি সংক্রান্ত প্রশ্নের উত্তর দাও। "
+    "বাংলায় সংক্ষেপে এবং স্পষ্টভাবে উত্তর দাও। "
+    "যদি ছবি পাঠানো হয়, ছবির বিষয়বস্তু বিশ্লেষণ করে সাহায্য কর।"
+)
+
 
 @app.route('/')
 def home():
-    return jsonify({"status": "online", "provider": "groq", "model": MODEL})
+    return jsonify({
+        "status": "online",
+        "provider": "groq",
+        "model": GROQ_MODEL,
+        "features": ["text", "image"]
+    })
+
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     try:
-        data = request.get_json()
-        user_message = data.get('message', '').strip()
-        if not user_message:
-            return jsonify({"error": "Message is required"}), 400
+        # ✅ multipart/form-data থেকে ডেটা নেওয়া
+        user_message = request.form.get('message', '').strip()
+        image_file = request.files.get('image')
 
+        if not user_message and not image_file:
+            return jsonify({"error": "Message or image required"}), 400
+
+        # ✅ মেসেজ তৈরি
+        content_parts = []
+
+        if user_message:
+            content_parts.append({
+                "type": "text",
+                "text": user_message
+            })
+        else:
+            content_parts.append({
+                "type": "text",
+                "text": "এই ছবিটি বিশ্লেষণ করে বাংলায় সংক্ষেপে বলো।"
+            })
+
+        # ✅ ছবি থাকলে base64 এনকোড করে যোগ করা
+        if image_file:
+            mime_type = image_file.mimetype
+            allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+
+            if mime_type not in allowed:
+                return jsonify({"error": "শুধু JPG, PNG, WEBP, GIF ছবি সাপোর্ট করে"}), 400
+
+            image_bytes = image_file.read()
+            image_b64 = base64.b64encode(image_bytes).decode('utf-8')
+
+            content_parts.append({
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:{mime_type};base64,{image_b64}"
+                }
+            })
+
+        # ✅ Groq-এ রিকোয়েস্ট
         response = client.chat.completions.create(
-            model=MODEL,
+            model=GROQ_MODEL,
             messages=[
-                {"role": "system", "content": "তুমি Medical Admission Tracker-এর একজন সহায়ক AI। বাংলায় সংক্ষেপে উত্তর দাও।"},
-                {"role": "user", "content": user_message}
-            ]
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": content_parts}
+            ],
+            temperature=0.7,
+            max_tokens=1024
         )
-        return jsonify({"reply": response.choices[0].message.content, "provider": "groq"})
+
+        reply = response.choices[0].message.content
+        return jsonify({"reply": reply, "provider": "groq"})
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"Server Error: {str(e)}")
+        return jsonify({"error": f"Server error: {str(e)}"}), 500
+
+
+@app.errorhandler(413)
+def too_large(e):
+    return jsonify({"error": "ফাইল অনেক বড়, সর্বোচ্চ ৫ MB"}), 413
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 5000)))
+    port = int(os.getenv("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
