@@ -51,22 +51,8 @@ main{flex:1;display:flex;flex-direction:column;padding:40px 20px;max-width:1100p
 .voice-pill-row{padding:12px 24px 0;display:flex;justify-content:flex-start;}
 .voice-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;background:var(--bg-bot);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s ease;font-family:inherit;}
 .voice-pill:hover{border-color:var(--primary);color:var(--primary);}
-
-/* ═══ Premium glossy pill avatar ═══ */
-.voice-pill-avatar{
-    width:24px;height:24px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-size:.72rem;color:#fff;font-weight:700;
-    flex-shrink:0;position:relative;overflow:hidden;
-    text-shadow:0 1px 1px rgba(0,0,0,.3);
-    box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 -2px 3px rgba(0,0,0,.2),inset 0 1px 2px rgba(255,255,255,.3);
-    background:linear-gradient(160deg,#3B82F6,#1E40AF);
-}
-.voice-pill-avatar::before{
-    content:'';position:absolute;top:8%;left:14%;width:42%;height:42%;
-    background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 70%);
-    border-radius:50%;pointer-events:none;
-}
+.voice-pill-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#fff;font-weight:700;flex-shrink:0;position:relative;overflow:hidden;text-shadow:0 1px 1px rgba(0,0,0,.3);box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 -2px 3px rgba(0,0,0,.2),inset 0 1px 2px rgba(255,255,255,.3);background:linear-gradient(160deg,#3B82F6,#1E40AF);}
+.voice-pill-avatar::before{content:'';position:absolute;top:8%;left:14%;width:42%;height:42%;background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 70%);border-radius:50%;pointer-events:none;}
 .voice-pill-avatar > span{position:relative;z-index:1;}
 .voice-pill-avatar.v-emma{background:linear-gradient(160deg,#F472B6,#DB2777);}
 .voice-pill-avatar.v-ryan{background:linear-gradient(160deg,#60A5FA,#1D4ED8);}
@@ -75,7 +61,6 @@ main{flex:1;display:flex;flex-direction:column;padding:40px 20px;max-width:1100p
 .voice-pill-avatar.v-olivia{background:linear-gradient(160deg,#A78BFA,#7C3AED);}
 .voice-pill-avatar.v-james{background:linear-gradient(160deg,#22D3EE,#0E7490);}
 .voice-pill-avatar.v-charlotte{background:linear-gradient(160deg,#FB7185,#BE123C);}
-
 .listening-indicator{display:none;align-items:center;justify-content:center;gap:10px;margin:12px 24px 0;padding:10px 16px;background:rgba(239,68,68,.08);border:1px solid #EF4444;border-radius:10px;color:#EF4444;font-size:.88rem;font-weight:600;}
 .listening-indicator.active{display:flex;}
 .listening-indicator.preparing{background:rgba(59,130,246,.08);border-color:var(--primary);color:var(--primary);}
@@ -146,35 +131,9 @@ footer{background:var(--footer-bg);color:var(--footer-text);padding:60px 40px 20
 .voice-card:hover{border-color:var(--primary);transform:translateY(-2px);}
 .voice-card.selected{border-color:var(--primary);background:rgba(59,130,246,.08);box-shadow:0 0 0 3px rgba(59,130,246,.15);}
 .voice-card.selected::after{content:'✓';position:absolute;top:8px;right:10px;width:20px;height:20px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;z-index:2;}
-
-/* ═══ Premium ChatGPT-style 3D avatar ═══ */
-.voice-avatar{
-    width:54px;height:54px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-size:1.35rem;flex-shrink:0;font-weight:700;color:#fff;
-    letter-spacing:0.5px;
-    position:relative;overflow:hidden;
-    text-shadow:0 2px 3px rgba(0,0,0,.35);
-    box-shadow:
-        0 6px 16px rgba(0,0,0,0.25),
-        0 2px 4px rgba(0,0,0,0.15),
-        inset 0 -6px 10px rgba(0,0,0,0.28),
-        inset 0 4px 8px rgba(255,255,255,0.28),
-        inset 0 0 0 1px rgba(255,255,255,0.1);
-    background:linear-gradient(160deg,#3B82F6,#1E40AF);
-}
-.voice-avatar::before{
-    content:'';position:absolute;top:5%;left:12%;width:48%;height:48%;
-    background:radial-gradient(ellipse at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,0) 65%);
-    border-radius:50%;pointer-events:none;
-}
-.voice-avatar::after{
-    content:'';position:absolute;inset:0;border-radius:50%;
-    background:
-        radial-gradient(circle at 70% 85%, rgba(255,255,255,.18), transparent 40%),
-        radial-gradient(circle at 50% 120%, rgba(0,0,0,.35), transparent 60%);
-    pointer-events:none;
-}
+.voice-avatar{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;font-weight:700;color:#fff;letter-spacing:0.5px;position:relative;overflow:hidden;text-shadow:0 2px 3px rgba(0,0,0,.35);box-shadow:0 6px 16px rgba(0,0,0,0.25),0 2px 4px rgba(0,0,0,0.15),inset 0 -6px 10px rgba(0,0,0,0.28),inset 0 4px 8px rgba(255,255,255,0.28),inset 0 0 0 1px rgba(255,255,255,0.1);background:linear-gradient(160deg,#3B82F6,#1E40AF);}
+.voice-avatar::before{content:'';position:absolute;top:5%;left:12%;width:48%;height:48%;background:radial-gradient(ellipse at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,0) 65%);border-radius:50%;pointer-events:none;}
+.voice-avatar::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 70% 85%, rgba(255,255,255,.18), transparent 40%),radial-gradient(circle at 50% 120%, rgba(0,0,0,.35), transparent 60%);pointer-events:none;}
 .voice-avatar > span{position:relative;z-index:1;}
 .voice-avatar.v-emma{background:linear-gradient(160deg,#F472B6 0%,#EC4899 45%,#BE185D 100%);}
 .voice-avatar.v-ryan{background:linear-gradient(160deg,#60A5FA 0%,#3B82F6 45%,#1D4ED8 100%);}
@@ -183,7 +142,6 @@ footer{background:var(--footer-bg);color:var(--footer-text);padding:60px 40px 20
 .voice-avatar.v-olivia{background:linear-gradient(160deg,#A78BFA 0%,#8B5CF6 45%,#6D28D9 100%);}
 .voice-avatar.v-james{background:linear-gradient(160deg,#22D3EE 0%,#06B6D4 45%,#0E7490 100%);}
 .voice-avatar.v-charlotte{background:linear-gradient(160deg,#FB7185 0%,#F43F5E 45%,#9F1239 100%);}
-
 .voice-info{flex:1;min-width:0;}
 .voice-info h4{font-size:.92rem;font-weight:700;margin-bottom:2px;}
 .voice-info .voice-style{font-size:.72rem;color:var(--text-muted);line-height:1.3;margin-bottom:2px;}
@@ -192,7 +150,7 @@ footer{background:var(--footer-bg);color:var(--footer-text);padding:60px 40px 20
 .voice-play-btn:hover{transform:scale(1.1);background:#2563EB;}
 .voice-play-btn.playing{background:#EF4444;animation:pulse 1.2s infinite;}
 
-/* ═══ Full-Screen Voice Mode ═══ */
+/* Full-Screen Voice Mode */
 .voice-overlay{position:fixed;inset:0;background:#000;z-index:5000;display:none;flex-direction:column;animation:voiceFadeIn .35s ease;}
 .voice-overlay.open{display:flex;}
 @keyframes voiceFadeIn{from{opacity:0;}to{opacity:1;}}
@@ -223,7 +181,7 @@ footer{background:var(--footer-bg);color:var(--footer-text);padding:60px 40px 20
 .voice-bottom{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:20px;padding:0 20px 24px;pointer-events:none;}
 .voice-bottom > *{pointer-events:auto;}
 
-/* ═══ Live Orb ═══ */
+/* Live Orb */
 .voice-orb-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
 .voice-orb-tooltip{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(4px);background:#1A1A1A;color:#E5E7EB;padding:8px 16px;border-radius:20px;font-size:.82rem;font-weight:500;white-space:nowrap;border:1px solid #2A2A2A;box-shadow:0 4px 16px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;}
 .voice-orb-wrap:hover .voice-orb-tooltip{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -268,7 +226,7 @@ footer{background:var(--footer-bg);color:var(--footer-text);padding:60px 40px 20
 .voice-inputbar .vib-mic.muted{background:#EF4444;color:#fff;}
 .voice-inputbar .vib-mic svg{width:18px;height:18px;}
 .voice-inputbar .vib-close{background:#2563EB;border:none;color:#fff;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s ease;flex-shrink:0;}
-.voice-inputbar .vib-close:hover{background:#1D4ED8;}
+.voice-inputbar .vib-close:hover{background:#1D4ED8;transform:scale(1.08);}
 .voice-inputbar .vib-close svg{width:18px;height:18px;}
 
 @media(max-width:768px){
@@ -388,7 +346,7 @@ footer{padding:40px 20px 20px;}
         <div class="faq-container">
             <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-question"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, সম্পূর্ণ ফ্রি। যেকোনো প্রশ্ন করতে পারেন।</div></div>
             <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-question"><span>ভয়েস পরিবর্তন করা যাবে?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, ইনপুট বক্সের উপরে ভয়েস পিলে ক্লিক করুন। ৭ জন ভয়েস আর্টিস্টের ডেমো শুনে পছন্দমতো বেছে নিন।</div></div>
-            <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-question"><span>Full-screen Voice Mode কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">🎤 বাটনে ক্লিক করলে ChatGPT-এর মতো পুরো স্ক্রিন জুড়ে ভয়েস মোড খুলবে — কেন্দ্রে live animated orb, চ্যাট মেসেজ এবং নিচে কন্ট্রোল বার।</div></div>
+            <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-question"><span>Full-screen Voice Mode কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">🎤 বাটনে ক্লিক করলে ChatGPT-এর মতো পুরো স্ক্রিন জুড়ে ভয়েস মোড খুলবে — কেন্দ্রে live animated orb, চ্যাট মেসেজ এবং নিচে কন্ট্রোল বার। মাইক বন্ধ করলে AI আর কথা বলবে না।</div></div>
             <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-question"><span>AI-এর উত্তর Review করা যাবে?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, প্রতিটি উত্তরের নিচে Copy · Like · Dislike · Share · Read aloud · Regenerate বাটন আছে।</div></div>
         </div>
     </div>
@@ -458,7 +416,7 @@ footer{padding:40px 20px 20px;}
             <button class="vib-mic" id="vibMic" onclick="toggleOrbMic()" title="Mute">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
             </button>
-            <button class="vib-close" onclick="closeVoiceMode()" title="Close">
+            <button class="vib-close" onclick="closeVoiceMode()" title="Back to Chat">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="6" y1="18" x2="18" y2="6"></line></svg>
             </button>
         </div>
@@ -631,10 +589,13 @@ fileInput.addEventListener('change', (e) => {
 });
 function clearFile() { attachedFile = null; fileInput.value = ''; filePreview.style.display = 'none'; previewImg.src = ''; }
 
-// TTS
+// ═══════════════════════════════════════════════════════════
+// 🔊 TTS — ✅ মাইক বন্ধ থাকলে কথা বলবে না
+// ═══════════════════════════════════════════════════════════
 function speakText(text) {
     return new Promise(async (resolve) => {
-        if (!text) { resolve(); return; }
+        // ✅ মাইক বন্ধ → AI কোনো কথা বলবে না
+        if (!text || micMuted) { resolve(); return; }
         stopAllAudio();
         if (ttsAbortController) ttsAbortController.abort();
         ttsAbortController = new AbortController();
@@ -665,7 +626,8 @@ function speakText(text) {
 }
 function browserSpeak(text) {
     return new Promise((resolve) => {
-        if (!('speechSynthesis' in window)) { resolve(); return; }
+        // ✅ মাইক বন্ধ → বাজবে না
+        if (!('speechSynthesis' in window) || micMuted) { resolve(); return; }
         speechSynthesis.cancel();
         const cfg = BROWSER_VOICE_MAP[selectedVoice] || BROWSER_VOICE_MAP.emma;
         const isBangla = /[\u0980-\u09FF]/.test(text);
@@ -689,7 +651,10 @@ function stopAllAudio() {
 }
 
 async function speakAndListen(text) {
+    // ✅ মাইক বন্ধ থাকলে কিছুই করবে না
+    if (micMuted) { setOrbState('idle'); return; }
     if (isRecognizing) { try { recognition.stop(); } catch(e){} await new Promise(r => setTimeout(r, 300)); }
+    if (micMuted) { setOrbState('idle'); return; }
     setOrbState('speaking');
     await speakText(text);
     if (voiceModeOn && !micMuted && !isRecognizing) {
@@ -745,14 +710,23 @@ function closeVoiceMode() {
     switchView(returnToView);
 }
 
+// ═══════════════════════════════════════════════════════════
+// 🎤 মাইক Toggle — ON/OFF
+//   ON  → শুনবে + AI কথা বলবে
+//   OFF → শোনা বন্ধ + AI কথা বলা সাথে সাথে বন্ধ
+// ═══════════════════════════════════════════════════════════
 function toggleOrbMic() {
     micMuted = !micMuted;
     vibMic.classList.toggle('muted', micMuted);
     if (micMuted) {
+        // ═══ OFF → সব অডিও + recognition বন্ধ ═══
         stopAllAudio();
         if (isRecognizing) try { recognition.stop(); } catch(e){}
         setOrbState('idle');
+        statusText.textContent = '🔇 মাইক বন্ধ — AI শুনছে না';
     } else {
+        // ═══ ON → মাইক চালু ═══
+        statusText.textContent = '🎙️ মাইক চালু — শুনছি';
         if (!isRecognizing && voiceModeOn) {
             try { finalTranscript = ''; recognition.start(); } catch(e){}
         }
@@ -789,7 +763,6 @@ function addVoiceMsg(text, role) {
     voiceMessages.scrollTop = voiceMessages.scrollHeight;
 }
 
-// Message actions
 function copyVoiceText(btn) {
     const txt = btn.closest('.v-msg').querySelector('.v-bubble').innerText;
     navigator.clipboard.writeText(txt).then(() => {
@@ -843,7 +816,7 @@ async function regenerateMsg(btn) {
         const data = await res.json();
         if (res.ok && data.reply) {
             addVoiceMsg(data.reply, 'bot');
-            if (voiceModeOn) await speakAndListen(data.reply);
+            if (voiceModeOn && !micMuted) await speakAndListen(data.reply);
             else setOrbState('idle');
         } else setOrbState('idle');
     } catch(e) { setOrbState('idle'); }
@@ -859,7 +832,6 @@ function editUserMsg(btn) {
 }
 function moreActions(btn) { console.log('More actions clicked'); }
 
-// Send from voice overlay
 async function sendFromVoice(text) {
     if (!text) return;
     addVoiceMsg(text, 'user');
@@ -873,7 +845,8 @@ async function sendFromVoice(text) {
         if (res.ok && data.reply) {
             addVoiceMsg(data.reply, 'bot');
             addMessage(data.reply, 'bot', null);
-            if (voiceModeOn) await speakAndListen(data.reply);
+            // ✅ মাইক চালু থাকলে শোনাবে, বন্ধ থাকলে চুপ থাকবে
+            if (voiceModeOn && !micMuted) await speakAndListen(data.reply);
             else setOrbState('idle');
         } else {
             addVoiceMsg('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
@@ -907,6 +880,8 @@ if (SpeechRecognition) {
         setOrbState('listening');
     };
     recognition.onresult = (event) => {
+        // ✅ মাইক বন্ধ থাকলে কিছুই করবে না
+        if (micMuted) return;
         let interim = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
             const t = event.results[i][0].transcript;
@@ -917,22 +892,25 @@ if (SpeechRecognition) {
         userInput.value = preview;
         voiceTextInput.value = preview;
         clearTimeout(silenceTimer);
-        silenceTimer = setTimeout(() => { if (isRecognizing) recognition.stop(); }, 2500);
+        silenceTimer = setTimeout(() => { if (isRecognizing && !micMuted) recognition.stop(); }, 2500);
     };
     recognition.onspeechend = () => {
         clearTimeout(silenceTimer);
-        silenceTimer = setTimeout(() => { if (isRecognizing) recognition.stop(); }, 2500);
+        silenceTimer = setTimeout(() => { if (isRecognizing && !micMuted) recognition.stop(); }, 2500);
     };
     recognition.onerror = (event) => {
         if (event.error === 'not-allowed') {
             alert('⚠️ মাইক্রোফোনের অনুমতি দিন।');
             micMuted = true;
+            vibMic.classList.add('muted');
             setOrbState('idle');
         }
     };
     recognition.onend = () => {
         isRecognizing = false;
         clearTimeout(silenceTimer);
+        // ✅ মাইক বন্ধ থাকলে অটো-সেন্ড হবে না
+        if (micMuted) { setOrbState('idle'); return; }
         const text = userInput.value.trim();
         if (text && !isSending && voiceModeOn && !micMuted) {
             userInput.value = '';
@@ -949,7 +927,6 @@ if (SpeechRecognition) {
     micBtn.addEventListener('click', () => alert('Chrome বা Edge ব্যবহার করুন — ভয়েস সাপোর্ট নেই।'));
 }
 
-// Main Chat Send
 async function sendMessage() {
     if (isSending) return;
     const text = userInput.value.trim();
