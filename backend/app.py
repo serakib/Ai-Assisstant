@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from google import genai  # ✅ নতুন SDK ইমপোর্ট
+from google import genai
 
 load_dotenv()
 
@@ -15,9 +15,12 @@ CORS(app, origins=[
     "http://127.0.0.1:5000"
 ])
 
-# ✅ নতুন SDK-তে ক্লায়েন্ট তৈরি
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=GEMINI_API_KEY)
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY is not set!")
+
+# ✅ vertexai=False যোগ করা হলো
+client = genai.Client(api_key=GEMINI_API_KEY, vertexai=False)
 
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
@@ -28,7 +31,8 @@ def home():
         "status": "online",
         "provider": "gemini",
         "model": GEMINI_MODEL,
-        "sdk": "google-genai"
+        "sdk": "google-genai",
+        "vertexai": False
     })
 
 
@@ -40,7 +44,6 @@ def chat():
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
 
-        # ✅ নতুন SDK দিয়ে কনটেন্ট জেনারেট
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=user_message
