@@ -2,39 +2,18 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from google import genai
+from groq import Groq
 
 load_dotenv()
-
 app = Flask(__name__)
-CORS(app, origins=[
-    "https://serakib.github.io",
-    "http://localhost:5500",
-    "http://127.0.0.1:5500",
-    "http://localhost:5000",
-    "http://127.0.0.1:5000"
-])
+CORS(app, origins=["https://serakib.github.io", "http://127.0.0.1:5000"])
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY is not set!")
-
-# ✅ vertexai=False যোগ করা হলো
-client = genai.Client(api_key=GEMINI_API_KEY, vertexai=False)
-
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 @app.route('/')
 def home():
-    return jsonify({
-        "status": "online",
-        "provider": "gemini",
-        "model": GEMINI_MODEL,
-        "sdk": "google-genai",
-        "vertexai": False
-    })
-
+    return jsonify({"status": "online", "provider": "groq", "model": MODEL})
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
@@ -44,18 +23,16 @@ def chat():
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
 
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=user_message
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": "তুমি Medical Admission Tracker-এর একজন সহায়ক AI। বাংলায় সংক্ষেপে উত্তর দাও।"},
+                {"role": "user", "content": user_message}
+            ]
         )
-
-        return jsonify({"reply": response.text, "provider": "gemini"})
-
+        return jsonify({"reply": response.choices[0].message.content, "provider": "groq"})
     except Exception as e:
-        print(f"Server Error: {str(e)}")
-        return jsonify({"error": f"Server error: {str(e)}"}), 500
-
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    port = int(os.getenv("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 5000)))
