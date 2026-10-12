@@ -3,3 +3,4 @@ flask-cors==4.0.0
 groq>=0.11.0
 python-dotenv==1.0.0
 gunicorn==21.2.0
+gTTS>=2.5.0
