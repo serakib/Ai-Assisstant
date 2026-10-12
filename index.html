@@ -280,7 +280,7 @@
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">
-                    <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন।</div>
+                    <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন।</div>
                     <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
                 </div>
 
@@ -403,7 +403,7 @@
         </div>
     </footer>
 
-    <!-- ================= জাভাস্ক্রিপ্ট লজিক (REST API ফিক্স) ================= -->
+    <!-- ================= জাভাস্ক্রিপ্ট লজিক (আপনার curl কমান্ডের হুবহু অনুবাদ) ================= -->
     <script>
         // ১. UI এলিমেন্ট
         const chatMessages = document.getElementById('chatMessages');
@@ -411,8 +411,9 @@
         const sendBtn = document.getElementById('sendBtn');
         const typingIndicator = document.getElementById('typingIndicator');
 
-        // ২. আপনার API Key (সরাসরি REST API-তে পাঠানোর জন্য)
-        const GEMINI_API_KEY = "AQ.Ab8RN6LMmI9lOdfmynXxpxo1Ptrg9xoNm8Pr9jV0liC-0y0JZw";
+        // ২. আপনার API Key
+        // 🚨 সতর্কতা: এই Key-টি পাবলিক হয়ে গেছে। এখনই Revoke করে নতুন Key বসান!
+        const GEMINI_API_KEY = "AQ.Ab8RN6LMmI9lOdfmynXxpxo1Ptrg9xoNm8Pr9jV0liC-0y0JZw"; 
 
         // ৩. Tabbed View System (পেজ পরিবর্তন)
         window.switchView = function(viewName) {
@@ -441,7 +442,7 @@
             sendMessage();
         }
 
-        // ৬. চ্যাট লজিক (REST API)
+        // ৬. চ্যাট লজিক (আপনার curl কমান্ডের হুবহু অনুবাদ)
         async function sendMessage() {
             const text = userInput.value.trim();
             if (!text) return;
@@ -455,12 +456,16 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
-                // ৭. REST API-তে সঠিক হেডার সহ রিকোয়েস্ট পাঠানো
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`, {
+                // ✅ আপনার curl কমান্ডের হুবহু জাভাস্ক্রিপ্ট সংস্করণ
+                // URL: https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent
+                // Header: X-goog-api-key
+                // Body: contents -> parts -> text
+                
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-goog-api-key': GEMINI_API_KEY // ⬅️ এখানে x-goog-api-key হেডার ব্যবহার করা হয়েছে
+                        'X-goog-api-key': GEMINI_API_KEY // আপনার curl-এ ঠিক এই হেডারটিই ছিল
                     },
                     body: JSON.stringify({
                         contents: [{
@@ -472,11 +477,12 @@
                 const data = await response.json();
                 typingIndicator.style.display = 'none';
 
+                // ৭. ফলাফল বিশ্লেষণ
                 if (data.candidates && data.candidates[0].content) {
                     const botReply = data.candidates[0].content.parts[0].text;
                     addMessage(botReply, 'bot');
                 } else if (data.error) {
-                    // API থেকে আসা আসল এরর মেসেজ দেখানো
+                    // API থেকে আসা আসল এরর মেসেজটি চ্যাটে দেখানো
                     addMessage("API এরর: " + data.error.message, 'bot');
                     console.error("API Error Details:", data.error);
                 } else {
