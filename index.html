@@ -1,1013 +1,794 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MedTracker AI — অ্যাসিস্ট্যান্ট</title>
-<style>
-  :root {
-    --bg: #0B1120;
-    --card: #111827;
-    --card2: #1E293B;
-    --text: #E5E7EB;
-    --muted: #94A3B8;
-    --accent: #8B5CF6;
-    --accent2: #6366F1;
-    --border: #1F2937;
-  }
-  [data-theme="light"] {
-    --bg: #F8FAFC;
-    --card: #FFFFFF;
-    --card2: #F1F5F9;
-    --text: #0F172A;
-    --muted: #64748B;
-    --border: #E2E8F0;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', 'Noto Sans Bengali', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    transition: background 0.3s, color 0.3s;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - Medical Admission Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ================= থিম ভেরিয়েবল ================= */
+        :root {
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --bg-header: #FFFFFF;
+            --bg-bot: #F1F5F9;
+            --bg-user: #3B82F6;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --primary: #3B82F6;
+            --footer-bg: #0F172A;
+            --footer-text: #94A3B8;
+            --shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
 
-  /* ===== Header ===== */
-  header {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 18px;
-  }
-  .logo-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 18px;
-  }
+        body.dark-mode {
+            --bg-body: #0B1120;
+            --bg-card: #111827;
+            --bg-header: #0B1120;
+            --bg-bot: #1E293B;
+            --bg-user: #3B82F6;
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --border: #374151;
+            --footer-bg: #080C14;
+            --footer-text: #9CA3AF;
+            --shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
 
-  /* ===== Nav Menu ===== */
-  nav.nav-menu {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .nav-link {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    padding: 8px 16px;
-    border-radius: 9px;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: inherit;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  .nav-link:hover { color: var(--text); background: var(--card2); }
-  .nav-link.active {
-    color: white;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-  }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .header-actions { display: flex; gap: 10px; }
-  .icon-btn {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    width: 38px; height: 38px;
-    border-radius: 9px;
-    cursor: pointer;
-    font-size: 17px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-  .icon-btn:hover { border-color: var(--accent); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-  /* Mobile Menu Toggle */
-  .mobile-menu-btn {
-    display: none;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    width: 38px; height: 38px;
-    border-radius: 9px;
-    cursor: pointer;
-    font-size: 18px;
-  }
+        /* ================= হেডার ================= */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; }
+        
+        .nav-links { display: flex; gap: 24px; font-size: 0.95rem; font-weight: 500; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; cursor: pointer; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        
+        /* প্রিমিয়াম মোড টগল বাটন */
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-main); width: 42px; height: 42px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .theme-toggle:hover { background: var(--bg-bot); transform: scale(1.05); }
+        .theme-toggle svg {
+            position: absolute; transition: all 0.4s ease;
+        }
+        .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+        .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+        body.dark-mode .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+        body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
 
-  /* ===== Main ===== */
-  main {
-    flex: 1;
-    max-width: 1000px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--text-muted); text-decoration: none;
+            font-weight: 500; font-size: 0.9rem; padding: 8px 16px;
+            border: 1px solid var(--border); border-radius: 8px;
+            transition: all 0.2s ease; cursor: pointer; background: transparent;
+        }
+        .back-btn:hover { background-color: var(--bg-bot); color: var(--text-main); }
 
-  /* ===== Tabs (Views) ===== */
-  .view { display: none; animation: fadeIn 0.3s ease; }
-  .view.active { display: block; }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+        /* ================= মূল কন্টেন্ট এরিয়া ================= */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-  /* ===== Chat View ===== */
-  .chat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 65vh;
-  }
-  .chat-messages {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    scroll-behavior: smooth;
-  }
-  .msg {
-    display: flex;
-    gap: 10px;
-    max-width: 85%;
-    animation: fadeIn 0.25s ease;
-  }
-  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+        .view { display: none; animation: fadeIn 0.4s ease; }
+        .view.active { display: block; }
 
-  .avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
-    color: white;
-  }
-  .avatar.bot { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
-  .avatar.user { background: linear-gradient(135deg, #10B981, #059669); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  .bubble {
-    background: var(--card2);
-    padding: 12px 16px;
-    border-radius: 14px;
-    font-size: 15px;
-    line-height: 1.7;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    border: 1px solid var(--border);
-  }
-  .msg.user .bubble {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: white;
-    border: none;
-  }
-  .bubble img {
-    max-width: 260px;
-    max-height: 260px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    display: block;
-  }
+        /* ================= চ্যাট ইন্টারফেস ================= */
+        .chat-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            height: 600px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-  /* Typing */
-  .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
-  .typing span {
-    width: 7px; height: 7px;
-    background: var(--muted);
-    border-radius: 50%;
-    animation: bounce 1.2s infinite;
-  }
-  .typing span:nth-child(2) { animation-delay: 0.15s; }
-  .typing span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-    30% { transform: translateY(-7px); opacity: 1; }
-  }
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background-color: var(--bg-card);
+        }
+        .bot-avatar {
+            width: 44px; height: 44px; border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 1.1rem;
+        }
+        .bot-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+        .bot-info p { font-size: 0.8rem; color: var(--text-muted); }
 
-  /* Suggestions */
-  .suggestions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    padding: 0 20px 12px;
-  }
-  .sugg-btn {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s;
-  }
-  .sugg-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .chat-messages {
+            flex: 1; padding: 24px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 20px;
+        }
 
-  /* Input area */
-  .chat-input-area {
-    border-top: 1px solid var(--border);
-    padding: 12px 16px;
-    background: var(--card);
-  }
-  .file-preview {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin-bottom: 10px;
-    font-size: 13px;
-  }
-  .file-preview img {
-    width: 48px; height: 48px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  .file-preview button {
-    margin-left: auto;
-    background: transparent;
-    border: none;
-    color: #EF4444;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  .input-row {
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-  }
-  .input-row textarea {
-    flex: 1;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 12px;
-    padding: 11px 14px;
-    font-family: inherit;
-    font-size: 15px;
-    resize: none;
-    max-height: 120px;
-    min-height: 44px;
-    outline: none;
-    transition: border 0.2s;
-  }
-  .input-row textarea:focus { border-color: var(--accent); }
+        .message {
+            max-width: 80%; padding: 16px 20px; border-radius: 18px;
+            font-size: 0.95rem; line-height: 1.6;
+            animation: fadeIn 0.3s ease forwards;
+            word-wrap: break-word;
+        }
 
-  .send-btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: white;
-    border: none;
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s;
-  }
-  .send-btn:hover { transform: scale(1.05); }
-  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .message.bot { align-self: flex-start; background-color: var(--bg-bot); color: var(--text-main); border-bottom-left-radius: 4px; }
+        .message.user { align-self: flex-end; background-color: var(--bg-user); color: #ffffff; border-bottom-right-radius: 4px; }
 
-  .attach-btn {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-  .attach-btn:hover { border-color: var(--accent); color: var(--accent); }
+        /* ✅ নতুন: ছবির প্রিভিউ মেসেজের ভেতরে */
+        .message img {
+            max-width: 240px;
+            max-height: 240px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: block;
+        }
 
-  /* ===== Section Cards (About, FAQ, Contact) ===== */
-  .section-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px;
-  }
-  .section-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .section-subtitle {
-    color: var(--muted);
-    margin-bottom: 24px;
-    font-size: 15px;
-  }
+        .typing-indicator {
+            display: none; align-self: flex-start; padding: 16px 20px;
+            background: var(--bg-bot); border-radius: 18px; border-bottom-left-radius: 4px;
+            gap: 6px; align-items: center;
+        }
+        .typing-indicator span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-  /* About */
-  .about-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
-  }
-  .about-item {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-  .about-item:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent);
-  }
-  .about-icon {
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
-  .about-item h3 {
-    font-size: 16px;
-    margin-bottom: 8px;
-  }
-  .about-item p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
+        /* ================= ইনপুট এরিয়া (নতুন ফিচার সহ) ================= */
+        .chat-input-wrapper {
+            border-top: 1px solid var(--border);
+            background-color: var(--bg-card);
+        }
 
-  /* FAQ Accordion */
-  .faq-item {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .faq-item:hover { border-color: var(--accent); }
-  .faq-question {
-    padding: 16px 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    font-size: 15px;
-    user-select: none;
-  }
-  .faq-question::after {
-    content: '+';
-    font-size: 22px;
-    color: var(--accent);
-    transition: transform 0.3s;
-    font-weight: 400;
-  }
-  .faq-item.open .faq-question::after {
-    transform: rotate(45deg);
-  }
-  .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-    padding: 0 20px;
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .faq-item.open .faq-answer {
-    max-height: 300px;
-    padding: 0 20px 18px;
-  }
+        /* ✅ নতুন: ফাইল প্রিভিউ */
+        .file-preview {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px 0 24px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .file-preview img {
+            width: 48px; height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .file-preview .remove-file {
+            margin-left: auto;
+            background: transparent;
+            border: none;
+            color: #EF4444;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
 
-  /* Contact */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  .contact-item {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .contact-icon {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: white;
-    flex-shrink: 0;
-  }
-  .contact-item h4 {
-    font-size: 13px;
-    color: var(--muted);
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  .contact-item p {
-    font-size: 14px;
-    font-weight: 600;
-  }
+        .input-area {
+            padding: 20px 24px;
+            display: flex; align-items: center; gap: 12px;
+        }
 
-  .contact-form {
-    display: grid;
-    gap: 14px;
-  }
-  .contact-form input,
-  .contact-form textarea {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 12px 14px;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .contact-form input:focus,
-  .contact-form textarea:focus { border-color: var(--accent); }
-  .contact-form textarea { resize: vertical; min-height: 100px; }
-  .contact-form button {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: white;
-    border: none;
-    padding: 13px;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-  .contact-form button:hover { transform: scale(1.02); }
+        /* ✅ নতুন: অ্যাটাচ ও মাইক বাটন */
+        .icon-btn-input {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
+        }
+        .icon-btn-input:hover { background: var(--bg-bot); color: var(--primary); border-color: var(--primary); }
+        .icon-btn-input.recording {
+            background: #EF4444;
+            color: white;
+            border-color: #EF4444;
+            animation: pulse 1.2s infinite;
+        }
+        .icon-btn-input.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .icon-btn-input svg { width: 20px; height: 20px; }
 
-  /* ===== Footer ===== */
-  footer {
-    background: var(--card);
-    border-top: 1px solid var(--border);
-    padding: 40px 24px 20px;
-    margin-top: 20px;
-  }
-  .footer-grid {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    margin-bottom: 30px;
-  }
-  .footer-col h4 {
-    font-size: 15px;
-    margin-bottom: 14px;
-    color: var(--text);
-  }
-  .footer-col p,
-  .footer-col a {
-    display: block;
-    color: var(--muted);
-    font-size: 14px;
-    text-decoration: none;
-    margin-bottom: 9px;
-    transition: color 0.2s;
-    line-height: 1.6;
-  }
-  .footer-col a:hover { color: var(--accent); }
-  .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    font-weight: 700;
-    font-size: 16px;
-  }
-  .footer-social {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .footer-social a {
-    width: 36px; height: 36px;
-    background: var(--card2);
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    margin: 0;
-  }
-  .footer-social a:hover { background: var(--accent); color: white; }
-  .footer-bottom {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-  }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
 
-  /* ===== Responsive ===== */
-  @media (max-width: 900px) {
-    .footer-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 768px) {
-    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
-    nav.nav-menu {
-      display: none;
-      width: 100%;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-    }
-    nav.nav-menu.open { display: flex; }
-    .nav-link { width: 100%; text-align: left; }
-    .section-card { padding: 24px 20px; }
-  }
-  @media (max-width: 640px) {
-    main { padding: 12px; }
-    .msg { max-width: 92%; }
-    .bubble { font-size: 14px; }
-    .logo span { font-size: 15px; }
-    header { padding: 12px 14px; }
-    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
-  }
-</style>
+        .input-area input[type="text"] {
+            flex: 1; padding: 16px 20px; border: 1px solid var(--border);
+            border-radius: 12px; font-size: 0.95rem; outline: none;
+            font-family: inherit; background-color: var(--bg-body);
+            color: var(--text-main); transition: border-color 0.2s;
+            min-width: 0;
+        }
+        .input-area input[type="text"]::placeholder { color: var(--text-muted); }
+        .input-area input[type="text"]:focus { border-color: var(--primary); }
+
+        .send-btn {
+            background: var(--primary); color: white; border: none;
+            width: 52px; height: 52px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
+        }
+        .send-btn:hover { background: #2563EB; transform: scale(1.05); }
+        .send-btn:disabled { background: #94A3B8; cursor: not-allowed; transform: none; }
+        .send-btn svg { width: 20px; height: 20px; fill: white; }
+
+        /* ================= অন্যান্য সেকশনের ডিজাইন ================= */
+        .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-main); }
+        .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 48px auto; }
+
+        .about-content { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
+        .about-text { flex: 1; min-width: 300px; }
+        .about-text h3 { font-size: 1.5rem; margin-bottom: 16px; }
+        .about-text p { color: var(--text-muted); margin-bottom: 16px; }
+        .about-image { flex: 1; min-width: 300px; height: 250px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--primary); }
+
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+        .faq-question { padding: 20px 24px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+        .faq-question:hover { background: var(--bg-bot); }
+        .faq-answer { padding: 0 24px 20px 24px; color: var(--text-muted); display: none; font-size: 0.95rem; }
+        .faq-item.active .faq-answer { display: block; }
+        .faq-item.active .faq-question { color: var(--primary); }
+        .faq-icon { transition: transform 0.3s; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+
+        .contact-container { display: flex; flex-wrap: wrap; gap: 40px; max-width: 900px; margin: 0 auto; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
+        .contact-info { flex: 1; min-width: 250px; }
+        .contact-info h3 { font-size: 1.2rem; margin-bottom: 20px; }
+        .contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: var(--text-muted); }
+        .contact-item svg { width: 20px; height: 20px; color: var(--primary); }
+        .contact-form { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 16px; }
+        .contact-form input, .contact-form textarea { padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main); font-family: inherit; outline: none; }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--primary); }
+        .contact-form button { padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .contact-form button:hover { background: #2563EB; }
+
+        /* ================= ফুটার ================= */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 60px 40px 20px 40px;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto 40px auto;
+        }
+        .footer-col h4 { color: #FFFFFF; font-size: 1.1rem; margin-bottom: 20px; }
+        .footer-col p { font-size: 0.9rem; line-height: 1.8; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: var(--footer-text); text-decoration: none; transition: 0.2s; font-size: 0.9rem; cursor: pointer; }
+        .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
+        .footer-bottom {
+            text-align: center; padding-top: 20px; border-top: 1px solid #1E293B;
+            font-size: 0.85rem; max-width: 1100px; margin: 0 auto;
+        }
+
+        /* ================= রেসপন্সিভ ================= */
+        @media (max-width: 768px) {
+            header { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
+            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 10px; gap: 16px; font-size: 0.85rem; }
+            .chat-card { height: 550px; }
+            .message { max-width: 90%; }
+            .section-title { font-size: 1.5rem; }
+            .about-content, .contact-container { padding: 20px; }
+            footer { padding: 40px 20px 20px 20px; }
+            .input-area { padding: 14px 16px; gap: 8px; }
+            .icon-btn-input, .send-btn { width: 44px; height: 44px; }
+            .input-area input[type="text"] { padding: 12px 14px; font-size: 0.9rem; }
+            .file-preview { padding: 10px 16px 0 16px; }
+        }
+
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    </style>
 </head>
 <body>
 
-<!-- ===== Header ===== -->
-<header>
-  <div class="logo">
-    <div class="logo-icon">🩺</div>
-    <span>MedTracker AI</span>
-  </div>
-
-  <nav class="nav-menu" id="navMenu">
-    <button class="nav-link active" data-view="home">হোম</button>
-    <button class="nav-link" data-view="about">সম্পর্কে</button>
-    <button class="nav-link" data-view="faq">FAQ</button>
-    <button class="nav-link" data-view="contact">যোগাযোগ</button>
-  </nav>
-
-  <div class="header-actions">
-    <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন">🌙</button>
-    <button class="icon-btn" onclick="window.location.href='https://serakib.github.io/Medical-Admission-Tracker/'" title="ফিরে যান">←</button>
-    <button class="mobile-menu-btn" id="mobileMenuBtn" title="মেনু">☰</button>
-  </div>
-</header>
-
-<!-- ===== Main ===== -->
-<main>
-
-  <!-- Home / Chat View -->
-  <section class="view active" id="view-home">
-    <div class="chat-card">
-      <div class="chat-messages" id="messages">
-        <div class="msg bot">
-          <div class="avatar bot">AI</div>
-          <div class="bubble">আসসালামু আলাইকুম! 👋<br>আমি MedTracker AI। মেডিকেল ভর্তি সম্পর্কিত যেকোনো প্রশ্ন করতে পারেন। ছবি পাঠিয়ে প্রশ্নও করতে পারেন (📎 আইকনে ক্লিক করে)।</div>
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">AI</div>
+            MedTracker AI
         </div>
-      </div>
-
-      <div class="suggestions" id="suggestions">
-        <button class="sugg-btn" onclick="askSuggestion('মেডিকেল ভর্তি পরীক্ষার সিলেবাস কী?')">📚 সিলেবাস</button>
-        <button class="sugg-btn" onclick="askSuggestion('ভর্তি পরীক্ষার জন্য কীভাবে প্রস্তুতি নেব?')">✍️ প্রস্তুতি</button>
-        <button class="sugg-btn" onclick="askSuggestion('মেডিকেল কলেজের লিস্ট দাও')">🏥 কলেজ লিস্ট</button>
-      </div>
-
-      <div class="chat-input-area">
-        <div class="file-preview" id="filePreview">
-          <img id="previewImg" src="" alt="" />
-          <span id="previewName"></span>
-          <button onclick="clearFile()" title="মুছে ফেলুন">✕</button>
+        
+        <div class="nav-links">
+            <a id="nav-home" class="active" onclick="switchView('home')">Home</a>
+            <a id="nav-about" onclick="switchView('about')">About</a>
+            <a id="nav-faq" onclick="switchView('faq')">FAQ</a>
+            <a id="nav-contact" onclick="switchView('contact')">Contact</a>
         </div>
-        <div class="input-row">
-          <label for="fileInput" class="attach-btn" title="ছবি পাঠান">📎</label>
-          <input type="file" id="fileInput" accept="image/*" hidden />
-          <textarea id="userInput" rows="1" placeholder="আপনার প্রশ্ন লিখুন..."></textarea>
-          <button class="send-btn" id="sendBtn" title="পাঠান">➤</button>
+
+        <div class="nav-right">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+            
+            <a href="https://serakib.github.io/Medical-Admission-Tracker/" class="back-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back
+            </a>
         </div>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- About View -->
-  <section class="view" id="view-about">
-    <div class="section-card">
-      <h2 class="section-title">MedTracker AI সম্পর্কে</h2>
-      <p class="section-subtitle">মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি স্মার্ট সহায়ক</p>
+    <main>
+        <!-- Home View -->
+        <div id="view-home" class="view active">
+            <div class="chat-card">
+                <div class="chat-header">
+                    <div class="bot-avatar">AI</div>
+                    <div class="bot-info">
+                        <h3>Your website's AI Assistant</h3>
+                        <p>Preview — trained on your live content</p>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন। 📎 আইকনে ক্লিক করে ছবি পাঠাতে পারেন, 🎤 আইকনে ক্লিক করে কথা বলতে পারেন।</div>
+                </div>
+                <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
 
-      <p style="line-height: 1.8; color: var(--muted); font-size: 15px;">
-        MedTracker AI হলো Medical Admission Tracker-এর একটি অংশ, যা মেডিকেল ভর্তি পরীক্ষার প্রস্তুতিতে শিক্ষার্থীদের সাহায্য করে।
-        এটি Groq-এর অত্যাধুনিক AI মডেল দ্বারা চালিত, যা বাংলা ও ইংরেজি উভয় ভাষায় প্রশ্নের উত্তর দিতে সক্ষম।
-        আপনি টেক্সট, ছবি — যেকোনোভাবে প্রশ্ন করতে পারেন।
-      </p>
+                <!-- ✅ নতুন: ইনপুট র‍্যাপার (ফাইল প্রিভিউ + ইনপুট + বাটন) -->
+                <div class="chat-input-wrapper">
+                    <div class="file-preview" id="filePreview">
+                        <img id="previewImg" src="" alt="" />
+                        <span id="previewName"></span>
+                        <button class="remove-file" onclick="clearFile()" title="মুছে ফেলুন">✕</button>
+                    </div>
 
-      <div class="about-grid">
-        <div class="about-item">
-          <div class="about-icon">⚡</div>
-          <h3>দ্রুত উত্তর</h3>
-          <p>Groq-এর অত্যাধুনিক প্রসেসরে চলে, তাই রেসপন্স মিলিসেকেন্ডে আসে।</p>
+                    <div class="input-area">
+                        <!-- ✅ অ্যাটাচ বাটন -->
+                        <label for="fileInput" class="icon-btn-input" title="ছবি পাঠান">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </label>
+                        <input type="file" id="fileInput" accept="image/*" hidden />
+
+                        <!-- ✅ মাইক বাটন -->
+                        <button class="icon-btn-input" id="micBtn" title="কথা বলে প্রশ্ন করুন">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </button>
+
+                        <!-- ✅ স্পিকার টগল -->
+                        <button class="icon-btn-input" id="speakerBtn" title="উত্তর শুনুন (টগল)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                        </button>
+
+                        <input type="text" id="userInput" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="about-item">
-          <div class="about-icon">🎯</div>
-          <h3>নির্ভুল তথ্য</h3>
-          <p>মেডিকেল ভর্তি সম্পর্কিত নির্ভরযোগ্য ও সঠিক তথ্য প্রদান করে।</p>
+
+        <!-- About View -->
+        <div id="view-about" class="view">
+            <h2 class="section-title">About Us</h2>
+            <p class="section-subtitle">আমাদের সম্পর্কে জানুন</p>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Medical Admission Tracker</h3>
+                    <p>আমরা একটি স্বেচ্ছাসেবী প্ল্যাটফর্ম, যা মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের সঠিক তথ্য ও দিকনির্দেশনা দিতে কাজ করে। আমাদের লক্ষ্য হলো শিক্ষার্থীদের ভর্তি প্রক্রিয়াকে সহজ করা।</p>
+                    <p>এই AI অ্যাসিস্ট্যান্টটি শিক্ষার্থীদের সাধারণ প্রশ্নের উত্তর দিতে এবং তাদের সঠিক পথে পরিচালিত করতে সাহায্য করবে।</p>
+                </div>
+                <div class="about-image">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+            </div>
         </div>
-        <div class="about-item">
-          <div class="about-icon">🖼️</div>
-          <h3>ছবি বিশ্লেষণ</h3>
-          <p>প্রশ্নের ছবি পাঠালে AI সেটি বিশ্লেষণ করে উত্তর দিতে পারে।</p>
+
+        <!-- FAQ View -->
+        <div id="view-faq" class="view">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">আপনার সাধারণ জিজ্ঞাসাগুলোর উত্তর</p>
+            <div class="faq-container">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div>
+                    <div class="faq-answer">হ্যাঁ, এই অ্যাসিস্ট্যান্টটি সম্পূর্ণ ফ্রি। আপনি যেকোনো সময় যেকোনো প্রশ্ন করতে পারেন।</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question"><span>AI কি সবসময় সঠিক উত্তর দেবে?</span><span class="faq-icon">▼</span></div>
+                    <div class="faq-answer">AI সাধারণত সঠিক উত্তর দেয়, তবে মাঝে মাঝে ভুল করতে পারে। অফিসিয়াল নোটিশের জন্য অনুগ্রহ করে মূল ওয়েবসাইটের নোটিশ বোর্ড দেখুন।</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question"><span>আমি কি ইংরেজিতে প্রশ্ন করতে পারব?</span><span class="faq-icon">▼</span></div>
+                    <div class="faq-answer">অবশ্যই! আপনি বাংলা বা ইংরেজি যেকোনো ভাষায় প্রশ্ন করতে পারেন। AI আপনার ভাষাতেই উত্তর দেবে।</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question"><span>ছবি পাঠিয়ে প্রশ্ন করা যাবে?</span><span class="faq-icon">▼</span></div>
+                    <div class="faq-answer">হ্যাঁ, ইনপুট বক্সের পাশে 📎 আইকনে ক্লিক করে ছবি (JPG, PNG, WEBP) পাঠাতে পারেন। AI ছবিটি বিশ্লেষণ করে উত্তর দেবে। সর্বোচ্চ ৫ MB।</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question"><span>ভয়েস দিয়ে প্রশ্ন করা যাবে?</span><span class="faq-icon">▼</span></div>
+                    <div class="faq-answer">হ্যাঁ, 🎤 আইকনে ক্লিক করে কথা বলে প্রশ্ন করতে পারেন। আর 🔊 আইকনে ক্লিক করে AI-এর উত্তর শুনতে পারেন।</div>
+                </div>
+            </div>
         </div>
-        <div class="about-item">
-          <div class="about-icon">🆓</div>
-          <h3>সম্পূর্ণ ফ্রি</h3>
-          <p>কোনো সাবস্ক্রিপশন বা পেমেন্ট ছাড়াই সব ফিচার ব্যবহার করা যায়।</p>
+
+        <!-- Contact View -->
+        <div id="view-contact" class="view">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-subtitle">যেকোনো পরামর্শ বা অভিযোগের জন্য আমাদের সাথে যোগাযোগ করুন</p>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span>serakib@example.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        <span>+880 1234 567890</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span>Dhaka, Bangladesh</span>
+                    </div>
+                </div>
+                <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully!');">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea rows="5" placeholder="Your Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </main>
 
-  <!-- FAQ View -->
-  <section class="view" id="view-faq">
-    <div class="section-card">
-      <h2 class="section-title">সাধারণ জিজ্ঞাসা</h2>
-      <p class="section-subtitle">আপনার প্রশ্নের উত্তর এখানে পেতে পারেন</p>
-
-      <div class="faq-item">
-        <div class="faq-question">MedTracker AI কী?</div>
-        <div class="faq-answer">MedTracker AI হলো একটি কৃত্রিম বুদ্ধিমত্তা চালিত সহায়ক, যা মেডিকেল ভর্তি পরীক্ষা সংক্রান্ত প্রশ্নের উত্তর দেয়। এটি Medical Admission Tracker-এর একটি অবিচ্ছেদ্য অংশ।</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">এটি কি ফ্রি?</div>
-        <div class="faq-answer">হ্যাঁ, MedTracker AI সম্পূর্ণ ফ্রি। কোনো সাবস্ক্রিপশন, লগইন বা পেমেন্টের প্রয়োজন নেই। আপনি সরাসরি প্রশ্ন করতে পারেন।</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">ছবি পাঠিয়ে প্রশ্ন করা যাবে?</div>
-        <div class="faq-answer">হ্যাঁ, ইনপুট বক্সের পাশে 📎 আইকনে ক্লিক করে ছবি (JPG, PNG, WEBP, GIF) পাঠাতে পারেন। ছবিটি AI বিশ্লেষণ করে উত্তর দেবে। সর্বোচ্চ ৫ MB সাইজ।</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">AI কি বাংলায় উত্তর দেয়?</div>
-        <div class="faq-answer">হ্যাঁ, MedTracker AI বাংলা ও ইংরেজি উভয় ভাষায় প্রশ্ন বুঝতে এবং উত্তর দিতে সক্ষম। আপনি যে ভাষায় প্রশ্ন করবেন, সেই ভাষায় উত্তর পাবেন।</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">উত্তর কতটা নির্ভরযোগ্য?</div>
-        <div class="faq-answer">AI যতটা সম্ভব নির্ভুল উত্তর দেওয়ার চেষ্টা করে, তবে গুরুত্বপূর্ণ সিদ্ধান্তের আগে অফিসিয়াল সূত্র যাচাই করা উচিত। এটি একটি সহায়ক টুল, চূড়ান্ত পরামর্শ নয়।</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact View -->
-  <section class="view" id="view-contact">
-    <div class="section-card">
-      <h2 class="section-title">যোগাযোগ করুন</h2>
-      <p class="section-subtitle">যেকোনো প্রশ্ন বা পরামর্শের জন্য আমাদের সাথে যোগাযোগ করুন</p>
-
-      <div class="contact-grid">
-        <div class="contact-item">
-          <div class="contact-icon">📧</div>
-          <div>
-            <h4>ইমেইল</h4>
-            <p>serakib@example.com</p>
-          </div>
+    <!-- ================= ফুটার ================= -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>MedTracker AI</h4>
+                <p>মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি নির্ভরযোগ্য প্ল্যাটফর্ম। সঠিক তথ্য ও দিকনির্দেশনা আমাদের লক্ষ্য।</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a onclick="switchView('home')">Home</a></li>
+                    <li><a onclick="switchView('about')">About Us</a></li>
+                    <li><a onclick="switchView('faq')">FAQ</a></li>
+                    <li><a onclick="switchView('contact')">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="https://serakib.github.io/Medical-Admission-Tracker/" target="_blank">Main Website</a></li>
+                    <li><a href="#">Admission Guide</a></li>
+                    <li><a href="#">Notice Board</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">YouTube</a></li>
+                    <li><a href="#">Telegram</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="contact-item">
-          <div class="contact-icon">📱</div>
-          <div>
-            <h4>ফোন</h4>
-            <p>+৮৮০ ১৭XX-XXXXXX</p>
-          </div>
+        <div class="footer-bottom">
+            &copy; 2026 Medical Admission Tracker. All rights reserved.
         </div>
-        <div class="contact-item">
-          <div class="contact-icon">📍</div>
-          <div>
-            <h4>ঠিকানা</h4>
-            <p>ঢাকা, বাংলাদেশ</p>
-          </div>
-        </div>
-      </div>
+    </footer>
 
-      <form class="contact-form" onsubmit="event.preventDefault(); alert('ধন্যবাদ! আপনার বার্তা পাঠানো হয়েছে।');">
-        <input type="text" placeholder="আপনার নাম" required />
-        <input type="email" placeholder="আপনার ইমেইল" required />
-        <textarea placeholder="আপনার বার্তা লিখুন..." required></textarea>
-        <button type="submit">বার্তা পাঠান</button>
-      </form>
-    </div>
-  </section>
+    <script>
+        // ==============================================================
+        // ⚙️ কনফিগারেশন
+        // ==============================================================
+        const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 
-</main>
+        // ==============================================================
+        // ১. থিম টগল (Dark/Light Mode)
+        // ==============================================================
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
 
-<!-- ===== Footer ===== -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-col">
-      <div class="footer-logo">
-        <div class="logo-icon" style="width:30px;height:30px;font-size:15px;">🩺</div>
-        <span>MedTracker AI</span>
-      </div>
-      <p>মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের জন্য একটি স্মার্ট AI সহায়ক। প্রশ্ন করুন, শিখুন, এগিয়ে যান।</p>
-    </div>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
 
-    <div class="footer-col">
-      <h4>Quick Links</h4>
-      <a href="#" onclick="switchView('home'); return false;">হোম</a>
-      <a href="#" onclick="switchView('about'); return false;">সম্পর্কে</a>
-      <a href="#" onclick="switchView('faq'); return false;">FAQ</a>
-      <a href="#" onclick="switchView('contact'); return false;">যোগাযোগ</a>
-    </div>
+        // ==============================================================
+        // ২. Tabbed View System
+        // ==============================================================
+        function switchView(viewName) {
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
+            
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            document.getElementById('nav-' + viewName).classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-    <div class="footer-col">
-      <h4>Resources</h4>
-      <a href="https://serakib.github.io/Medical-Admission-Tracker/" target="_blank">মূল সাইট</a>
-      <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
-      <a href="https://console.groq.com" target="_blank">Groq Console</a>
-      <a href="https://render.com" target="_blank">Render.com</a>
-    </div>
+        // ==============================================================
+        // ৩. FAQ Accordion
+        // ==============================================================
+        function toggleFaq(element) {
+            const faqItem = element;
+            const allItems = document.querySelectorAll('.faq-item');
+            allItems.forEach(item => {
+                if (item !== faqItem) item.classList.remove('active');
+            });
+            faqItem.classList.toggle('active');
+        }
 
-    <div class="footer-col">
-      <h4>Follow Us</h4>
-      <p>সোশ্যাল মিডিয়ায় আমাদের অনুসরণ করুন</p>
-      <div class="footer-social">
-        <a href="#" title="Facebook">f</a>
-        <a href="#" title="YouTube">▶</a>
-        <a href="#" title="Twitter">𝕏</a>
-        <a href="#" title="GitHub">⚙</a>
-      </div>
-    </div>
-  </div>
+        // ==============================================================
+        // ৪. চ্যাট লজিক
+        // ==============================================================
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
+        const previewImg = document.getElementById('previewImg');
+        const previewName = document.getElementById('previewName');
+        const micBtn = document.getElementById('micBtn');
+        const speakerBtn = document.getElementById('speakerBtn');
 
-  <div class="footer-bottom">
-    © ২০২৬ MedTracker AI। সর্বস্বত্ব সংরক্ষিত। | Made with 💜 for Medical Students
-  </div>
-</footer>
+        let attachedFile = null;
+        let isSending = false;
+        let voiceReplyEnabled = localStorage.getItem('voiceReply') === 'true';
+        let recognition = null;
 
-<script>
-// ⚙️ Render-এর URL
-const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
+        // স্পিকার বাটনের প্রাথমিক অবস্থা
+        if (voiceReplyEnabled) speakerBtn.classList.add('active');
 
-const messagesEl = document.getElementById('messages');
-const inputEl = document.getElementById('userInput');
-const sendBtn = document.getElementById('sendBtn');
-const fileInput = document.getElementById('fileInput');
-const filePreview = document.getElementById('filePreview');
-const previewImg = document.getElementById('previewImg');
-const previewName = document.getElementById('previewName');
-const themeBtn = document.getElementById('themeBtn');
-const suggestionsEl = document.getElementById('suggestions');
-const navMenu = document.getElementById('navMenu');
-const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        // ==============================================================
+        // ৫. ছবি হ্যান্ডলিং
+        // ==============================================================
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-let attachedFile = null;
-let isSending = false;
+            if (file.size > 5 * 1024 * 1024) {
+                alert('ছবির সাইজ ৫ MB এর বেশি হতে পারবে না');
+                fileInput.value = '';
+                return;
+            }
 
-/* ===== থিম টগল ===== */
-const savedTheme = localStorage.getItem('theme') || 'dark';
-document.documentElement.setAttribute('data-theme', savedTheme);
-themeBtn.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+            attachedFile = file;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                previewImg.src = ev.target.result;
+                previewName.textContent = file.name;
+                filePreview.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        });
 
-themeBtn.addEventListener('click', () => {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  themeBtn.textContent = next === 'dark' ? '🌙' : '☀️';
-  localStorage.setItem('theme', next);
-});
+        function clearFile() {
+            attachedFile = null;
+            fileInput.value = '';
+            filePreview.style.display = 'none';
+            previewImg.src = '';
+        }
 
-/* ===== Tabbed View System ===== */
-function switchView(viewName) {
-  // সব view লুকান
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  // নির্বাচিত view দেখান
-  const target = document.getElementById('view-' + viewName);
-  if (target) target.classList.add('active');
+        // ==============================================================
+        // ৬. ভয়েস ইনপুট (Web Speech API)
+        // ==============================================================
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  // Nav active state
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.classList.toggle('active', link.dataset.view === viewName);
-  });
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'bn-BD';
+            recognition.continuous = false;
+            recognition.interimResults = false;
 
-  // Mobile menu বন্ধ করুন
-  navMenu.classList.remove('open');
-}
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                micBtn.classList.remove('recording');
+            };
 
-// Nav links ইভেন্ট
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', () => switchView(link.dataset.view));
-});
+            recognition.onerror = (event) => {
+                console.error('Speech error:', event.error);
+                micBtn.classList.remove('recording');
+                if (event.error === 'not-allowed') {
+                    alert('মাইক্রোফোন ব্যবহারের অনুমতি প্রয়োজন');
+                }
+            };
 
-// Mobile menu toggle
-mobileMenuBtn.addEventListener('click', () => {
-  navMenu.classList.toggle('open');
-});
+            recognition.onend = () => {
+                micBtn.classList.remove('recording');
+            };
 
-/* ===== FAQ Accordion ===== */
-document.querySelectorAll('.faq-question').forEach(q => {
-  q.addEventListener('click', () => {
-    const item = q.parentElement;
-    const isOpen = item.classList.contains('open');
-    // সব বন্ধ করুন
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    // যদি বন্ধ ছিল, খুলুন
-    if (!isOpen) item.classList.add('open');
-  });
-});
+            micBtn.addEventListener('click', () => {
+                if (micBtn.classList.contains('recording')) {
+                    recognition.stop();
+                } else {
+                    try {
+                        recognition.start();
+                        micBtn.classList.add('recording');
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            });
+        } else {
+            micBtn.addEventListener('click', () => {
+                alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।');
+            });
+        }
 
-/* ===== ফাইল হ্যান্ডলিং ===== */
-fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+        // ==============================================================
+        // ৭. ভয়েস আউটপুট (Text-to-Speech)
+        // ==============================================================
+        speakerBtn.addEventListener('click', () => {
+            voiceReplyEnabled = !voiceReplyEnabled;
+            localStorage.setItem('voiceReply', voiceReplyEnabled);
+            speakerBtn.classList.toggle('active', voiceReplyEnabled);
+            if (!voiceReplyEnabled) {
+                speechSynthesis.cancel();
+            }
+        });
 
-  if (file.size > 5 * 1024 * 1024) {
-    alert('ছবির সাইজ ৫ MB এর বেশি হতে পারবে না');
-    fileInput.value = '';
-    return;
-  }
+        function speakText(text) {
+            if (!voiceReplyEnabled) return;
+            if (!('speechSynthesis' in window)) return;
 
-  attachedFile = file;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    previewImg.src = ev.target.result;
-    previewName.textContent = file.name;
-    filePreview.style.display = 'flex';
-  };
-  reader.readAsDataURL(file);
-});
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            // ভাষা ডিটেক্ট: বাংলা অক্ষর থাকলে বাংলা, নাহলে ইংরেজি
+            utterance.lang = /[\u0980-\u09FF]/.test(text) ? 'bn-BD' : 'en-US';
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            speechSynthesis.speak(utterance);
+        }
 
-function clearFile() {
-  attachedFile = null;
-  fileInput.value = '';
-  filePreview.style.display = 'none';
-  previewImg.src = '';
-}
+        // ==============================================================
+        // ৮. মেসেজ পাঠানো
+        // ==============================================================
+        async function sendMessage() {
+            if (isSending) return;
+            const text = userInput.value.trim();
+            if (!text && !attachedFile) return;
 
-/* ===== মেসেজ পাঠানো ===== */
-async function sendMessage() {
-  if (isSending) return;
-  const text = inputEl.value.trim();
-  if (!text && !attachedFile) return;
+            isSending = true;
+            sendBtn.disabled = true;
 
-  isSending = true;
-  sendBtn.disabled = true;
+            // ইউজার মেসেজ UI-তে দেখান
+            addMessage(text, 'user', attachedFile);
+            userInput.value = '';
 
-  addMessage('user', text, attachedFile);
-  inputEl.value = '';
-  inputEl.style.height = 'auto';
+            const fileToSend = attachedFile;
+            clearFile();
 
-  const fileToSend = attachedFile;
-  clearFile();
-  suggestionsEl.style.display = 'none';
+            // টাইপিং ইন্ডিকেটর
+            typingIndicator.style.display = 'flex';
+            chatMessages.appendChild(typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
 
-  const typingEl = addTyping();
+            try {
+                const formData = new FormData();
+                formData.append('message', text || '');
+                if (fileToSend) formData.append('image', fileToSend);
 
-  try {
-    const formData = new FormData();
-    formData.append('message', text || '');
-    if (fileToSend) formData.append('image', fileToSend);
+                const response = await fetch(`${BACKEND_URL}/api/chat`, {
+                    method: 'POST',
+                    body: formData
+                });
 
-    const res = await fetch(`${BACKEND_URL}/api/chat`, {
-      method: 'POST',
-      body: formData
-    });
+                const data = await response.json();
+                typingIndicator.style.display = 'none';
 
-    const data = await res.json();
-    typingEl.remove();
+                if (response.ok && data.reply) {
+                    addMessage(data.reply, 'bot');
+                    speakText(data.reply);
+                } else {
+                    addMessage("দুঃখিত, আমি এই মুহূর্তে উত্তর দিতে পারছি না। আবার চেষ্টা করুন।", 'bot');
+                }
+            } catch (error) {
+                typingIndicator.style.display = 'none';
+                addMessage("নেটওয়ার্ক সমস্যা হয়েছে। ইন্টারনেট চেক করে আবার চেষ্টা করুন।", 'bot');
+                console.error(error);
+            }
 
-    if (!res.ok) {
-      addMessage('bot', '❌ এরর: ' + (data.error || 'অজানা সমস্যা'));
-    } else {
-      addMessage('bot', data.reply);
-    }
-  } catch (err) {
-    typingEl.remove();
-    addMessage('bot', '❌ সার্ভারে সংযোগ করা যাচ্ছে না। কিছুক্ষণ পর চেষ্টা করুন।');
-  } finally {
-    isSending = false;
-    sendBtn.disabled = false;
-    inputEl.focus();
-  }
-}
+            isSending = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+        }
 
-function addMessage(role, text, file) {
-  const wrap = document.createElement('div');
-  wrap.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
+        function addMessage(text, sender, file) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', sender);
 
-  const avatar = document.createElement('div');
-  avatar.className = `avatar ${role === 'user' ? 'user' : 'bot'}`;
-  avatar.textContent = role === 'user' ? '👤' : 'AI';
+            // ছবি থাকলে যোগ করুন
+            if (file) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                msgDiv.appendChild(img);
+            }
 
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
+            // টেক্সট থাকলে যোগ করুন
+            if (text) {
+                const p = document.createElement('div');
+                p.innerText = text;
+                msgDiv.appendChild(p);
+            }
 
-  if (file) {
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    bubble.appendChild(img);
-  }
+            chatMessages.insertBefore(msgDiv, typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
-  if (text) {
-    const p = document.createElement('div');
-    p.textContent = text;
-    bubble.appendChild(p);
-  }
-
-  wrap.appendChild(avatar);
-  wrap.appendChild(bubble);
-  messagesEl.appendChild(wrap);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-  return wrap;
-}
-
-function addTyping() {
-  const wrap = document.createElement('div');
-  wrap.className = 'msg bot';
-  wrap.innerHTML = `
-    <div class="avatar bot">AI</div>
-    <div class="bubble">
-      <div class="typing"><span></span><span></span><span></span></div>
-    </div>`;
-  messagesEl.appendChild(wrap);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-  return wrap;
-}
-
-function askSuggestion(text) {
-  inputEl.value = text;
-  sendMessage();
-}
-
-/* ===== ইভেন্ট ===== */
-sendBtn.addEventListener('click', sendMessage);
-
-inputEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-});
-
-inputEl.addEventListener('input', () => {
-  inputEl.style.height = 'auto';
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
-});
-
-inputEl.focus();
-</script>
-
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
 </body>
 </html>
