@@ -583,6 +583,62 @@ footer{padding:40px 20px 20px;}
 
 <div class="voice-toast" id="voiceToast"></div>
 
+
+
+
+
+
+
+
+
+<script>
+
+async function browserSpeak(text) {
+    return new Promise(async (resolve) => {
+        if (!('speechSynthesis' in window)) { resolve(); return; }
+        try { speechSynthesis.cancel(); } catch(e){}
+
+        const voices = await ensureVoicesLoaded();
+        const cfg = BROWSER_VOICE_MAP[selectedVoice] || BROWSER_VOICE_MAP.emma;
+        const best = await pickBestVoice(text, cfg.lang);
+
+        const u = new SpeechSynthesisUtterance(text);
+        window.currentUtterance = u; // Chrome garbage collection bug fix
+
+        // Bengali voice na thakle default English/System voice set korbe
+        if (best.voice) {
+            u.voice = best.voice;
+            u.lang = best.lang;
+        } else if (voices.length > 0) {
+            u.voice = voices[0];
+            u.lang = voices[0].lang;
+        }
+
+        u.pitch = cfg.pitch || 1.0;
+        u.rate = cfg.rate || 1.0;
+        u.volume = 1;
+
+        const safety = setTimeout(() => { 
+            window.currentUtterance = null; 
+            resolve(); 
+        }, Math.max(6000, text.length * 150));
+
+        u.onend = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
+        u.onerror = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
+
+        try {
+            speechSynthesis.speak(u);
+        } catch (e) {
+            clearTimeout(safety);
+            window.currentUtterance = null;
+            resolve();
+        }
+    });
+}
+
+
+</script>
+
 <script>
 const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 const FETCH_TIMEOUT_MS = 60000;
