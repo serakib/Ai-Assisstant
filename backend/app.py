@@ -1,8 +1,8 @@
-=from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from google import genai  # ✅ গুগলের নতুন SDK ইমপোর্ট
+from google import genai  # ✅ নতুন SDK ইমপোর্ট
 
 load_dotenv()
 
