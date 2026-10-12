@@ -1167,22 +1167,57 @@ function safeStartRecognition() {
     }
 }
 
-async function speakAndListen(text) {
-    isSpeaking = true;
-    if (isRecognizing) {
-        try { recognition.stop(); } catch(e){}
-        await new Promise(r => setTimeout(r, 280));
-    }
-    setOrbState('speaking');
-    await new Promise(r => setTimeout(r, 60));
-    await speakText(text);
-    isSpeaking = false;
-    if (micMuted || !voiceModeOn) { setOrbState('idle'); return; }
-    setTimeout(() => {
-        if (voiceModeOn && !micMuted && !isRecognizing) safeStartRecognition();
-    }, 420);
-}
+async function speakText(text) {
+    return new Promise(async (resolve) => {
+        if (!text || !text.trim()) { resolve(); return; }
+        stopAllAudio();
+        if (ttsAbortController) { try { ttsAbortController.abort(); } catch(e){} }
+        ttsAbortController = new AbortController();
+        pendingTtsResolve = resolve;
+        let resolved = false;
+        const done = () => { if (!resolved) { resolved = true; pendingTtsResolve = null; resolve(); } };
 
+        try {
+            // ১. প্রথমে আপনার পাইথন ব্যাকএন্ডের /api/tts চেষ্টা করবে
+            const res = await fetch(`${BACKEND_URL}/api/tts`, {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ text, voice: selectedVoice }),
+                signal: ttsAbortController.signal
+            });
+            if (!res.ok) throw new Error('Backend TTS status ' + res.status);
+            const blob = await res.blob();
+            if (!blob.type.startsWith('audio/')) throw new Error('Not audio');
+            const url = URL.createObjectURL(blob);
+            const audio = new Audio(url);
+            audio.preload = 'auto';
+            audio.volume = 1;
+            window.currentAudio = audio;
+            await playAudioWithFade(audio, { fadeIn: 0.08, fadeOut: 0.12 });
+            URL.revokeObjectURL(url);
+            window.currentAudio = null;
+            done();
+            return;
+        } catch (err) {
+            // ২. ব্যাকএন্ড ফেইল করলে বা নেটওয়ার্ক সমস্যা হলে Google TTS Fallback ব্যবহার করবে
+            try {
+                const encodedText = encodeURIComponent(text);
+                const fallbackUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=bn&client=tw-ob`;
+                const fallbackAudio = new Audio(fallbackUrl);
+                fallbackAudio.volume = 1;
+                window.currentAudio = fallbackAudio;
+                await playAudioWithFade(fallbackAudio, { fadeIn: 0.05, fadeOut: 0.05 });
+                window.currentAudio = null;
+                done();
+                return;
+            } catch (fallbackErr) {
+                // ৩. শেষ অপশন হিসেবে ব্রাউজারের নিজস্ব স্পিচ সিন্থেসিস ব্যবহার করবে
+                await browserSpeak(text);
+                done();
+            }
+        }
+    });
+}
 function openVoiceMode() {
     const activeView = document.querySelector('.view.active');
     if (activeView) returnToView = activeView.id.replace('view-', '');
