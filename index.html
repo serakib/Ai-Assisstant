@@ -325,7 +325,7 @@ body.light-mode .voice-overlay{
 .voice-inputbar input{flex:1;background:transparent;border:none;outline:none;color:var(--v-text);font-family:inherit;font-size:.95rem;padding:8px 4px;min-width:0;}
 .voice-inputbar input::placeholder{color:var(--v-text-muted);}
 .voice-inputbar .vib-mic{background:#10B981;color:#fff;border:none;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .35s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;box-shadow:0 0 0 0 rgba(16,185,129,.5);animation:micPulse 2s infinite;}
-@keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5);}70%{box-shadow:0 0 0 10px rgba(16,185,129,0);}}
+@keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5);}70%{box-shadow:0 0 0 10px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
 .voice-inputbar .vib-mic:hover{transform:scale(1.08);}
 .voice-inputbar .vib-mic.muted{background:#EF4444;animation:none;box-shadow:0 0 0 0 rgba(239,68,68,.4);}
 .voice-inputbar .vib-mic.muted:hover{background:#DC2626;transform:scale(1.05);}
@@ -583,65 +583,9 @@ footer{padding:40px 20px 20px;}
 
 <div class="voice-toast" id="voiceToast"></div>
 
-
-
-
-
-
-
-
-
-<script>
-
-async function browserSpeak(text) {
-    return new Promise(async (resolve) => {
-        if (!('speechSynthesis' in window)) { resolve(); return; }
-        try { speechSynthesis.cancel(); } catch(e){}
-
-        const voices = await ensureVoicesLoaded();
-        const cfg = BROWSER_VOICE_MAP[selectedVoice] || BROWSER_VOICE_MAP.emma;
-        const best = await pickBestVoice(text, cfg.lang);
-
-        const u = new SpeechSynthesisUtterance(text);
-        window.currentUtterance = u; // Chrome garbage collection bug fix
-
-        // Bengali voice na thakle default English/System voice set korbe
-        if (best.voice) {
-            u.voice = best.voice;
-            u.lang = best.lang;
-        } else if (voices.length > 0) {
-            u.voice = voices[0];
-            u.lang = voices[0].lang;
-        }
-
-        u.pitch = cfg.pitch || 1.0;
-        u.rate = cfg.rate || 1.0;
-        u.volume = 1;
-
-        const safety = setTimeout(() => { 
-            window.currentUtterance = null; 
-            resolve(); 
-        }, Math.max(6000, text.length * 150));
-
-        u.onend = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
-        u.onerror = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
-
-        try {
-            speechSynthesis.speak(u);
-        } catch (e) {
-            clearTimeout(safety);
-            window.currentUtterance = null;
-            resolve();
-        }
-    });
-}
-
-
-</script>
-
 <script>
 const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
-const FETCH_TIMEOUT_MS = 60000;
+const FETCH_TIMEOUT_MS = 90000; // Increased to 90s to prevent Render spin-down timeout errors
 
 const VOICE_ARTISTS = [
     { id:'emma', name:'Emma', gender:'female', style:'Friendly · Warm · Clear', lang:'🇧🇩 Bengali (BD)', demo:'হ্যালো, আমি এমা। আমি আপনাকে সাহায্য করতে পেরে খুশি হব।' },
@@ -758,10 +702,10 @@ let isSpeaking = false;
 let ttsAbortController = null;
 let pendingTtsResolve = null;
 let micPermissionRequested = false;
-window.currentUtterance = null; // Fixed garbage collection for speech synthesis
+window.currentUtterance = null;
 
 // ══════════════════════════════════════════════════════════
-//  🎧 SMOOTH AUDIO ENGINE
+//  🎧 ROBUST AUDIO & TTS ENGINE (WITH BROWSER FALLBACK)
 // ══════════════════════════════════════════════════════════
 
 let audioCtx = null;
@@ -847,7 +791,7 @@ async function pickBestVoice(text, preferredLang) {
     return { voice: null, lang: preferredLang || 'en-US' };
 }
 
-function speakText(text) {
+async function speakText(text) {
     return new Promise(async (resolve) => {
         if (!text || !text.trim()) { resolve(); return; }
         stopAllAudio();
@@ -858,6 +802,7 @@ function speakText(text) {
         const done = () => { if (!resolved) { resolved = true; pendingTtsResolve = null; resolve(); } };
 
         try {
+            // 1. Try backend Edge-TTS
             const res = await fetch(`${BACKEND_URL}/api/tts`, {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
@@ -897,6 +842,8 @@ function speakText(text) {
         } catch (err) {
             if (err.name === 'AbortError') { done(); return; }
         }
+
+        // 2. Fallback to Browser Speech Synthesis (Guaranteed voice playback)
         await browserSpeak(text);
         done();
     });
@@ -908,29 +855,25 @@ async function browserSpeak(text) {
         try { speechSynthesis.cancel(); } catch(e){}
         const cfg = BROWSER_VOICE_MAP[selectedVoice] || BROWSER_VOICE_MAP.emma;
         const best = await pickBestVoice(text, cfg.lang);
-        const isBangla = /[\u0980-\u09FF]/.test(text);
-        if (isBangla && best.voice && !best.voice.lang.toLowerCase().startsWith('bn')) {
-            showToast('⚠️ বাংলা ভয়েস পাওয়া যায়নি — ডিফল্ট ভয়েসে চেষ্টা হচ্ছে।', 5000);
-        }
         const u = new SpeechSynthesisUtterance(text);
-        window.currentUtterance = u; // Keep reference to prevent garbage collection bug in Chrome
-        u.lang = best.lang;
+        window.currentUtterance = u;
+        if (best.voice) {
+            u.voice = best.voice;
+            u.lang = best.lang;
+        }
         u.pitch = cfg.pitch;
         u.rate = cfg.rate;
-        u.volume = 1; // Set volume directly to 1 to avoid silent playback
-        if (best.voice) u.voice = best.voice;
-        
+        u.volume = 1;
+
         const safety = setTimeout(() => { window.currentUtterance = null; resolve(); }, Math.max(8000, text.length * 200));
-        
         u.onend = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
         u.onerror = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
-        
-        try { 
-            speechSynthesis.speak(u); 
-        } catch(e) { 
-            clearTimeout(safety); 
-            window.currentUtterance = null; 
-            resolve(); 
+        try {
+            speechSynthesis.speak(u);
+        } catch(e) {
+            clearTimeout(safety);
+            window.currentUtterance = null;
+            resolve();
         }
     });
 }
@@ -969,17 +912,10 @@ async function testVoice() {
     testVoiceBtn.classList.add('playing');
     showToast('🔊 ভয়েস টেস্ট চলছে…', 2500);
     const artist = VOICE_ARTISTS.find(v => v.id === selectedVoice) || VOICE_ARTISTS[0];
-    const testText = artist.demo;
-    const voices = await ensureVoicesLoaded();
-    const hasBangla = voices.some(v => v.lang.toLowerCase().startsWith('bn'));
     try {
-        await speakText(testText);
+        await speakText(artist.demo);
         testVoiceBtn.classList.remove('playing');
-        if (!hasBangla && /[\u0980-\u09FF]/.test(testText)) {
-            showToast('⚠️ বাংলা ভয়েস নেই — Chrome Settings → Languages → Text-to-speech এ Bengali ইনস্টল করুন।', 6000);
-        } else {
-            showToast('✅ ভয়েস কাজ করছে!', 2000);
-        }
+        showToast('✅ ভয়েস কাজ করছে!', 2000);
     } catch (e) {
         testVoiceBtn.classList.remove('playing');
         showToast('❌ ভয়েস ব্যর্থ: ' + e.message, 5000);
@@ -1167,57 +1103,22 @@ function safeStartRecognition() {
     }
 }
 
-async function speakText(text) {
-    return new Promise(async (resolve) => {
-        if (!text || !text.trim()) { resolve(); return; }
-        stopAllAudio();
-        if (ttsAbortController) { try { ttsAbortController.abort(); } catch(e){} }
-        ttsAbortController = new AbortController();
-        pendingTtsResolve = resolve;
-        let resolved = false;
-        const done = () => { if (!resolved) { resolved = true; pendingTtsResolve = null; resolve(); } };
-
-        try {
-            // ১. প্রথমে আপনার পাইথন ব্যাকএন্ডের /api/tts চেষ্টা করবে
-            const res = await fetch(`${BACKEND_URL}/api/tts`, {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body: JSON.stringify({ text, voice: selectedVoice }),
-                signal: ttsAbortController.signal
-            });
-            if (!res.ok) throw new Error('Backend TTS status ' + res.status);
-            const blob = await res.blob();
-            if (!blob.type.startsWith('audio/')) throw new Error('Not audio');
-            const url = URL.createObjectURL(blob);
-            const audio = new Audio(url);
-            audio.preload = 'auto';
-            audio.volume = 1;
-            window.currentAudio = audio;
-            await playAudioWithFade(audio, { fadeIn: 0.08, fadeOut: 0.12 });
-            URL.revokeObjectURL(url);
-            window.currentAudio = null;
-            done();
-            return;
-        } catch (err) {
-            // ২. ব্যাকএন্ড ফেইল করলে বা নেটওয়ার্ক সমস্যা হলে Google TTS Fallback ব্যবহার করবে
-            try {
-                const encodedText = encodeURIComponent(text);
-                const fallbackUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=bn&client=tw-ob`;
-                const fallbackAudio = new Audio(fallbackUrl);
-                fallbackAudio.volume = 1;
-                window.currentAudio = fallbackAudio;
-                await playAudioWithFade(fallbackAudio, { fadeIn: 0.05, fadeOut: 0.05 });
-                window.currentAudio = null;
-                done();
-                return;
-            } catch (fallbackErr) {
-                // ৩. শেষ অপশন হিসেবে ব্রাউজারের নিজস্ব স্পিচ সিন্থেসিস ব্যবহার করবে
-                await browserSpeak(text);
-                done();
-            }
-        }
-    });
+async function speakAndListen(text) {
+    isSpeaking = true;
+    if (isRecognizing) {
+        try { recognition.stop(); } catch(e){}
+        await new Promise(r => setTimeout(r, 280));
+    }
+    setOrbState('speaking');
+    await new Promise(r => setTimeout(r, 60));
+    await speakText(text);
+    isSpeaking = false;
+    if (micMuted || !voiceModeOn) { setOrbState('idle'); return; }
+    setTimeout(() => {
+        if (voiceModeOn && !micMuted && !isRecognizing) safeStartRecognition();
+    }, 420);
 }
+
 function openVoiceMode() {
     const activeView = document.querySelector('.view.active');
     if (activeView) returnToView = activeView.id.replace('view-', '');
@@ -1438,7 +1339,7 @@ async function sendFromVoice(text) {
         }
     } catch (e) {
         removeVoiceThinkingBadge(badge);
-        const errMsg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
+        const errMsg = e.name === 'AbortError' ? '⏱️ সার্ভার জাগতে সময় নিচ্ছে। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addVoiceMsg(errMsg, 'bot');
         setOrbState('idle');
     }
@@ -1555,12 +1456,16 @@ async function sendMessage() {
         const data = await res.json();
         typingIndicator.style.display = 'none';
         finishThinkingPanel(thinkPanel);
-        if (res.ok && data.reply) addMessage(data.reply, 'bot');
-        else addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
+        if (res.ok && data.reply) {
+            addMessage(data.reply, 'bot');
+            speakText(data.reply); // Automatically speak the reply in normal chat view too!
+        } else {
+            addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
+        }
     } catch (e) {
         typingIndicator.style.display = 'none';
         finishThinkingPanel(thinkPanel);
-        const msg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
+        const msg = e.name === 'AbortError' ? '⏱️ সার্ভার জাগতে সময় নিচ্ছে (Render Free Tier)। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addMessage(msg, 'bot');
     }
     isSending = false; sendBtn.disabled = false; userInput.focus();
@@ -1685,8 +1590,12 @@ async function regenerateChatMsg(btn) {
         const data = await res.json();
         typingIndicator.style.display = 'none';
         finishThinkingPanel(thinkPanel);
-        if (res.ok && data.reply) addMessage(data.reply, 'bot');
-        else addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
+        if (res.ok && data.reply) {
+            addMessage(data.reply, 'bot');
+            speakText(data.reply);
+        } else {
+            addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
+        }
     } catch (e) {
         typingIndicator.style.display = 'none';
         finishThinkingPanel(thinkPanel);
