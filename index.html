@@ -6,7 +6,6 @@
     <title>AI Assistant - Medical Admission Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ================= থিম ভেরিয়েবল ================= */
         :root {
             --bg-body: #F8FAFC;
             --bg-card: #FFFFFF;
@@ -49,7 +48,6 @@
             flex-direction: column;
         }
 
-        /* ================= হেডার ================= */
         header {
             position: sticky;
             top: 0;
@@ -72,7 +70,6 @@
         
         .nav-right { display: flex; align-items: center; gap: 16px; }
         
-        /* প্রিমিয়াম মোড টগল বাটন */
         .theme-toggle {
             background: transparent; border: 1px solid var(--border);
             color: var(--text-main); width: 42px; height: 42px; border-radius: 50%;
@@ -81,9 +78,7 @@
             position: relative; overflow: hidden;
         }
         .theme-toggle:hover { background: var(--bg-bot); transform: scale(1.05); }
-        .theme-toggle svg {
-            position: absolute; transition: all 0.4s ease;
-        }
+        .theme-toggle svg { position: absolute; transition: all 0.4s ease; }
         .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
         .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
         body.dark-mode .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
@@ -98,7 +93,6 @@
         }
         .back-btn:hover { background-color: var(--bg-bot); color: var(--text-main); }
 
-        /* ================= মূল কন্টেন্ট এরিয়া ================= */
         main {
             flex: 1;
             display: flex;
@@ -114,7 +108,6 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= চ্যাট ইন্টারফেস ================= */
         .chat-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
@@ -123,7 +116,7 @@
             flex-direction: column;
             overflow: hidden;
             box-shadow: var(--shadow);
-            height: 600px;
+            height: 620px;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -161,7 +154,6 @@
         .message.bot { align-self: flex-start; background-color: var(--bg-bot); color: var(--text-main); border-bottom-left-radius: 4px; }
         .message.user { align-self: flex-end; background-color: var(--bg-user); color: #ffffff; border-bottom-right-radius: 4px; }
 
-        /* ✅ নতুন: ছবির প্রিভিউ মেসেজের ভেতরে */
         .message img {
             max-width: 240px;
             max-height: 240px;
@@ -180,13 +172,11 @@
         .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* ================= ইনপুট এরিয়া (নতুন ফিচার সহ) ================= */
         .chat-input-wrapper {
             border-top: 1px solid var(--border);
             background-color: var(--bg-card);
         }
 
-        /* ✅ নতুন: ফাইল প্রিভিউ */
         .file-preview {
             display: none;
             align-items: center;
@@ -213,10 +203,9 @@
 
         .input-area {
             padding: 20px 24px;
-            display: flex; align-items: center; gap: 12px;
+            display: flex; align-items: center; gap: 10px;
         }
 
-        /* ✅ নতুন: অ্যাটাচ ও মাইক বাটন */
         .icon-btn-input {
             background: transparent;
             border: 1px solid var(--border);
@@ -266,7 +255,6 @@
         .send-btn:disabled { background: #94A3B8; cursor: not-allowed; transform: none; }
         .send-btn svg { width: 20px; height: 20px; fill: white; }
 
-        /* ================= অন্যান্য সেকশনের ডিজাইন ================= */
         .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-main); }
         .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 48px auto; }
 
@@ -297,7 +285,6 @@
         .contact-form button { padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .contact-form button:hover { background: #2563EB; }
 
-        /* ================= ফুটার ================= */
         footer {
             background-color: var(--footer-bg);
             color: var(--footer-text);
@@ -318,12 +305,8 @@
         .footer-col ul li { margin-bottom: 12px; }
         .footer-col ul li a { color: var(--footer-text); text-decoration: none; transition: 0.2s; font-size: 0.9rem; cursor: pointer; }
         .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
-        .footer-bottom {
-            text-align: center; padding-top: 20px; border-top: 1px solid #1E293B;
-            font-size: 0.85rem; max-width: 1100px; margin: 0 auto;
-        }
+        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1E293B; font-size: 0.85rem; max-width: 1100px; margin: 0 auto; }
 
-        /* ================= রেসপন্সিভ ================= */
         @media (max-width: 768px) {
             header { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
             .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 10px; gap: 16px; font-size: 0.85rem; }
@@ -379,15 +362,16 @@
                     <div class="bot-avatar">AI</div>
                     <div class="bot-info">
                         <h3>Your website's AI Assistant</h3>
-                        <p>Preview — trained on your live content</p>
+                        <p>Powered by Groq — Text, Image & Voice</p>
                     </div>
                 </div>
+
+                <!-- ✅ typingIndicator এখন chatMessages-এর ভেতরে -->
                 <div class="chat-messages" id="chatMessages">
                     <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন। 📎 আইকনে ক্লিক করে ছবি পাঠাতে পারেন, 🎤 আইকনে ক্লিক করে কথা বলতে পারেন।</div>
+                    <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
                 </div>
-                <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
 
-                <!-- ✅ নতুন: ইনপুট র‍্যাপার (ফাইল প্রিভিউ + ইনপুট + বাটন) -->
                 <div class="chat-input-wrapper">
                     <div class="file-preview" id="filePreview">
                         <img id="previewImg" src="" alt="" />
@@ -396,7 +380,6 @@
                     </div>
 
                     <div class="input-area">
-                        <!-- ✅ অ্যাটাচ বাটন -->
                         <label for="fileInput" class="icon-btn-input" title="ছবি পাঠান">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
@@ -404,7 +387,6 @@
                         </label>
                         <input type="file" id="fileInput" accept="image/*" hidden />
 
-                        <!-- ✅ মাইক বাটন -->
                         <button class="icon-btn-input" id="micBtn" title="কথা বলে প্রশ্ন করুন">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
@@ -414,7 +396,6 @@
                             </svg>
                         </button>
 
-                        <!-- ✅ স্পিকার টগল -->
                         <button class="icon-btn-input" id="speakerBtn" title="উত্তর শুনুন (টগল)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -505,7 +486,6 @@
         </div>
     </main>
 
-    <!-- ================= ফুটার ================= -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
@@ -550,7 +530,7 @@
         const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 
         // ==============================================================
-        // ১. থিম টগল (Dark/Light Mode)
+        // ১. থিম টগল
         // ==============================================================
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
@@ -563,15 +543,17 @@
         }
 
         // ==============================================================
-        // ২. Tabbed View System
+        // ২. Tabbed View
         // ==============================================================
         function switchView(viewName) {
             document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            document.getElementById('view-' + viewName).classList.add('active');
-            
+            const targetView = document.getElementById('view-' + viewName);
+            if (targetView) targetView.classList.add('active');
+
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-            document.getElementById('nav-' + viewName).classList.add('active');
-            
+            const navEl = document.getElementById('nav-' + viewName);
+            if (navEl) navEl.classList.add('active');
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -579,16 +561,14 @@
         // ৩. FAQ Accordion
         // ==============================================================
         function toggleFaq(element) {
-            const faqItem = element;
-            const allItems = document.querySelectorAll('.faq-item');
-            allItems.forEach(item => {
-                if (item !== faqItem) item.classList.remove('active');
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if (item !== element) item.classList.remove('active');
             });
-            faqItem.classList.toggle('active');
+            element.classList.toggle('active');
         }
 
         // ==============================================================
-        // ৪. চ্যাট লজিক
+        // ৪. DOM রেফারেন্স
         // ==============================================================
         const chatMessages = document.getElementById('chatMessages');
         const userInput = document.getElementById('userInput');
@@ -606,7 +586,6 @@
         let voiceReplyEnabled = localStorage.getItem('voiceReply') === 'true';
         let recognition = null;
 
-        // স্পিকার বাটনের প্রাথমিক অবস্থা
         if (voiceReplyEnabled) speakerBtn.classList.add('active');
 
         // ==============================================================
@@ -640,7 +619,7 @@
         }
 
         // ==============================================================
-        // ৬. ভয়েস ইনপুট (Web Speech API)
+        // ৬. ভয়েস ইনপুট
         // ==============================================================
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -651,22 +630,15 @@
             recognition.interimResults = false;
 
             recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                userInput.value = transcript;
+                userInput.value = event.results[0][0].transcript;
                 micBtn.classList.remove('recording');
             };
-
             recognition.onerror = (event) => {
                 console.error('Speech error:', event.error);
                 micBtn.classList.remove('recording');
-                if (event.error === 'not-allowed') {
-                    alert('মাইক্রোফোন ব্যবহারের অনুমতি প্রয়োজন');
-                }
+                if (event.error === 'not-allowed') alert('মাইক্রোফোন ব্যবহারের অনুমতি প্রয়োজন');
             };
-
-            recognition.onend = () => {
-                micBtn.classList.remove('recording');
-            };
+            recognition.onend = () => micBtn.classList.remove('recording');
 
             micBtn.addEventListener('click', () => {
                 if (micBtn.classList.contains('recording')) {
@@ -675,9 +647,7 @@
                     try {
                         recognition.start();
                         micBtn.classList.add('recording');
-                    } catch (err) {
-                        console.error(err);
-                    }
+                    } catch (err) { console.error(err); }
                 }
             });
         } else {
@@ -687,24 +657,20 @@
         }
 
         // ==============================================================
-        // ৭. ভয়েস আউটপুট (Text-to-Speech)
+        // ৭. ভয়েস আউটপুট
         // ==============================================================
         speakerBtn.addEventListener('click', () => {
             voiceReplyEnabled = !voiceReplyEnabled;
             localStorage.setItem('voiceReply', voiceReplyEnabled);
             speakerBtn.classList.toggle('active', voiceReplyEnabled);
-            if (!voiceReplyEnabled) {
-                speechSynthesis.cancel();
-            }
+            if (!voiceReplyEnabled) speechSynthesis.cancel();
         });
 
         function speakText(text) {
             if (!voiceReplyEnabled) return;
             if (!('speechSynthesis' in window)) return;
-
             speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
-            // ভাষা ডিটেক্ট: বাংলা অক্ষর থাকলে বাংলা, নাহলে ইংরেজি
             utterance.lang = /[\u0980-\u09FF]/.test(text) ? 'bn-BD' : 'en-US';
             utterance.rate = 1.0;
             utterance.pitch = 1.0;
@@ -722,16 +688,13 @@
             isSending = true;
             sendBtn.disabled = true;
 
-            // ইউজার মেসেজ UI-তে দেখান
             addMessage(text, 'user', attachedFile);
             userInput.value = '';
 
             const fileToSend = attachedFile;
             clearFile();
 
-            // টাইপিং ইন্ডিকেটর
             typingIndicator.style.display = 'flex';
-            chatMessages.appendChild(typingIndicator);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
@@ -751,11 +714,11 @@
                     addMessage(data.reply, 'bot');
                     speakText(data.reply);
                 } else {
-                    addMessage("দুঃখিত, আমি এই মুহূর্তে উত্তর দিতে পারছি না। আবার চেষ্টা করুন।", 'bot');
+                    addMessage("❌ এরর: " + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
                 }
             } catch (error) {
                 typingIndicator.style.display = 'none';
-                addMessage("নেটওয়ার্ক সমস্যা হয়েছে। ইন্টারনেট চেক করে আবার চেষ্টা করুন।", 'bot');
+                addMessage("❌ নেটওয়ার্ক সমস্যা। Render সার্ভার হয়তো ঘুমিয়ে আছে, ৩০ সেকেন্ড পর আবার চেষ্টা করুন।", 'bot');
                 console.error(error);
             }
 
@@ -764,25 +727,31 @@
             userInput.focus();
         }
 
+        // ==============================================================
+        // ৯. মেসেজ DOM-এ যোগ (✅ ফিক্সড)
+        // ==============================================================
         function addMessage(text, sender, file) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', sender);
 
-            // ছবি থাকলে যোগ করুন
             if (file) {
                 const img = document.createElement('img');
                 img.src = URL.createObjectURL(file);
                 msgDiv.appendChild(img);
             }
 
-            // টেক্সট থাকলে যোগ করুন
             if (text) {
                 const p = document.createElement('div');
                 p.innerText = text;
                 msgDiv.appendChild(p);
             }
 
-            chatMessages.insertBefore(msgDiv, typingIndicator);
+            // ✅ নিরাপদ চেক — typingIndicator চ্যাটের চাইল্ড কিনা
+            if (typingIndicator && typingIndicator.parentNode === chatMessages) {
+                chatMessages.insertBefore(msgDiv, typingIndicator);
+            } else {
+                chatMessages.appendChild(msgDiv);
+            }
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
