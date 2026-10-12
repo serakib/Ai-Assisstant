@@ -1,0 +1,42 @@
+# ==========================================
+# AI Assistant Project .gitignore
+# ==========================================
+
+# ১. Environment Variables (API Keys & Secrets)
+# Firebase এবং Gemini এর গোপন কী এই ফাইলে রাখলে সেগুলো গিটহাবে পুশ হবে না
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Firebase Service Account (যদি ব্যবহার করেন)
+serviceAccountKey.json
+.firebaserc
+
+# ২. OS এবং Editor ফাইল (অপ্রয়োজনীয় ফাইল আটকাতে)
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ৩. Node.js (ভবিষ্যতে যদি কোনো প্যাকেজ ব্যবহার করেন)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ৪. Build এবং Dist ফোল্ডার
+dist/
+build/
+out/
+.cache/
+
+# ৫. Logs এবং Temporary ফাইল
+*.log
+*.tmp
+*.temp
