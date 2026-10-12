@@ -396,12 +396,7 @@
                             </svg>
                         </button>
 
-                        <button class="icon-btn-input" id="speakerBtn" title="উত্তর শুনুন (টগল)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                            </svg>
-                        </button>
+                        
 
                         <input type="text" id="userInput" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
                         <button class="send-btn" id="sendBtn" onclick="sendMessage()">
@@ -579,14 +574,13 @@
         const previewImg = document.getElementById('previewImg');
         const previewName = document.getElementById('previewName');
         const micBtn = document.getElementById('micBtn');
-        const speakerBtn = document.getElementById('speakerBtn');
+     
 
         let attachedFile = null;
         let isSending = false;
-        let voiceReplyEnabled = localStorage.getItem('voiceReply') === 'true';
         let recognition = null;
-
-        if (voiceReplyEnabled) speakerBtn.classList.add('active');
+let silenceTimer = null;
+let finalTranscript = '';
 
         // ==============================================================
         // ৫. ছবি হ্যান্ডলিং
@@ -623,60 +617,93 @@
         // ==============================================================
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.lang = 'bn-BD';
-            recognition.continuous = false;
-            recognition.interimResults = false;
+       if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'bn-BD';
+    recognition.continuous = true;
+    recognition.interimResults = true;
 
-            recognition.onresult = (event) => {
-                userInput.value = event.results[0][0].transcript;
-                micBtn.classList.remove('recording');
-            };
-            recognition.onerror = (event) => {
-                console.error('Speech error:', event.error);
-                micBtn.classList.remove('recording');
-                if (event.error === 'not-allowed') alert('মাইক্রোফোন ব্যবহারের অনুমতি প্রয়োজন');
-            };
-            recognition.onend = () => micBtn.classList.remove('recording');
+    recognition.onstart = () => {
+        finalTranscript = '';
+        micBtn.classList.add('recording');
+    };
 
-            micBtn.addEventListener('click', () => {
-                if (micBtn.classList.contains('recording')) {
-                    recognition.stop();
-                } else {
-                    try {
-                        recognition.start();
-                        micBtn.classList.add('recording');
-                    } catch (err) { console.error(err); }
-                }
-            });
-        } else {
-            micBtn.addEventListener('click', () => {
-                alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।');
-            });
+    recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += transcript + ' ';
+            } else {
+                interim += transcript;
+            }
         }
+        userInput.value = (finalTranscript + interim).trim();
+
+        // ✅ নতুন কথা শুনলে টাইমার রিসেট করুন
+        clearTimeout(silenceTimer);
+        silenceTimer = setTimeout(() => {
+            recognition.stop(); // ২.৫ সেকেন্ড চুপ → অটো স্টপ
+        }, 2500);
+    };
+
+    recognition.onspeechend = () => {
+        // কথা থামলে ২.৫ সেকেন্ড পর স্টপ
+        clearTimeout(silenceTimer);
+        silenceTimer = setTimeout(() => {
+            recognition.stop();
+        }, 2500);
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Speech error:', event.error);
+        micBtn.classList.remove('recording');
+        clearTimeout(silenceTimer);
+        if (event.error === 'not-allowed') {
+            alert('মাইক্রোফোন ব্যবহারের অনুমতি প্রয়োজন');
+        }
+    };
+
+    recognition.onend = () => {
+        micBtn.classList.remove('recording');
+        clearTimeout(silenceTimer);
+
+        // ✅ অটো-সেন্ড: যদি টেক্সট থাকে, সাথে সাথে পাঠিয়ে দিন
+        const text = userInput.value.trim();
+        if (text && !isSending) {
+            sendMessage();
+        }
+    };
+
+    micBtn.addEventListener('click', () => {
+        if (micBtn.classList.contains('recording')) {
+            recognition.stop();
+        } else {
+            try {
+                finalTranscript = '';
+                recognition.start();
+            } catch (err) { console.error(err); }
+        }
+    });
+} else {
+    micBtn.addEventListener('click', () => {
+        alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।');
+    });
+}
 
         // ==============================================================
         // ৭. ভয়েস আউটপুট
         // ==============================================================
-        speakerBtn.addEventListener('click', () => {
-            voiceReplyEnabled = !voiceReplyEnabled;
-            localStorage.setItem('voiceReply', voiceReplyEnabled);
-            speakerBtn.classList.toggle('active', voiceReplyEnabled);
-            if (!voiceReplyEnabled) speechSynthesis.cancel();
-        });
-
-        function speakText(text) {
-            if (!voiceReplyEnabled) return;
-            if (!('speechSynthesis' in window)) return;
-            speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = /[\u0980-\u09FF]/.test(text) ? 'bn-BD' : 'en-US';
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            speechSynthesis.speak(utterance);
-        }
-
+        // ✅ স্পিকার টগল নেই — সবসময় উত্তর শোনাবে
+function speakText(text) {
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = /[\u0980-\u09FF]/.test(text) ? 'bn-BD' : 'en-US';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    speechSynthesis.speak(utterance);
+}
         // ==============================================================
         // ৮. মেসেজ পাঠানো
         // ==============================================================
