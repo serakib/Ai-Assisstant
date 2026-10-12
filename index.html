@@ -7,49 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-    --bg:#0A0A0A;
-    --bg-elev:#111111;
-    --bg-elev2:#1A1A1A;
-    --bg-input:#1F1F1F;
-    --text:#F5F5F5;
-    --text-muted:#9CA3AF;
-    --text-dim:#6B7280;
-    --border:#222222;
-    --border-soft:#1F1F1F;
-    --primary:#2563EB;
-    --primary-hover:#1D4ED8;
-    --user-bubble:#2563EB;
-    --danger:#EF4444;
-    --success:#10B981;
+    --bg:#0A0A0A;--bg-elev:#111111;--bg-elev2:#1A1A1A;--bg-input:#1F1F1F;
+    --text:#F5F5F5;--text-muted:#9CA3AF;--text-dim:#6B7280;
+    --border:#222222;--border-soft:#1F1F1F;
+    --primary:#2563EB;--primary-hover:#1D4ED8;
+    --user-bubble:#2563EB;--danger:#EF4444;--success:#10B981;
 }
 body.light-mode{
-    --bg:#F8FAFC;
-    --bg-elev:#FFFFFF;
-    --bg-elev2:#F1F5F9;
-    --bg-input:#F1F5F9;
-    --text:#0F172A;
-    --text-muted:#64748B;
-    --text-dim:#94A3B8;
-    --border:#E2E8F0;
-    --border-soft:#F1F5F9;
+    --bg:#F8FAFC;--bg-elev:#FFFFFF;--bg-elev2:#F1F5F9;--bg-input:#F1F5F9;
+    --text:#0F172A;--text-muted:#64748B;--text-dim:#94A3B8;
+    --border:#E2E8F0;--border-soft:#F1F5F9;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:background-color .3s,color .3s;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;}
 body.voice-active{overflow:hidden;}
 
-/* Header */
 header{position:sticky;top:0;z-index:1000;background:var(--bg);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:14px 40px;transition:background-color .3s,border-color .3s;}
 .logo-area{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem;}
 .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#2563EB,#1D4ED8);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.78rem;color:#fff;font-weight:700;}
 .nav-links{display:flex;gap:6px;font-size:.92rem;font-weight:500;}
 .nav-links a{color:var(--text-muted);text-decoration:none;cursor:pointer;padding:9px 16px;border-radius:10px;transition:all .2s ease;position:relative;}
 .nav-links a:hover{color:var(--text);background:var(--bg-elev2);}
-.nav-links a.active{
-    color:#fff;
-    background:linear-gradient(135deg,#2563EB,#1D4ED8);
-    font-weight:600;
-    box-shadow:0 4px 14px rgba(37,99,235,.4);
-}
+.nav-links a.active{color:#fff;background:linear-gradient(135deg,#2563EB,#1D4ED8);font-weight:600;box-shadow:0 4px 14px rgba(37,99,235,.4);}
 body.light-mode .nav-links a.active{color:#fff;}
 .nav-right{display:flex;align-items:center;gap:10px;}
 .theme-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;position:relative;overflow:hidden;}
@@ -67,7 +46,6 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 .view.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-/* CHAT CARD */
 .chat-card{display:flex;flex-direction:column;height:calc(100vh - 140px);min-height:520px;max-height:820px;position:relative;}
 .chat-header{padding:12px 4px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-soft);margin-bottom:8px;}
 .bot-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.9rem;box-shadow:0 4px 12px rgba(37,99,235,.3);}
@@ -76,14 +54,12 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 
 .chat-messages{flex:1;padding:12px 4px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;scroll-behavior:smooth;}
 
-/* Messages */
 .message{max-width:82%;font-size:.95rem;line-height:1.6;animation:fadeIn .3s ease forwards;word-wrap:break-word;}
 .message.bot{align-self:flex-start;color:var(--text);padding:0 4px;}
 .message.user{align-self:flex-end;background:var(--user-bubble);color:#fff;padding:12px 18px;border-radius:20px;border-bottom-right-radius:6px;box-shadow:0 2px 8px rgba(37,99,235,.25);}
 .message img{max-width:260px;max-height:260px;border-radius:12px;margin-bottom:10px;display:block;}
 .message.bot img{border-radius:12px;}
 
-/* Chat message actions */
 .msg-actions{display:flex;gap:2px;margin-top:8px;opacity:.55;transition:opacity .2s;}
 .message:hover .msg-actions{opacity:1;}
 .msg-action{background:transparent;border:none;color:var(--text-muted);cursor:pointer;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .15s ease;}
@@ -95,7 +71,180 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 .message.user .msg-action{color:rgba(255,255,255,.8);}
 .message.user .msg-action:hover{background:rgba(255,255,255,.15);color:#fff;}
 
-/* Typing */
+/* ═══ DEEP THINKING PANEL (DeepSeek style) ═══ */
+.think-panel{
+    max-width:82%;align-self:flex-start;
+    background:var(--bg-elev);
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+    animation:fadeIn .3s ease;
+    transition:all .3s ease;
+}
+.think-panel.search-panel{
+    border-color:rgba(37,99,235,.4);
+    background:linear-gradient(180deg,rgba(37,99,235,.06),var(--bg-elev));
+}
+.think-header{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 16px;
+    cursor:pointer;
+    user-select:none;
+    font-size:.85rem;font-weight:600;
+    color:var(--text-muted);
+    transition:color .2s;
+}
+.think-header:hover{color:var(--text);}
+.think-header .think-icon{
+    width:20px;height:20px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+}
+.think-header .think-icon svg{
+    width:16px;height:16px;
+    animation:spinSlow 3s linear infinite;
+}
+@keyframes spinSlow{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+.think-panel.done .think-header .think-icon svg{animation:none;}
+.think-panel.done .think-header{color:var(--text-muted);}
+.think-header .chev{
+    margin-left:auto;
+    transition:transform .3s;
+    width:14px;height:14px;
+}
+.think-panel.open .think-header .chev{transform:rotate(180deg);}
+.think-title{
+    display:flex;align-items:center;gap:8px;
+}
+.think-title .dot-stream{
+    display:inline-flex;gap:3px;
+}
+.think-title .dot-stream span{
+    width:4px;height:4px;border-radius:50%;
+    background:currentColor;opacity:.5;
+    animation:dotStream 1.4s infinite;
+}
+.think-title .dot-stream span:nth-child(2){animation-delay:.2s;}
+.think-title .dot-stream span:nth-child(3){animation-delay:.4s;}
+@keyframes dotStream{0%,80%,100%{opacity:.3;transform:scale(.8);}40%{opacity:1;transform:scale(1.1);}}
+.think-panel.done .think-title .dot-stream{display:none;}
+
+.think-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .4s ease;
+    padding:0 16px;
+}
+.think-panel.open .think-body{
+    max-height:500px;
+    padding:0 16px 14px;
+}
+.think-step{
+    display:flex;gap:10px;
+    padding:8px 0;
+    font-size:.83rem;
+    color:var(--text-muted);
+    line-height:1.5;
+    opacity:0;
+    transform:translateY(4px);
+    animation:stepIn .35s ease forwards;
+}
+@keyframes stepIn{to{opacity:1;transform:translateY(0);}}
+.think-step .step-bullet{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--primary);
+    margin-top:8px;flex-shrink:0;
+    box-shadow:0 0 8px rgba(37,99,235,.6);
+}
+.think-panel.search-panel .think-step .step-bullet{
+    background:#06B6D4;
+    box-shadow:0 0 8px rgba(6,182,212,.6);
+}
+.think-step.active{color:var(--text);font-weight:500;}
+.think-step.active .step-bullet{
+    animation:pulseBullet 1.2s infinite;
+}
+@keyframes pulseBullet{
+    0%,100%{transform:scale(1);opacity:1;}
+    50%{transform:scale(1.5);opacity:.5;}
+}
+.think-step.done .step-bullet{
+    background:#10B981;
+    box-shadow:0 0 8px rgba(16,185,129,.5);
+}
+.think-sources{
+    display:flex;flex-wrap:wrap;gap:6px;
+    margin-top:8px;
+    padding-top:10px;
+    border-top:1px dashed var(--border);
+}
+.think-sources .src-chip{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:5px 10px;
+    background:var(--bg-input);
+    border:1px solid var(--border);
+    border-radius:20px;
+    font-size:.72rem;
+    color:var(--text-muted);
+    text-decoration:none;
+    transition:all .2s;
+    max-width:200px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.think-sources .src-chip:hover{
+    border-color:var(--primary);
+    color:var(--text);
+    background:rgba(37,99,235,.08);
+}
+.think-sources .src-chip svg{
+    width:11px;height:11px;
+    flex-shrink:0;
+    color:#60A5FA;
+}
+.think-sources .src-favicon{
+    width:14px;height:14px;border-radius:50%;
+    background:linear-gradient(135deg,#2563EB,#1D4ED8);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:.6rem;font-weight:700;color:#fff;
+    flex-shrink:0;
+}
+
+/* Toggle pills row */
+.mode-toggle-row{
+    display:flex;gap:8px;
+    padding:0 0 10px;
+    flex-wrap:wrap;
+}
+.mode-toggle{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:7px 14px;
+    background:var(--bg-input);
+    border:1px solid var(--border);
+    border-radius:20px;
+    color:var(--text-muted);
+    font-size:.78rem;font-weight:600;
+    cursor:pointer;font-family:inherit;
+    transition:all .2s ease;
+}
+.mode-toggle:hover{border-color:var(--text-dim);color:var(--text);}
+.mode-toggle svg{width:14px;height:14px;}
+.mode-toggle.active.think-mode{
+    background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(124,58,237,.12));
+    border-color:#8B5CF6;
+    color:#A78BFA;
+    box-shadow:0 0 0 3px rgba(139,92,246,.1);
+}
+.mode-toggle.active.search-mode{
+    background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(14,116,144,.12));
+    border-color:#06B6D4;
+    color:#22D3EE;
+    box-shadow:0 0 0 3px rgba(6,182,212,.1);
+}
+body.light-mode .mode-toggle.active.think-mode{color:#7C3AED;}
+body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
+
 .typing-indicator{display:none;align-self:flex-start;padding:6px 4px;gap:6px;align-items:center;}
 .typing-indicator span{width:7px;height:7px;background:var(--text-muted);border-radius:50%;animation:bounce 1.4s infinite ease-in-out both;}
 .typing-indicator span:nth-child(1){animation-delay:-.32s;}
@@ -104,8 +253,7 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 
 .chat-input-wrapper{margin-top:auto;background:var(--bg);padding-top:12px;}
 
-/* Voice pill */
-.voice-pill-row{padding:0 0 12px;display:flex;justify-content:flex-start;}
+.voice-pill-row{padding:0 0 8px;display:flex;justify-content:flex-start;}
 .voice-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s ease;font-family:inherit;}
 .voice-pill:hover{border-color:var(--text-dim);color:var(--text);}
 .voice-pill-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#fff;font-weight:700;flex-shrink:0;position:relative;overflow:hidden;text-shadow:0 1px 1px rgba(0,0,0,.3);box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 -2px 3px rgba(0,0,0,.2),inset 0 1px 2px rgba(255,255,255,.3);background:linear-gradient(160deg,#3B82F6,#1E40AF);}
@@ -145,7 +293,6 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 .input-bar .bar-mic:hover{background:var(--bg-elev2);color:var(--text);}
 .input-bar .bar-mic svg{width:20px;height:20px;}
 
-/* Sections */
 .section-title{text-align:center;font-size:2rem;font-weight:700;margin-bottom:16px;letter-spacing:-.02em;}
 .section-subtitle{text-align:center;color:var(--text-muted);max-width:600px;margin:0 auto 48px;font-size:.95rem;}
 .about-content{display:flex;flex-wrap:wrap;gap:40px;align-items:center;background:var(--bg-elev);padding:40px;border-radius:20px;border:1px solid var(--border);}
@@ -173,7 +320,6 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 .contact-form button{padding:14px;background:#2563EB;color:#fff;border:none;border-radius:12px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.95rem;transition:background .2s;}
 .contact-form button:hover{background:#1D4ED8;}
 
-/* Footer */
 footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margin-top:auto;border-top:1px solid var(--border);}
 .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;max-width:1100px;margin:0 auto 40px;}
 .footer-col h4{color:var(--text);font-size:1rem;margin-bottom:18px;font-weight:600;}
@@ -184,7 +330,6 @@ footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margi
 .footer-col ul li a:hover{color:var(--text);}
 .footer-bottom{text-align:center;padding-top:20px;border-top:1px solid var(--border);font-size:.82rem;max-width:1100px;margin:0 auto;}
 
-/* Voice modal */
 .voice-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:6000;display:none;align-items:center;justify-content:center;padding:20px;}
 .voice-modal.open{display:flex;}
 .voice-modal-content{background:var(--bg-elev);border:1px solid var(--border);border-radius:20px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,.5);animation:slideUp .3s ease;}
@@ -219,26 +364,14 @@ footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margi
 .voice-play-btn.playing{background:#EF4444;animation:pulse 1.2s infinite;}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6);}70%{box-shadow:0 0 0 12px rgba(239,68,68,0);}100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}}
 
-/* FULL-SCREEN VOICE MODE */
 .voice-overlay{
-    --v-bg:#000000;
-    --v-bg-elev:#1A1A1A;
-    --v-bg-hover:#1F2937;
-    --v-border:#2A2A2A;
-    --v-text:#E5E7EB;
-    --v-text-muted:#9CA3AF;
-    --v-input-bg:#1A1A1A;
-    position:fixed;inset:0;background:var(--v-bg);z-index:5000;display:none;flex-direction:column;animation:voiceFadeIn .35s ease;
-    transition:background-color .3s ease;
+    --v-bg:#000000;--v-bg-elev:#1A1A1A;--v-bg-hover:#1F2937;--v-border:#2A2A2A;
+    --v-text:#E5E7EB;--v-text-muted:#9CA3AF;--v-input-bg:#1A1A1A;
+    position:fixed;inset:0;background:var(--v-bg);z-index:5000;display:none;flex-direction:column;animation:voiceFadeIn .35s ease;transition:background-color .3s ease;
 }
 body.light-mode .voice-overlay{
-    --v-bg:#F8FAFC;
-    --v-bg-elev:#FFFFFF;
-    --v-bg-hover:#F1F5F9;
-    --v-border:#E2E8F0;
-    --v-text:#0F172A;
-    --v-text-muted:#64748B;
-    --v-input-bg:#FFFFFF;
+    --v-bg:#F8FAFC;--v-bg-elev:#FFFFFF;--v-bg-hover:#F1F5F9;--v-border:#E2E8F0;
+    --v-text:#0F172A;--v-text-muted:#64748B;--v-input-bg:#FFFFFF;
 }
 .voice-overlay.open{display:flex;}
 @keyframes voiceFadeIn{from{opacity:0;}to{opacity:1;}}
@@ -247,7 +380,6 @@ body.light-mode .voice-overlay{
 .voice-topbtn:hover{background:var(--v-bg-hover);color:var(--v-text);}
 .voice-topbtn svg{width:18px;height:18px;}
 
-/* Developer blue button */
 .dev-btn{
     display:inline-flex;align-items:center;gap:7px;
     padding:9px 18px;border-radius:22px;
@@ -258,15 +390,8 @@ body.light-mode .voice-overlay{
     transition:all .25s cubic-bezier(.4,0,.2,1);
     border:none;cursor:pointer;position:relative;overflow:hidden;
 }
-.dev-btn::before{
-    content:'';position:absolute;inset:0;border-radius:22px;
-    background:linear-gradient(135deg,rgba(255,255,255,.25),transparent 60%);
-    opacity:0;transition:opacity .25s ease;
-}
-.dev-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 24px rgba(37,99,235,.6),inset 0 1px 0 rgba(255,255,255,.35);
-}
+.dev-btn::before{content:'';position:absolute;inset:0;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.25),transparent 60%);opacity:0;transition:opacity .25s ease;}
+.dev-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.6),inset 0 1px 0 rgba(255,255,255,.35);}
 .dev-btn:hover::before{opacity:1;}
 .dev-btn:active{transform:translateY(0);}
 .dev-btn svg{width:14px;height:14px;position:relative;z-index:1;}
@@ -291,6 +416,31 @@ body.light-mode .voice-overlay{
 .v-action svg{width:15px;height:15px;}
 .v-msg.user .v-actions{justify-content:flex-end;}
 .v-msg.user .v-action:hover{background:rgba(255,255,255,.2);color:#FFF;}
+
+/* Voice thinking badge (compact) */
+.v-think-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 14px;border-radius:20px;
+    background:rgba(139,92,246,.12);
+    border:1px solid rgba(139,92,246,.35);
+    color:#A78BFA;
+    font-size:.78rem;font-weight:600;
+    margin-bottom:8px;
+    animation:fadeIn .3s ease;
+}
+.v-think-badge.search{
+    background:rgba(6,182,212,.12);
+    border-color:rgba(6,182,212,.35);
+    color:#22D3EE;
+}
+.v-think-badge .spin{
+    width:12px;height:12px;
+    border:2px solid currentColor;
+    border-top-color:transparent;
+    border-radius:50%;
+    animation:spinSlow .8s linear infinite;
+}
+
 .voice-bottom{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:20px;padding:0 20px 24px;pointer-events:none;background:linear-gradient(to top,var(--v-bg) 60%,transparent);}
 .voice-bottom > *{pointer-events:auto;}
 
@@ -325,9 +475,6 @@ body.light-mode .voice-overlay{
 .voice-orb.thinking .orb-particle{animation-duration:3s;}
 
 .voice-inputbar{display:flex;align-items:center;gap:10px;background:var(--v-input-bg);border:1px solid var(--v-border);border-radius:30px;padding:8px 12px;width:100%;max-width:700px;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:background-color .3s,border-color .3s;}
-.voice-inputbar .vib-btn{background:transparent;border:none;color:var(--v-text-muted);cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s ease;flex-shrink:0;}
-.voice-inputbar .vib-btn:hover{background:var(--v-bg-hover);color:var(--v-text);}
-.voice-inputbar .vib-btn svg{width:20px;height:20px;}
 .voice-inputbar input{flex:1;background:transparent;border:none;outline:none;color:var(--v-text);font-family:inherit;font-size:.95rem;padding:8px 4px;min-width:0;}
 .voice-inputbar input::placeholder{color:var(--v-text-muted);}
 .voice-inputbar .vib-mic{background:#10B981;color:#fff;border:none;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .25s ease;flex-shrink:0;box-shadow:0 0 0 0 rgba(16,185,129,.5);animation:micPulse 2s infinite;}
@@ -352,6 +499,7 @@ header{padding:12px 16px;flex-wrap:wrap;gap:10px;}
 .nav-links a{padding:7px 12px;}
 .chat-card{height:calc(100vh - 200px);}
 .message{max-width:92%;}
+.think-panel{max-width:92%;}
 .section-title{font-size:1.5rem;}
 .about-content,.contact-container{padding:20px;}
 footer{padding:40px 20px 20px;}
@@ -367,6 +515,7 @@ footer{padding:40px 20px 20px;}
 .v-actions{opacity:1;}
 .msg-actions{opacity:1;}
 .dev-btn{padding:7px 14px;font-size:.78rem;}
+.mode-toggle{padding:6px 11px;font-size:.72rem;}
 }
 </style>
 </head>
@@ -403,7 +552,7 @@ footer{padding:40px 20px 20px;}
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="message bot">
-                    <div class="msg-content">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে প্রশ্ন করতে পারেন। 📎 ছবি পাঠাতে বা 🎤 ভয়েস মোডে যেতে পারেন।</div>
+                    <div class="msg-content">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে প্রশ্ন করতে পারেন। 🧠 Deep Think বা 🌐 Smart Search চালু করে আরও স্মার্ট উত্তর পান।</div>
                 </div>
                 <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
             </div>
@@ -416,6 +565,18 @@ footer{padding:40px 20px 20px;}
                         <span style="opacity:.5">▾</span>
                     </button>
                 </div>
+
+                <div class="mode-toggle-row">
+                    <button class="mode-toggle think-mode" id="deepThinkBtn" onclick="toggleDeepThink()" title="Deep reasoning before answering">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2z"></path></svg>
+                        Deep Think
+                    </button>
+                    <button class="mode-toggle search-mode" id="smartSearchBtn" onclick="toggleSmartSearch()" title="Search the web for fresh info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        Smart Search
+                    </button>
+                </div>
+
                 <div class="listening-indicator" id="listeningIndicator">
                     <span class="pulse-dot"></span>
                     <span id="listeningText">🎤 শুনছি... কথা বলুন</span>
@@ -462,8 +623,9 @@ footer{padding:40px 20px 20px;}
         <p class="section-subtitle">আপনার সাধারণ জিজ্ঞাসাগুলোর উত্তর</p>
         <div class="faq-container">
             <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, সম্পূর্ণ ফ্রি। যেকোনো প্রশ্ন করতে পারেন।</div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Deep Think কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Deep Think চালু করলে AI উত্তর দেওয়ার আগে ধাপে ধাপে চিন্তা করে — ঠিক DeepSeek-এর মতো। কঠিন প্রশ্নে বেশি নির্ভুল উত্তর পাবেন।</div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Smart Search কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Smart Search চালু করলে AI ওয়েব থেকে সাম্প্রতিক তথ্য খুঁজে উত্তর দেবে। মেডিকেল নোটিশ, পরীক্ষার তারিখ ইত্যাদির জন্য দারুণ।</div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>ভয়েস পরিবর্তন করা যাবে?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, ইনপুট বক্সের উপরে ভয়েস পিলে ক্লিক করুন। ৭ জন ভয়েস আর্টিস্টের ডেমো শুনে পছন্দমতো বেছে নিন।</div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Full-screen Voice Mode কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">🎤 বাটনে ক্লিক করলে ChatGPT-এর মতো পুরো স্ক্রিন জুড়ে ভয়েস মোড খুলবে। মাইক সবুজ → শুনছে। মাইক লাল → বন্ধ। ডানদিকের থিম বাটন দিয়ে ডার্ক/লাইট বদলানো যাবে।</div></div>
         </div>
     </div>
 
@@ -594,6 +756,10 @@ let demoAudio = null;
 let returnToView = 'home';
 let msgIdCounter = 0;
 
+// ===== New mode state =====
+let deepThinkEnabled = localStorage.getItem('deepThink') === 'true';
+let smartSearchEnabled = localStorage.getItem('smartSearch') === 'true';
+
 // Default dark
 if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light-mode');
@@ -618,6 +784,37 @@ function toggleFaq(el) {
     document.querySelectorAll('.faq-item').forEach(i => { if (i !== el) i.classList.remove('active'); });
     el.classList.toggle('active');
 }
+
+// ===== Deep Think / Smart Search toggles =====
+const deepThinkBtn = document.getElementById('deepThinkBtn');
+const smartSearchBtn = document.getElementById('smartSearchBtn');
+
+function updateModeButtons() {
+    deepThinkBtn.classList.toggle('active', deepThinkEnabled);
+    smartSearchBtn.classList.toggle('active', smartSearchEnabled);
+}
+function toggleDeepThink() {
+    deepThinkEnabled = !deepThinkEnabled;
+    localStorage.setItem('deepThink', deepThinkEnabled);
+    updateModeButtons();
+    flashStatus(deepThinkEnabled ? '🧠 Deep Think চালু' : '🧠 Deep Think বন্ধ');
+}
+function toggleSmartSearch() {
+    smartSearchEnabled = !smartSearchEnabled;
+    localStorage.setItem('smartSearch', smartSearchEnabled);
+    updateModeButtons();
+    flashStatus(smartSearchEnabled ? '🌐 Smart Search চালু' : '🌐 Smart Search বন্ধ');
+}
+let statusFlashTimer = null;
+function flashStatus(text) {
+    if (!statusText) return;
+    statusText.textContent = text;
+    clearTimeout(statusFlashTimer);
+    statusFlashTimer = setTimeout(() => {
+        statusText.textContent = 'Text, Image & Voice — সব একসাথে';
+    }, 2200);
+}
+updateModeButtons();
 
 const chatMessages = document.getElementById('chatMessages');
 const userInput = document.getElementById('userInput');
@@ -725,7 +922,6 @@ function stopDemo() {
 }
 if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }
 
-// Fetch with timeout
 async function fetchWithTimeout(url, options = {}, timeout = FETCH_TIMEOUT_MS) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeout);
@@ -754,7 +950,129 @@ function clearFile() {
     previewImg.removeAttribute('src');
 }
 
-// TTS
+// ===== THINKING PANEL (DeepSeek style) =====
+const THINK_STEPS = {
+    deep: [
+        'প্রশ্নটি বিশ্লেষণ করছি…',
+        'প্রাসঙ্গিক ধারণা ও তথ্য মনে করছি…',
+        'বিভিন্ন দিক বিবেচনা করছি…',
+        'উত্তর গঠন করছি…'
+    ],
+    search: [
+        'ওয়েব সার্চ চালাচ্ছি…',
+        'নির্ভরযোগ্য সূত্র খুঁজছি…',
+        'তথ্য যাচাই করছি…',
+        'সাম্প্রতিক তথ্য সংগ্রহ করছি…'
+    ]
+};
+
+const MOCK_SOURCES = [
+    { name: 'dgme.gov.bd', label: 'DGME Bangladesh' },
+    { name: 'medical.gov.bd', label: 'Medical Education' },
+    { name: 'bmdc.org.bd', label: 'BMDC' },
+    { name: 'wikipedia.org', label: 'Wikipedia' },
+    { name: 'techtunes.com.bd', label: 'TechTune' },
+    { name: 'prothomalo.com', label: 'Prothom Alo' }
+];
+
+function createThinkingPanel() {
+    const panel = document.createElement('div');
+    panel.className = 'think-panel open';
+    const isSearch = smartSearchEnabled && !deepThinkEnabled;
+    if (isSearch) panel.classList.add('search-panel');
+    panel.dataset.startTime = Date.now();
+
+    const header = document.createElement('div');
+    header.className = 'think-header';
+    header.onclick = () => panel.classList.toggle('open');
+
+    const icon = document.createElement('span');
+    icon.className = 'think-icon';
+    icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
+
+    const title = document.createElement('span');
+    title.className = 'think-title';
+    title.innerHTML = '<span class="think-text">' + (deepThinkEnabled && smartSearchEnabled ? 'Thinking & Searching' : (deepThinkEnabled ? 'Deep Thinking' : 'Searching the web')) + '</span><span class="dot-stream"><span></span><span></span><span></span></span>';
+
+    const chev = document.createElement('span');
+    chev.className = 'chev';
+    chev.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+    header.appendChild(icon);
+    header.appendChild(title);
+    header.appendChild(chev);
+
+    const body = document.createElement('div');
+    body.className = 'think-body';
+
+    panel.appendChild(header);
+    panel.appendChild(body);
+    return panel;
+}
+
+function addThinkStep(panel, text, delayMs = 600) {
+    return new Promise(resolve => {
+        const body = panel.querySelector('.think-body');
+        const step = document.createElement('div');
+        step.className = 'think-step active';
+        step.innerHTML = '<span class="step-bullet"></span><span class="step-text"></span>';
+        step.querySelector('.step-text').textContent = text;
+        body.appendChild(step);
+        // remove active from previous
+        body.querySelectorAll('.think-step').forEach((s, i, arr) => {
+            if (i < arr.length - 1) s.classList.remove('active');
+        });
+        setTimeout(() => {
+            step.classList.remove('active');
+            step.classList.add('done');
+            resolve();
+        }, delayMs);
+    });
+}
+
+function addSearchSources(panel, query) {
+    const body = panel.querySelector('.think-body');
+    const sourcesWrap = document.createElement('div');
+    sourcesWrap.className = 'think-sources';
+    const picks = [...MOCK_SOURCES].sort(() => Math.random() - 0.5).slice(0, 3);
+    picks.forEach(s => {
+        const chip = document.createElement('a');
+        chip.className = 'src-chip';
+        chip.href = 'https://' + s.name;
+        chip.target = '_blank';
+        chip.rel = 'noopener';
+        chip.innerHTML = '<span class="src-favicon">' + s.name.charAt(0).toUpperCase() + '</span><span>' + s.label + '</span>';
+        sourcesWrap.appendChild(chip);
+    });
+    body.appendChild(sourcesWrap);
+}
+
+function finishThinkingPanel(panel) {
+    if (!panel) return;
+    const elapsed = Math.max(1, Math.round((Date.now() - parseInt(panel.dataset.startTime || '0')) / 1000));
+    const title = panel.querySelector('.think-text');
+    if (title) title.textContent = 'Thought for ' + elapsed + 's';
+    panel.classList.add('done');
+    panel.classList.remove('open');
+    const header = panel.querySelector('.think-header');
+    if (header) header.style.cursor = 'pointer';
+}
+
+async function runThinkingSequence(panel, text) {
+    if (deepThinkEnabled) {
+        for (const s of THINK_STEPS.deep) {
+            await addThinkStep(panel, s, 550);
+        }
+    }
+    if (smartSearchEnabled) {
+        for (const s of THINK_STEPS.search) {
+            await addThinkStep(panel, s, 500);
+        }
+        addSearchSources(panel, text);
+    }
+}
+
+// ===== TTS =====
 function speakText(text) {
     return new Promise(async (resolve) => {
         if (!text || micMuted) { resolve(); return; }
@@ -979,6 +1297,8 @@ async function regenerateMsg(btn) {
     try {
         const fd = new FormData();
         fd.append('message', prevUserText);
+        if (deepThinkEnabled) fd.append('deep_thinking', 'true');
+        if (smartSearchEnabled) fd.append('smart_search', 'true');
         const res = await fetchWithTimeout(`${BACKEND_URL}/api/chat`, { method:'POST', body: fd });
         const data = await res.json();
         if (res.ok && data.reply) {
@@ -999,6 +1319,25 @@ function editUserMsg(btn) {
     msgEl.dataset.edited = 'true';
 }
 
+// ===== VOICE MODE thinking badge =====
+function showVoiceThinkingBadge() {
+    if (!deepThinkEnabled && !smartSearchEnabled) return null;
+    const wrap = document.createElement('div');
+    wrap.className = 'v-think-badge' + (smartSearchEnabled && !deepThinkEnabled ? ' search' : '');
+    const label = deepThinkEnabled && smartSearchEnabled ? '🧠 Thinking & 🌐 Searching…' :
+                  (deepThinkEnabled ? '🧠 Deep thinking…' : '🌐 Searching the web…');
+    wrap.innerHTML = '<span class="spin"></span><span>' + label + '</span>';
+    // attach to the latest user message
+    const lastUser = voiceMessages.querySelector('.v-msg.user:last-of-type');
+    if (lastUser) lastUser.appendChild(wrap);
+    else voiceMessages.appendChild(wrap);
+    voiceMessages.scrollTop = voiceMessages.scrollHeight;
+    return wrap;
+}
+function removeVoiceThinkingBadge(badge) {
+    if (badge && badge.parentNode) badge.parentNode.removeChild(badge);
+}
+
 async function sendFromVoice(text) {
     if (!text || isSending) return;
     isSending = true;
@@ -1007,11 +1346,19 @@ async function sendFromVoice(text) {
     setOrbState('thinking');
     voiceTextInput.value = '';
     userInput.value = '';
+    const badge = showVoiceThinkingBadge();
+    // small visual delay if modes enabled
+    if (deepThinkEnabled || smartSearchEnabled) {
+        await new Promise(r => setTimeout(r, 900));
+    }
     try {
         const formData = new FormData();
         formData.append('message', text);
+        if (deepThinkEnabled) formData.append('deep_thinking', 'true');
+        if (smartSearchEnabled) formData.append('smart_search', 'true');
         const res = await fetchWithTimeout(`${BACKEND_URL}/api/chat`, { method:'POST', body: formData });
         const data = await res.json();
+        removeVoiceThinkingBadge(badge);
         if (res.ok && data.reply) {
             addVoiceMsg(data.reply, 'bot');
             addMessage(data.reply, 'bot', null, { silent: true });
@@ -1023,6 +1370,7 @@ async function sendFromVoice(text) {
             setOrbState('idle');
         }
     } catch (e) {
+        removeVoiceThinkingBadge(badge);
         const errMsg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addVoiceMsg(errMsg, 'bot');
         setOrbState('idle');
@@ -1089,7 +1437,6 @@ if (SpeechRecognition) {
             if (inVoice && voiceModeOn) sendFromVoice(text);
             else if (!inVoice) sendMessage();
         } else if (voiceModeOn && inVoice && !isSending) {
-            // Auto-restart loop to keep listening
             setTimeout(() => safeStartRecognition(), 400);
         } else {
             setOrbState('idle');
@@ -1097,7 +1444,6 @@ if (SpeechRecognition) {
     };
 
     micBtn.addEventListener('click', async () => {
-        // Request mic permission only on demand
         if (!micPermissionRequested) {
             micPermissionRequested = true;
             try {
@@ -1118,6 +1464,7 @@ if (SpeechRecognition) {
     micBtn.addEventListener('click', () => alert('Chrome বা Edge ব্যবহার করুন — ভয়েস সাপোর্ট নেই।'));
 }
 
+// ===== MAIN SEND with Deep Think & Smart Search =====
 async function sendMessage() {
     if (isSending) return;
     const text = userInput.value.trim();
@@ -1128,19 +1475,37 @@ async function sendMessage() {
     addMessage(text, 'user', fileToSend);
     userInput.value = '';
     clearFile();
+
+    // ═══ Deep Think / Smart Search panel ═══
+    let thinkPanel = null;
+    if (deepThinkEnabled || smartSearchEnabled) {
+        thinkPanel = createThinkingPanel();
+        if (typingIndicator && typingIndicator.parentNode === chatMessages) {
+            chatMessages.insertBefore(thinkPanel, typingIndicator);
+        } else {
+            chatMessages.appendChild(thinkPanel);
+        }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        await runThinkingSequence(thinkPanel, text);
+    }
+
     typingIndicator.style.display = 'flex';
     chatMessages.scrollTop = chatMessages.scrollHeight;
     try {
         const fd = new FormData();
         fd.append('message', text || '');
         if (fileToSend) fd.append('image', fileToSend);
+        if (deepThinkEnabled) fd.append('deep_thinking', 'true');
+        if (smartSearchEnabled) fd.append('smart_search', 'true');
         const res = await fetchWithTimeout(`${BACKEND_URL}/api/chat`, { method:'POST', body: fd });
         const data = await res.json();
         typingIndicator.style.display = 'none';
+        finishThinkingPanel(thinkPanel);
         if (res.ok && data.reply) addMessage(data.reply, 'bot');
         else addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
     } catch (e) {
         typingIndicator.style.display = 'none';
+        finishThinkingPanel(thinkPanel);
         const msg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addMessage(msg, 'bot');
     }
@@ -1169,7 +1534,6 @@ function addMessage(text, sender, file, opts = {}) {
     }
     d.appendChild(content);
 
-    // Action buttons
     const actions = document.createElement('div');
     actions.classList.add('msg-actions');
     if (sender === 'bot') {
@@ -1188,6 +1552,7 @@ function addMessage(text, sender, file, opts = {}) {
     if (typingIndicator && typingIndicator.parentNode === chatMessages) chatMessages.insertBefore(d, typingIndicator);
     else chatMessages.appendChild(d);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    return d;
 }
 
 function copyChatMsg(btn) {
@@ -1232,17 +1597,30 @@ async function regenerateChatMsg(btn) {
     if (!prevUserText) return;
     isSending = true;
     msgEl.remove();
+
+    let thinkPanel = null;
+    if (deepThinkEnabled || smartSearchEnabled) {
+        thinkPanel = createThinkingPanel();
+        chatMessages.insertBefore(thinkPanel, typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        await runThinkingSequence(thinkPanel, prevUserText);
+    }
+
     typingIndicator.style.display = 'flex';
     try {
         const fd = new FormData();
         fd.append('message', prevUserText);
+        if (deepThinkEnabled) fd.append('deep_thinking', 'true');
+        if (smartSearchEnabled) fd.append('smart_search', 'true');
         const res = await fetchWithTimeout(`${BACKEND_URL}/api/chat`, { method:'POST', body: fd });
         const data = await res.json();
         typingIndicator.style.display = 'none';
+        finishThinkingPanel(thinkPanel);
         if (res.ok && data.reply) addMessage(data.reply, 'bot');
         else addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
     } catch (e) {
         typingIndicator.style.display = 'none';
+        finishThinkingPanel(thinkPanel);
         addMessage('❌ নেটওয়ার্ক সমস্যা', 'bot');
     }
     isSending = false;
@@ -1252,7 +1630,6 @@ userInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage
 
 updateVoicePill();
 
-// Listen for keyboard access on orb
 voiceOrb.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleOrbMic(); }
 });
