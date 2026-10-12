@@ -8,6 +8,8 @@ from groq import Groq
 load_dotenv()
 
 app = Flask(__name__)
+
+# ✅ CORS — সব প্রয়োজনীয় origin
 CORS(app, origins=[
     "https://serakib.github.io",
     "http://localhost:5500",
@@ -23,17 +25,24 @@ if not GROQ_API_KEY:
 
 client = Groq(api_key=GROQ_API_KEY)
 
-# ✅ ভিশন মডেল (ছবি সাপোর্ট করে)
+# ✅ ভিশন মডেল
 GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
 
 # ✅ সর্বোচ্চ ফাইল সাইজ: ৫ MB
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
+# ✅ System Prompt — LaTeX নিষিদ্ধ
 SYSTEM_PROMPT = (
     "তুমি Medical Admission Tracker-এর একজন সহায়ক AI। "
     "মেডিকেল ভর্তি, প্রশ্নপত্র, সিলেবাস, প্রস্তুতি সংক্রান্ত প্রশ্নের উত্তর দাও। "
     "বাংলায় সংক্ষেপে এবং স্পষ্টভাবে উত্তর দাও। "
-    "যদি ছবি পাঠানো হয়, ছবির বিষয়বস্তু বিশ্লেষণ করে সাহায্য কর।"
+    "যদি ছবি পাঠানো হয়, ছবির বিষয়বস্তু বিশ্লেষণ করে সাহায্য কর। "
+    "\n\nগুরুত্বপূর্ণ নিয়ম:\n"
+    "১. কোনো LaTeX বা গাণিতিক চিহ্ন ($, \\, \\frac, \\int, ^, _) ব্যবহার করবে না। "
+    "২. অঙ্ক বা সূত্র সাধারণ বাংলা লেখায় লিখবে। "
+    "৩. উদাহরণ: 'x এর বর্গ' বা 'x²' লিখবে, '$x^2$' নয়। "
+    "৪. ভগ্নাংশ লিখতে '২/৩' বা '২ ভাগ ৩' লিখবে, '\\frac{2}{3}' নয়। "
+    "৫. উত্তর হবে সহজ, একজন সাধারণ শিক্ষার্থী যেন বুঝতে পারে।"
 )
 
 
@@ -43,35 +52,30 @@ def home():
         "status": "online",
         "provider": "groq",
         "model": GROQ_MODEL,
-        "features": ["text", "image"]
+        "features": ["text", "image"],
+        "routes": ["/api/chat"]
     })
 
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     try:
-        # ✅ multipart/form-data থেকে ডেটা নেওয়া
         user_message = request.form.get('message', '').strip()
         image_file = request.files.get('image')
 
         if not user_message and not image_file:
             return jsonify({"error": "Message or image required"}), 400
 
-        # ✅ মেসেজ তৈরি
         content_parts = []
 
         if user_message:
-            content_parts.append({
-                "type": "text",
-                "text": user_message
-            })
+            content_parts.append({"type": "text", "text": user_message})
         else:
             content_parts.append({
                 "type": "text",
                 "text": "এই ছবিটি বিশ্লেষণ করে বাংলায় সংক্ষেপে বলো।"
             })
 
-        # ✅ ছবি থাকলে base64 এনকোড করে যোগ করা
         if image_file:
             mime_type = image_file.mimetype
             allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -89,14 +93,13 @@ def chat():
                 }
             })
 
-        # ✅ Groq-এ রিকোয়েস্ট
         response = client.chat.completions.create(
             model=GROQ_MODEL,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": content_parts}
             ],
-            temperature=0.7,
+            temperature=0.5,
             max_tokens=1024
         )
 
