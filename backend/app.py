@@ -119,3 +119,41 @@ def too_large(e):
 if __name__ == '__main__':
     port = int(os.getenv("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
+
+
+
+
+
+
+from gtts import gTTS
+from flask import send_file
+import io
+
+@app.route('/api/tts', methods=['POST'])
+def tts():
+    try:
+        data = request.get_json()
+        text = data.get('text', '').strip()
+        if not text:
+            return jsonify({"error": "Text required"}), 400
+
+        # ✅ ভাষা ডিটেক্ট: বাংলা অক্ষর থাকলে বাংলা, নাহলে ইংরেজি
+        lang = 'bn' if any('\u0980' <= c <= '\u09FF' for c in text) else 'en'
+
+        # ✅ max 500 অক্ষর (gTTS-এ বেশি বড় টেক্সটে সমস্যা হয়)
+        text = text[:500]
+
+        tts = gTTS(text=text, lang=lang, slow=False)
+        audio_buffer = io.BytesIO()
+        tts.write_to_fp(audio_buffer)
+        audio_buffer.seek(0)
+
+        return send_file(
+            audio_buffer,
+            mimetype='audio/mpeg',
+            as_attachment=False
+        )
+    except Exception as e:
+        print(f"TTS Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
