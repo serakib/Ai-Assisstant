@@ -20,7 +20,6 @@
             --footer-text: #94A3B8;
             --shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
-
         body.dark-mode {
             --bg-body: #0B1120;
             --bg-card: #111827;
@@ -34,9 +33,7 @@
             --footer-text: #9CA3AF;
             --shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-body);
@@ -47,29 +44,21 @@
             display: flex;
             flex-direction: column;
         }
-
         header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            position: sticky; top: 0; z-index: 1000;
             background-color: var(--bg-header);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             padding: 16px 40px;
             transition: background-color 0.3s, border-color 0.3s;
         }
         .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
         .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; }
-        
         .nav-links { display: flex; gap: 24px; font-size: 0.95rem; font-weight: 500; }
         .nav-links a { color: var(--text-muted); text-decoration: none; cursor: pointer; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: 0.2s; }
         .nav-links a:hover { color: var(--primary); }
         .nav-links a.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        
         .nav-right { display: flex; align-items: center; gap: 16px; }
-        
         .theme-toggle {
             background: transparent; border: 1px solid var(--border);
             color: var(--text-main); width: 42px; height: 42px; border-radius: 50%;
@@ -83,7 +72,6 @@
         .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
         body.dark-mode .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
         body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
-
         .back-btn {
             display: inline-flex; align-items: center; gap: 8px;
             color: var(--text-muted); text-decoration: none;
@@ -92,41 +80,24 @@
             transition: all 0.2s ease; cursor: pointer; background: transparent;
         }
         .back-btn:hover { background-color: var(--bg-bot); color: var(--text-main); }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 40px 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
+        main { flex: 1; display: flex; flex-direction: column; padding: 40px 20px; max-width: 1100px; margin: 0 auto; width: 100%; }
         .view { display: none; animation: fadeIn 0.4s ease; }
         .view.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .chat-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 20px;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             overflow: hidden;
             box-shadow: var(--shadow);
-            height: 620px;
+            height: 640px;
             max-width: 800px;
             margin: 0 auto;
         }
-
         .chat-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            padding: 20px 24px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 16px;
             background-color: var(--bg-card);
         }
         .bot-avatar {
@@ -138,30 +109,16 @@
         }
         .bot-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
         .bot-info p { font-size: 0.8rem; color: var(--text-muted); }
-
-        .chat-messages {
-            flex: 1; padding: 24px; overflow-y: auto;
-            display: flex; flex-direction: column; gap: 20px;
-        }
-
+        .chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         .message {
             max-width: 80%; padding: 16px 20px; border-radius: 18px;
             font-size: 0.95rem; line-height: 1.6;
             animation: fadeIn 0.3s ease forwards;
             word-wrap: break-word;
         }
-
         .message.bot { align-self: flex-start; background-color: var(--bg-bot); color: var(--text-main); border-bottom-left-radius: 4px; }
         .message.user { align-self: flex-end; background-color: var(--bg-user); color: #ffffff; border-bottom-right-radius: 4px; }
-
-        .message img {
-            max-width: 240px;
-            max-height: 240px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
+        .message img { max-width: 240px; max-height: 240px; border-radius: 10px; margin-bottom: 10px; display: block; }
         .typing-indicator {
             display: none; align-self: flex-start; padding: 16px 20px;
             background: var(--bg-bot); border-radius: 18px; border-bottom-left-radius: 4px;
@@ -171,80 +128,86 @@
         .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
         .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        .chat-input-wrapper { border-top: 1px solid var(--border); background-color: var(--bg-card); }
 
-        .chat-input-wrapper {
-            border-top: 1px solid var(--border);
-            background-color: var(--bg-card);
-        }
-
-        .file-preview {
+        /* ✅ নতুন: লিসেনিং ইন্ডিকেটর */
+        .listening-indicator {
             display: none;
             align-items: center;
-            gap: 12px;
-            padding: 12px 24px 0 24px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        .file-preview img {
-            width: 48px; height: 48px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        .file-preview .remove-file {
-            margin-left: auto;
-            background: transparent;
-            border: none;
+            justify-content: center;
+            gap: 10px;
+            margin: 12px 24px 0 24px;
+            padding: 10px 16px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid #EF4444;
+            border-radius: 10px;
             color: #EF4444;
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 0.88rem;
+            font-weight: 600;
+            animation: slideDown 0.3s ease;
+        }
+        .listening-indicator.active { display: flex; }
+        .listening-indicator.preparing {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .pulse-dot {
+            width: 10px; height: 10px;
+            background: #EF4444;
+            border-radius: 50%;
+            animation: pulseDot 1s infinite;
+            flex-shrink: 0;
+        }
+        .listening-indicator.preparing .pulse-dot { background: var(--primary); }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.4); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .input-area {
-            padding: 20px 24px;
-            display: flex; align-items: center; gap: 10px;
+        /* ✅ ইনপুট ফিল্ড রেকর্ডিং অবস্থায় */
+        .input-area input[type="text"].listening {
+            border-color: #EF4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+            animation: inputPulse 1.5s infinite;
+        }
+        @keyframes inputPulse {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
+            50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.05); }
         }
 
+        .file-preview { display: none; align-items: center; gap: 12px; padding: 12px 24px 0 24px; font-size: 0.85rem; color: var(--text-muted); }
+        .file-preview img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+        .file-preview .remove-file { margin-left: auto; background: transparent; border: none; color: #EF4444; cursor: pointer; font-size: 1.2rem; font-weight: bold; }
+        .input-area { padding: 16px 24px 20px 24px; display: flex; align-items: center; gap: 10px; }
         .icon-btn-input {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            width: 48px; height: 48px;
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-muted); width: 48px; height: 48px;
             border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
         }
         .icon-btn-input:hover { background: var(--bg-bot); color: var(--primary); border-color: var(--primary); }
-        .icon-btn-input.recording {
-            background: #EF4444;
-            color: white;
-            border-color: #EF4444;
-            animation: pulse 1.2s infinite;
-        }
-        .icon-btn-input.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+        .icon-btn-input.recording { background: #EF4444; color: white; border-color: #EF4444; animation: pulse 1.2s infinite; }
         .icon-btn-input svg { width: 20px; height: 20px; }
-
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
             70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
-
         .input-area input[type="text"] {
             flex: 1; padding: 16px 20px; border: 1px solid var(--border);
             border-radius: 12px; font-size: 0.95rem; outline: none;
             font-family: inherit; background-color: var(--bg-body);
-            color: var(--text-main); transition: border-color 0.2s;
+            color: var(--text-main); transition: border-color 0.2s, box-shadow 0.2s;
             min-width: 0;
         }
         .input-area input[type="text"]::placeholder { color: var(--text-muted); }
         .input-area input[type="text"]:focus { border-color: var(--primary); }
-
         .send-btn {
             background: var(--primary); color: white; border: none;
             width: 52px; height: 52px; border-radius: 12px;
@@ -254,16 +217,13 @@
         .send-btn:hover { background: #2563EB; transform: scale(1.05); }
         .send-btn:disabled { background: #94A3B8; cursor: not-allowed; transform: none; }
         .send-btn svg { width: 20px; height: 20px; fill: white; }
-
         .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-main); }
         .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 48px auto; }
-
         .about-content { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
         .about-text { flex: 1; min-width: 300px; }
         .about-text h3 { font-size: 1.5rem; margin-bottom: 16px; }
         .about-text p { color: var(--text-muted); margin-bottom: 16px; }
         .about-image { flex: 1; min-width: 300px; height: 250px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--primary); }
-
         .faq-container { max-width: 800px; margin: 0 auto; }
         .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
         .faq-question { padding: 20px 24px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
@@ -273,7 +233,6 @@
         .faq-item.active .faq-question { color: var(--primary); }
         .faq-icon { transition: transform 0.3s; }
         .faq-item.active .faq-icon { transform: rotate(180deg); }
-
         .contact-container { display: flex; flex-wrap: wrap; gap: 40px; max-width: 900px; margin: 0 auto; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
         .contact-info { flex: 1; min-width: 250px; }
         .contact-info h3 { font-size: 1.2rem; margin-bottom: 20px; }
@@ -284,21 +243,8 @@
         .contact-form input:focus, .contact-form textarea:focus { border-color: var(--primary); }
         .contact-form button { padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .contact-form button:hover { background: #2563EB; }
-
-        footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-            padding: 60px 40px 20px 40px;
-            margin-top: auto;
-            border-top: 1px solid var(--border);
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            max-width: 1100px;
-            margin: 0 auto 40px auto;
-        }
+        footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 60px 40px 20px 40px; margin-top: auto; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1100px; margin: 0 auto 40px auto; }
         .footer-col h4 { color: #FFFFFF; font-size: 1.1rem; margin-bottom: 20px; }
         .footer-col p { font-size: 0.9rem; line-height: 1.8; }
         .footer-col ul { list-style: none; }
@@ -306,56 +252,49 @@
         .footer-col ul li a { color: var(--footer-text); text-decoration: none; transition: 0.2s; font-size: 0.9rem; cursor: pointer; }
         .footer-col ul li a:hover { color: #FFFFFF; padding-left: 5px; }
         .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1E293B; font-size: 0.85rem; max-width: 1100px; margin: 0 auto; }
-
         @media (max-width: 768px) {
             header { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
             .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 10px; gap: 16px; font-size: 0.85rem; }
-            .chat-card { height: 550px; }
+            .chat-card { height: 580px; }
             .message { max-width: 90%; }
             .section-title { font-size: 1.5rem; }
             .about-content, .contact-container { padding: 20px; }
             footer { padding: 40px 20px 20px 20px; }
-            .input-area { padding: 14px 16px; gap: 8px; }
+            .input-area { padding: 14px 16px 16px 16px; gap: 8px; }
             .icon-btn-input, .send-btn { width: 44px; height: 44px; }
             .input-area input[type="text"] { padding: 12px 14px; font-size: 0.9rem; }
             .file-preview { padding: 10px 16px 0 16px; }
+            .listening-indicator { margin: 10px 16px 0 16px; font-size: 0.8rem; }
         }
-
         .chat-messages::-webkit-scrollbar { width: 6px; }
         .chat-messages::-webkit-scrollbar-track { background: transparent; }
         .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
     </style>
 </head>
 <body>
-
     <header>
         <div class="logo-area">
             <div class="logo-icon">AI</div>
             MedTracker AI
         </div>
-        
         <div class="nav-links">
             <a id="nav-home" class="active" onclick="switchView('home')">Home</a>
             <a id="nav-about" onclick="switchView('about')">About</a>
             <a id="nav-faq" onclick="switchView('faq')">FAQ</a>
             <a id="nav-contact" onclick="switchView('contact')">Contact</a>
         </div>
-
         <div class="nav-right">
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
                 <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                 <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
             </button>
-            
             <a href="https://serakib.github.io/Medical-Admission-Tracker/" class="back-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 Back
             </a>
         </div>
     </header>
-
     <main>
-        <!-- Home View -->
         <div id="view-home" class="view active">
             <div class="chat-card">
                 <div class="chat-header">
@@ -365,14 +304,18 @@
                         <p>Powered by Groq — Text, Image & Voice</p>
                     </div>
                 </div>
-
-                <!-- ✅ typingIndicator এখন chatMessages-এর ভেতরে -->
                 <div class="chat-messages" id="chatMessages">
                     <div class="message bot">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে আমাকে প্রশ্ন করতে পারেন। 📎 আইকনে ক্লিক করে ছবি পাঠাতে পারেন, 🎤 আইকনে ক্লিক করে কথা বলতে পারেন।</div>
                     <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
                 </div>
 
                 <div class="chat-input-wrapper">
+                    <!-- ✅ লিসেনিং ইন্ডিকেটর -->
+                    <div class="listening-indicator" id="listeningIndicator">
+                        <span class="pulse-dot"></span>
+                        <span id="listeningText">🎤 শুনছি... কথা বলুন</span>
+                    </div>
+
                     <div class="file-preview" id="filePreview">
                         <img id="previewImg" src="" alt="" />
                         <span id="previewName"></span>
@@ -396,8 +339,6 @@
                             </svg>
                         </button>
 
-                        
-
                         <input type="text" id="userInput" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
                         <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                             <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -407,7 +348,6 @@
             </div>
         </div>
 
-        <!-- About View -->
         <div id="view-about" class="view">
             <h2 class="section-title">About Us</h2>
             <p class="section-subtitle">আমাদের সম্পর্কে জানুন</p>
@@ -423,7 +363,6 @@
             </div>
         </div>
 
-        <!-- FAQ View -->
         <div id="view-faq" class="view">
             <h2 class="section-title">Frequently Asked Questions</h2>
             <p class="section-subtitle">আপনার সাধারণ জিজ্ঞাসাগুলোর উত্তর</p>
@@ -451,7 +390,6 @@
             </div>
         </div>
 
-        <!-- Contact View -->
         <div id="view-contact" class="view">
             <h2 class="section-title">Contact Us</h2>
             <p class="section-subtitle">যেকোনো পরামর্শ বা অভিযোগের জন্য আমাদের সাথে যোগাযোগ করুন</p>
@@ -519,42 +457,30 @@
     </footer>
 
     <script>
-        // ==============================================================
-        // ⚙️ কনফিগারেশন
-        // ==============================================================
         const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 
-        // ==============================================================
-        // ১. থিম টগল
-        // ==============================================================
+        // ===== থিম =====
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
         }
-
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
 
-        // ==============================================================
-        // ২. Tabbed View
-        // ==============================================================
+        // ===== Tab =====
         function switchView(viewName) {
             document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
             const targetView = document.getElementById('view-' + viewName);
             if (targetView) targetView.classList.add('active');
-
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             const navEl = document.getElementById('nav-' + viewName);
             if (navEl) navEl.classList.add('active');
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ==============================================================
-        // ৩. FAQ Accordion
-        // ==============================================================
+        // ===== FAQ =====
         function toggleFaq(element) {
             document.querySelectorAll('.faq-item').forEach(item => {
                 if (item !== element) item.classList.remove('active');
@@ -562,9 +488,7 @@
             element.classList.toggle('active');
         }
 
-        // ==============================================================
-        // ৪. DOM রেফারেন্স
-        // ==============================================================
+        // ===== DOM =====
         const chatMessages = document.getElementById('chatMessages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
@@ -574,27 +498,25 @@
         const previewImg = document.getElementById('previewImg');
         const previewName = document.getElementById('previewName');
         const micBtn = document.getElementById('micBtn');
-     
+        const listeningIndicator = document.getElementById('listeningIndicator');
+        const listeningText = document.getElementById('listeningText');
 
         let attachedFile = null;
         let isSending = false;
         let recognition = null;
-let silenceTimer = null;
-let finalTranscript = '';
+        let silenceTimer = null;
+        let finalTranscript = '';
+        let isRecognitionActive = false;
 
-        // ==============================================================
-        // ৫. ছবি হ্যান্ডলিং
-        // ==============================================================
+        // ===== ছবি হ্যান্ডলিং =====
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             if (file.size > 5 * 1024 * 1024) {
                 alert('ছবির সাইজ ৫ MB এর বেশি হতে পারবে না');
                 fileInput.value = '';
                 return;
             }
-
             attachedFile = file;
             const reader = new FileReader();
             reader.onload = (ev) => {
@@ -604,7 +526,6 @@ let finalTranscript = '';
             };
             reader.readAsDataURL(file);
         });
-
         function clearFile() {
             attachedFile = null;
             fileInput.value = '';
@@ -612,155 +533,206 @@ let finalTranscript = '';
             previewImg.src = '';
         }
 
-        // ==============================================================
-        // ৬. ভয়েস ইনপুট
-        // ==============================================================
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        // ===== TTS =====
+        let ttsAbortController = null;
+        async function speakText(text) {
+            if (!text) return;
+            if (window.currentAudio) {
+                window.currentAudio.pause();
+                window.currentAudio.currentTime = 0;
+                window.currentAudio = null;
+            }
+            if ('speechSynthesis' in window) speechSynthesis.cancel();
 
-       if (SpeechRecognition) {
-    recognition = new SpeechRecognition();
-    recognition.lang = 'bn-BD';
-    recognition.continuous = true;
-    recognition.interimResults = true;
+            if (ttsAbortController) ttsAbortController.abort();
+            ttsAbortController = new AbortController();
 
-    recognition.onstart = () => {
-        finalTranscript = '';
-        micBtn.classList.add('recording');
-    };
-
-    recognition.onresult = (event) => {
-        let interim = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-                finalTranscript += transcript + ' ';
-            } else {
-                interim += transcript;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/tts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text }),
+                    signal: ttsAbortController.signal
+                });
+                if (!res.ok) { fallbackSpeak(text); return; }
+                const blob = await res.blob();
+                const audioUrl = URL.createObjectURL(blob);
+                const audio = new Audio(audioUrl);
+                window.currentAudio = audio;
+                audio.onended = () => {
+                    URL.revokeObjectURL(audioUrl);
+                    window.currentAudio = null;
+                };
+                audio.onerror = () => {
+                    URL.revokeObjectURL(audioUrl);
+                    window.currentAudio = null;
+                    fallbackSpeak(text);
+                };
+                try { await audio.play(); }
+                catch (playErr) {
+                    URL.revokeObjectURL(audioUrl);
+                    window.currentAudio = null;
+                    fallbackSpeak(text);
+                }
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+                console.error('TTS error:', err);
+                fallbackSpeak(text);
             }
         }
-        userInput.value = (finalTranscript + interim).trim();
 
-        // ✅ নতুন কথা শুনলে টাইমার রিসেট করুন
-        clearTimeout(silenceTimer);
-        silenceTimer = setTimeout(() => {
-            recognition.stop(); // ২.৫ সেকেন্ড চুপ → অটো স্টপ
-        }, 2500);
-    };
-
-    recognition.onspeechend = () => {
-        // কথা থামলে ২.৫ সেকেন্ড পর স্টপ
-        clearTimeout(silenceTimer);
-        silenceTimer = setTimeout(() => {
-            recognition.stop();
-        }, 2500);
-    };
-
-    recognition.onerror = (event) => {
-    console.error('Speech error:', event.error);
-    micBtn.classList.remove('recording');
-    clearTimeout(silenceTimer);
-
-    if (event.error === 'not-allowed') {
-        alert('মাইক্রোফোন ব্যবহারের অনুমতি দিন');
-    } else if (event.error === 'no-speech') {
-        console.warn('কোনো কথা শোনা যায়নি');
-    } else if (event.error === 'network') {
-        alert('ইন্টারনেট সমস্যা। চেক করুন।');
-    }
-};
-
-    recognition.onend = () => {
-        micBtn.classList.remove('recording');
-        clearTimeout(silenceTimer);
-
-        // ✅ অটো-সেন্ড: যদি টেক্সট থাকে, সাথে সাথে পাঠিয়ে দিন
-        const text = userInput.value.trim();
-        if (text && !isSending) {
-            sendMessage();
+        function fallbackSpeak(text) {
+            if (!('speechSynthesis' in window)) return;
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = /[\u0980-\u09FF]/.test(text) ? 'bn-BD' : 'en-US';
+            window.currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
         }
-    };
 
-micBtn.addEventListener('click', () => {
-    if (micBtn.classList.contains('recording')) {
-        if (window.currentAudio) window.currentAudio.pause();
-        recognition.stop();
-    } else {
-        try {
-            finalTranscript = '';
+        // ===== UI Helper =====
+        function showListeningUI(state) {
+            // state: 'preparing' | 'listening' | 'off'
+            if (state === 'off') {
+                listeningIndicator.classList.remove('active', 'preparing');
+                userInput.classList.remove('listening');
+                return;
+            }
+            listeningIndicator.classList.add('active');
+            userInput.classList.add('listening');
+            if (state === 'preparing') {
+                listeningIndicator.classList.add('preparing');
+                listeningText.textContent = '⏳ একটু অপেক্ষা করুন...';
+            } else {
+                listeningIndicator.classList.remove('preparing');
+                listeningText.textContent = '🎤 শুনছি... কথা বলুন';
+            }
+        }
 
-            // ✅ ব্যাকএন্ড থেকে বাংলা ভয়েস আনুন
-            const greetingText = 'আমি আপনাকে কীভাবে সাহায্য করতে পারি?';
-            speakText(greetingText).then(() => {
-                // ভয়েস শেষ হলে মাইক চালু
-                setTimeout(() => {
-                    try { recognition.start(); } catch (err) { console.error(err); }
-                }, 300);
+        // ===== ভয়েস ইনপুট =====
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'bn-IN';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isRecognitionActive = true;
+                finalTranscript = '';
+                micBtn.classList.add('recording');
+                showListeningUI('listening');
+                userInput.focus();
+            };
+
+            recognition.onresult = (event) => {
+                let interim = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript + ' ';
+                    } else {
+                        interim += transcript;
+                    }
+                }
+                // ✅ লাইভ আপডেট — আপনার কথা সাথে সাথে দেখা যাবে
+                userInput.value = (finalTranscript + interim).trim();
+
+                // টাইমার রিসেট — কথা বললে
+                clearTimeout(silenceTimer);
+                silenceTimer = setTimeout(() => {
+                    if (isRecognitionActive) recognition.stop();
+                }, 2500);
+            };
+
+            recognition.onspeechend = () => {
+                clearTimeout(silenceTimer);
+                silenceTimer = setTimeout(() => {
+                    if (isRecognitionActive) recognition.stop();
+                }, 2500);
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech error:', event.error);
+                if (event.error === 'not-allowed') {
+                    alert('মাইক্রোফোন ব্যবহারের অনুমতি দিন');
+                } else if (event.error === 'no-speech') {
+                    console.warn('কোনো কথা শোনা যায়নি');
+                } else if (event.error === 'audio-capture') {
+                    alert('মাইক্রোফোন পাওয়া যাচ্ছে না। চেক করুন।');
+                } else if (event.error === 'network') {
+                    alert('ইন্টারনেট সমস্যা। চেক করুন।');
+                }
+            };
+
+            recognition.onend = () => {
+                isRecognitionActive = false;
+                micBtn.classList.remove('recording');
+                showListeningUI('off');
+                clearTimeout(silenceTimer);
+
+                const text = userInput.value.trim();
+                if (text && !isSending) {
+                    // ✅ অটো-সেন্ড
+                    setTimeout(() => sendMessage(), 200);
+                }
+            };
+
+            micBtn.addEventListener('click', () => {
+                if (isRecognitionActive) {
+                    // বন্ধ করুন
+                    if (window.currentAudio) {
+                        window.currentAudio.pause();
+                        window.currentAudio = null;
+                    }
+                    if ('speechSynthesis' in window) speechSynthesis.cancel();
+                    recognition.stop();
+                } else {
+                    // শুরু করুন
+                    try {
+                        finalTranscript = '';
+                        userInput.value = '';
+
+                        // আগের সব অডিও বন্ধ
+                        if (window.currentAudio) {
+                            window.currentAudio.pause();
+                            window.currentAudio = null;
+                        }
+                        if ('speechSynthesis' in window) speechSynthesis.cancel();
+
+                        // ✅ প্রস্তুতি অবস্থা দেখান
+                        showListeningUI('preparing');
+                        micBtn.classList.add('recording');
+
+                        // ✅ Greeting চালান, তারপর মাইক চালু
+                        const greetingText = 'আমি আপনাকে কীভাবে সাহায্য করতে পারি?';
+                        speakText(greetingText).then(() => {
+                            // Greeting শেষ — এখন মাইক চালু
+                            setTimeout(() => {
+                                try { recognition.start(); }
+                                catch (err) { console.error('start err:', err); }
+                            }, 300);
+                        }).catch(() => {
+                            // Greeting fail হলেও মাইক চালু করুন
+                            try { recognition.start(); }
+                            catch (err) { console.error(err); }
+                        });
+
+                    } catch (err) {
+                        console.error(err);
+                        showListeningUI('off');
+                        micBtn.classList.remove('recording');
+                    }
+                }
             });
-
-        } catch (err) { console.error(err); }
-    }
-});
-} else {
-    micBtn.addEventListener('click', () => {
-        alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।');
-    });
-}
-
-        // ==============================================================
-        // ৭. ভয়েস আউটপুট
-        // ==============================================================
-        // ✅ স্পিকার টগল নেই — সবসময় উত্তর শোনাবে
-// ✅ নতুন speakText — ব্যাকএন্ড থেকে বাংলা অডিও আনে
-async function speakText(text) {
-    if (!text) return;
-
-    try {
-        // আগের অডিও বন্ধ করুন
-        if (window.currentAudio) {
-            window.currentAudio.pause();
-            window.currentAudio = null;
+        } else {
+            micBtn.addEventListener('click', () => {
+                alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome বা Edge ব্যবহার করুন।');
+            });
         }
 
-        const res = await fetch(`${BACKEND_URL}/api/tts`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: text })
-        });
-
-        if (!res.ok) {
-            console.warn('TTS failed, fallback to browser');
-            fallbackSpeak(text);
-            return;
-        }
-
-        const blob = await res.blob();
-        const audioUrl = URL.createObjectURL(blob);
-        const audio = new Audio(audioUrl);
-
-        window.currentAudio = audio;
-        audio.play().catch(err => {
-            console.warn('Audio play blocked:', err);
-            fallbackSpeak(text);
-        });
-
-        audio.onended = () => URL.revokeObjectURL(audioUrl);
-    } catch (err) {
-        console.error('TTS error:', err);
-        fallbackSpeak(text);
-    }
-}
-
-// ব্যাকআপ: ব্রাউজার TTS
-function fallbackSpeak(text) {
-    if (!('speechSynthesis' in window)) return;
-    speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'bn-IN';
-    speechSynthesis.speak(utterance);
-}
-        // ==============================================================
-        // ৮. মেসেজ পাঠানো
-        // ==============================================================
+        // ===== মেসেজ পাঠানো =====
         async function sendMessage() {
             if (isSending) return;
             const text = userInput.value.trim();
@@ -771,6 +743,8 @@ function fallbackSpeak(text) {
 
             addMessage(text, 'user', attachedFile);
             userInput.value = '';
+            userInput.classList.remove('listening');
+            listeningIndicator.classList.remove('active', 'preparing');
 
             const fileToSend = attachedFile;
             clearFile();
@@ -799,7 +773,7 @@ function fallbackSpeak(text) {
                 }
             } catch (error) {
                 typingIndicator.style.display = 'none';
-                addMessage("❌ নেটওয়ার্ক সমস্যা। Render সার্ভার হয়তো ঘুমিয়ে আছে, ৩০ সেকেন্ড পর আবার চেষ্টা করুন।", 'bot');
+                addMessage("❌ নেটওয়ার্ক সমস্যা। ৩০ সেকেন্ড পর আবার চেষ্টা করুন।", 'bot');
                 console.error(error);
             }
 
@@ -808,9 +782,6 @@ function fallbackSpeak(text) {
             userInput.focus();
         }
 
-        // ==============================================================
-        // ৯. মেসেজ DOM-এ যোগ (✅ ফিক্সড)
-        // ==============================================================
         function addMessage(text, sender, file) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', sender);
@@ -820,14 +791,12 @@ function fallbackSpeak(text) {
                 img.src = URL.createObjectURL(file);
                 msgDiv.appendChild(img);
             }
-
             if (text) {
                 const p = document.createElement('div');
                 p.innerText = text;
                 msgDiv.appendChild(p);
             }
 
-            // ✅ নিরাপদ চেক — typingIndicator চ্যাটের চাইল্ড কিনা
             if (typingIndicator && typingIndicator.parentNode === chatMessages) {
                 chatMessages.insertBefore(msgDiv, typingIndicator);
             } else {
