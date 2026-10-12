@@ -6,18 +6,30 @@
 <title>AI Assistant - Medical Admission Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0A0A0A;--bg-elev:#111111;--bg-elev2:#1A1A1A;--bg-input:#1F1F1F;--text:#F5F5F5;--text-muted:#9CA3AF;--text-dim:#6B7280;--border:#222222;--border-soft:#1F1F1F;--primary:#2563EB;--primary-hover:#1D4ED8;--user-bubble:#2563EB;--danger:#EF4444;--success:#10B981;}
-body.light-mode{--bg:#F8FAFC;--bg-elev:#FFFFFF;--bg-elev2:#F1F5F9;--bg-input:#F1F5F9;--text:#0F172A;--text-muted:#64748B;--text-dim:#94A3B8;--border:#E2E8F0;--border-soft:#F1F5F9;}
+:root{
+    --bg:#0A0A0A;--bg-elev:#111111;--bg-elev2:#1A1A1A;--bg-input:#1F1F1F;
+    --text:#F5F5F5;--text-muted:#9CA3AF;--text-dim:#6B7280;
+    --border:#222222;--border-soft:#1F1F1F;
+    --primary:#2563EB;--primary-hover:#1D4ED8;
+    --user-bubble:#2563EB;--danger:#EF4444;--success:#10B981;
+}
+body.light-mode{
+    --bg:#F8FAFC;--bg-elev:#FFFFFF;--bg-elev2:#F1F5F9;--bg-input:#F1F5F9;
+    --text:#0F172A;--text-muted:#64748B;--text-dim:#94A3B8;
+    --border:#E2E8F0;--border-soft:#F1F5F9;
+}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:background-color .3s,color .3s;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;}
 body.voice-active{overflow:hidden;}
+
 header{position:sticky;top:0;z-index:1000;background:var(--bg);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:14px 40px;transition:background-color .3s,border-color .3s;}
 .logo-area{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem;}
 .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#2563EB,#1D4ED8);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.78rem;color:#fff;font-weight:700;}
 .nav-links{display:flex;gap:6px;font-size:.92rem;font-weight:500;}
-.nav-links a{color:var(--text-muted);text-decoration:none;cursor:pointer;padding:9px 16px;border-radius:10px;transition:all .2s ease;}
+.nav-links a{color:var(--text-muted);text-decoration:none;cursor:pointer;padding:9px 16px;border-radius:10px;transition:all .2s ease;position:relative;}
 .nav-links a:hover{color:var(--text);background:var(--bg-elev2);}
 .nav-links a.active{color:#fff;background:linear-gradient(135deg,#2563EB,#1D4ED8);font-weight:600;box-shadow:0 4px 14px rgba(37,99,235,.4);}
+body.light-mode .nav-links a.active{color:#fff;}
 .nav-right{display:flex;align-items:center;gap:10px;}
 .theme-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;position:relative;overflow:hidden;}
 .theme-toggle:hover{background:var(--bg-elev2);color:var(--text);transform:scale(1.05);}
@@ -28,20 +40,26 @@ body.light-mode .sun-icon{opacity:0;transform:rotate(-90deg) scale(.5);}
 body.light-mode .moon-icon{opacity:1;transform:rotate(0) scale(1);}
 .back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--text-muted);text-decoration:none;font-weight:500;font-size:.88rem;padding:8px 14px;border:1px solid var(--border);border-radius:8px;transition:all .2s ease;background:transparent;cursor:pointer;}
 .back-btn:hover{background:var(--bg-elev2);color:var(--text);}
+
 main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px;margin:0 auto;width:100%;}
 .view{display:none;animation:fadeIn .4s ease;}
 .view.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
 .chat-card{display:flex;flex-direction:column;height:calc(100vh - 140px);min-height:520px;max-height:820px;position:relative;}
 .chat-header{padding:12px 4px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-soft);margin-bottom:8px;}
 .bot-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.9rem;box-shadow:0 4px 12px rgba(37,99,235,.3);}
 .bot-info h3{font-size:.95rem;font-weight:600;margin-bottom:2px;}
 .bot-info p{font-size:.75rem;color:var(--text-muted);}
+
 .chat-messages{flex:1;padding:12px 4px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;scroll-behavior:smooth;}
+
 .message{max-width:82%;font-size:.95rem;line-height:1.6;animation:fadeIn .3s ease forwards;word-wrap:break-word;}
 .message.bot{align-self:flex-start;color:var(--text);padding:0 4px;}
 .message.user{align-self:flex-end;background:var(--user-bubble);color:#fff;padding:12px 18px;border-radius:20px;border-bottom-right-radius:6px;box-shadow:0 2px 8px rgba(37,99,235,.25);}
 .message img{max-width:260px;max-height:260px;border-radius:12px;margin-bottom:10px;display:block;}
+.message.bot img{border-radius:12px;}
+
 .msg-actions{display:flex;gap:2px;margin-top:8px;opacity:.55;transition:opacity .2s;}
 .message:hover .msg-actions{opacity:1;}
 .msg-action{background:transparent;border:none;color:var(--text-muted);cursor:pointer;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .15s ease;}
@@ -57,30 +75,34 @@ body.light-mode .msg-action.playing{background:rgba(37,99,235,.12);}
 .message.user .msg-action{color:rgba(255,255,255,.8);}
 .message.user .msg-action:hover{background:rgba(255,255,255,.15);color:#fff;}
 
-/* ═══ THINKING PANEL — DeepSeek style ═══ */
-.think-panel{max-width:100%;align-self:stretch;background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;overflow:hidden;animation:fadeIn .3s ease;transition:all .3s ease;margin-bottom:4px;}
+.think-panel{max-width:82%;align-self:flex-start;background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;overflow:hidden;animation:fadeIn .3s ease;transition:all .3s ease;}
 .think-panel.search-panel{border-color:rgba(37,99,235,.4);background:linear-gradient(180deg,rgba(37,99,235,.06),var(--bg-elev));}
-.think-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;font-size:.92rem;font-weight:600;color:var(--text);transition:color .2s;}
-.think-header .think-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#8B5CF6;}
-.think-header .think-icon svg{width:18px;height:18px;animation:spinSlow 3s linear infinite;}
+.think-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;font-size:.85rem;font-weight:600;color:var(--text-muted);transition:color .2s;}
+.think-header:hover{color:var(--text);}
+.think-header .think-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.think-header .think-icon svg{width:16px;height:16px;animation:spinSlow 3s linear infinite;}
 @keyframes spinSlow{from{transform:rotate(0);}to{transform:rotate(360deg);}}
-.think-panel.done .think-header .think-icon svg{animation:none;color:#10B981;}
-.think-header .chev{margin-left:8px;transition:transform .3s;width:16px;height:16px;opacity:.6;}
+.think-panel.done .think-header .think-icon svg{animation:none;}
+.think-header .chev{margin-left:auto;transition:transform .3s;width:14px;height:14px;}
 .think-panel.open .think-header .chev{transform:rotate(180deg);}
-.think-title-text{font-weight:600;}
-.think-title-text.live{background:linear-gradient(90deg,var(--text) 0%,var(--text-muted) 50%,var(--text) 100%);background-size:200% auto;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 2s linear infinite;}
-@keyframes shimmer{to{background-position:-200% center;}}
-.think-body{max-height:0;overflow:hidden;transition:max-height .45s ease;padding:0 18px;}
-.think-panel.open .think-body{max-height:2000px;padding:0 18px 16px;}
-.think-step{display:flex;gap:11px;padding:9px 0;font-size:.86rem;color:var(--text-muted);line-height:1.65;}
-.think-step .step-bullet{width:7px;height:7px;border-radius:50%;background:var(--primary);margin-top:9px;flex-shrink:0;box-shadow:0 0 8px rgba(37,99,235,.6);}
+.think-title{display:flex;align-items:center;gap:8px;}
+.think-title .dot-stream{display:inline-flex;gap:3px;}
+.think-title .dot-stream span{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.5;animation:dotStream 1.4s infinite;}
+.think-title .dot-stream span:nth-child(2){animation-delay:.2s;}
+.think-title .dot-stream span:nth-child(3){animation-delay:.4s;}
+@keyframes dotStream{0%,80%,100%{opacity:.3;transform:scale(.8);}40%{opacity:1;transform:scale(1.1);}}
+.think-panel.done .think-title .dot-stream{display:none;}
+.think-body{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 16px;}
+.think-panel.open .think-body{max-height:500px;padding:0 16px 14px;}
+.think-step{display:flex;gap:10px;padding:8px 0;font-size:.83rem;color:var(--text-muted);line-height:1.5;opacity:0;transform:translateY(4px);animation:stepIn .35s ease forwards;}
+@keyframes stepIn{to{opacity:1;transform:translateY(0);}}
+.think-step .step-bullet{width:6px;height:6px;border-radius:50%;background:var(--primary);margin-top:8px;flex-shrink:0;box-shadow:0 0 8px rgba(37,99,235,.6);}
 .think-panel.search-panel .think-step .step-bullet{background:#06B6D4;box-shadow:0 0 8px rgba(6,182,212,.6);}
 .think-step.active{color:var(--text);font-weight:500;}
 .think-step.active .step-bullet{animation:pulseBullet 1.2s infinite;}
-@keyframes pulseBullet{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.6);opacity:.5;}}
+@keyframes pulseBullet{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.5;}}
 .think-step.done .step-bullet{background:#10B981;box-shadow:0 0 8px rgba(16,185,129,.5);}
-.think-step .step-text{white-space:pre-wrap;}
-.think-sources{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:12px;border-top:1px dashed var(--border);}
+.think-sources{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--border);}
 .think-sources .src-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text-muted);text-decoration:none;transition:all .2s;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .think-sources .src-chip:hover{border-color:var(--primary);color:var(--text);background:rgba(37,99,235,.08);}
 .think-sources .src-favicon{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0;}
@@ -93,12 +115,15 @@ body.light-mode .msg-action.playing{background:rgba(37,99,235,.12);}
 .mode-toggle.active.search-mode{background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(14,116,144,.12));border-color:#06B6D4;color:#22D3EE;box-shadow:0 0 0 3px rgba(6,182,212,.1);}
 body.light-mode .mode-toggle.active.think-mode{color:#7C3AED;}
 body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
+
 .typing-indicator{display:none;align-self:flex-start;padding:6px 4px;gap:6px;align-items:center;}
 .typing-indicator span{width:7px;height:7px;background:var(--text-muted);border-radius:50%;animation:bounce 1.4s infinite ease-in-out both;}
 .typing-indicator span:nth-child(1){animation-delay:-.32s;}
 .typing-indicator span:nth-child(2){animation-delay:-.16s;}
 @keyframes bounce{0%,80%,100%{transform:scale(0);}40%{transform:scale(1);}}
+
 .chat-input-wrapper{margin-top:auto;background:var(--bg);padding-top:12px;}
+
 .voice-pill-row{padding:0 0 8px;display:flex;justify-content:flex-start;gap:8px;align-items:center;}
 .voice-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s ease;font-family:inherit;}
 .voice-pill:hover{border-color:var(--text-dim);color:var(--text);}
@@ -112,18 +137,24 @@ body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
 .voice-pill-avatar.v-olivia{background:linear-gradient(160deg,#A78BFA,#7C3AED);}
 .voice-pill-avatar.v-james{background:linear-gradient(160deg,#22D3EE,#0E7490);}
 .voice-pill-avatar.v-charlotte{background:linear-gradient(160deg,#FB7185,#BE123C);}
+
 .test-voice-btn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--bg-input);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all .2s ease;font-family:inherit;flex-shrink:0;}
 .test-voice-btn:hover{background:var(--bg-elev2);color:var(--text);border-color:var(--text-dim);}
 .test-voice-btn:active{transform:scale(.92);}
 .test-voice-btn svg{width:15px;height:15px;}
 .test-voice-btn.playing{background:#EF4444;color:#fff;border-color:#EF4444;animation:pulse 1.2s infinite;}
+
 .listening-indicator{display:none;align-items:center;justify-content:center;gap:10px;padding:10px 16px;margin-bottom:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:12px;color:#EF4444;font-size:.85rem;font-weight:600;}
 .listening-indicator.active{display:flex;}
+.listening-indicator.preparing{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.3);color:#60A5FA;}
 .pulse-dot{width:9px;height:9px;background:#EF4444;border-radius:50%;animation:pulseDot 1s infinite;flex-shrink:0;}
+.listening-indicator.preparing .pulse-dot{background:#60A5FA;}
 @keyframes pulseDot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.4);}}
+
 .file-preview{display:none;align-items:center;gap:12px;padding:10px 14px;margin-bottom:10px;background:var(--bg-input);border:1px solid var(--border);border-radius:12px;font-size:.85rem;color:var(--text-muted);}
 .file-preview img{width:44px;height:44px;object-fit:cover;border-radius:8px;}
 .file-preview .remove-file{margin-left:auto;background:transparent;border:none;color:#EF4444;cursor:pointer;font-size:1.1rem;font-weight:bold;}
+
 .input-bar{display:flex;align-items:center;gap:8px;background:var(--bg-input);border:1px solid var(--border);border-radius:30px;padding:8px 10px 8px 14px;transition:border-color .2s,box-shadow .2s;}
 .input-bar:focus-within{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.12);}
 .input-bar input[type="text"]{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:inherit;font-size:.95rem;padding:10px 4px;min-width:0;}
@@ -138,6 +169,7 @@ body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
 .input-bar .bar-mic{background:transparent;border:none;color:var(--text-muted);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s ease;flex-shrink:0;}
 .input-bar .bar-mic:hover{background:var(--bg-elev2);color:var(--text);}
 .input-bar .bar-mic svg{width:20px;height:20px;}
+
 .section-title{text-align:center;font-size:2rem;font-weight:700;margin-bottom:16px;letter-spacing:-.02em;}
 .section-subtitle{text-align:center;color:var(--text-muted);max-width:600px;margin:0 auto 48px;font-size:.95rem;}
 .about-content{display:flex;flex-wrap:wrap;gap:40px;align-items:center;background:var(--bg-elev);padding:40px;border-radius:20px;border:1px solid var(--border);}
@@ -164,6 +196,7 @@ body.light-mode .mode-toggle.active.search-mode{color:#0891B2;}
 .contact-form input:focus,.contact-form textarea:focus{border-color:#2563EB;}
 .contact-form button{padding:14px;background:#2563EB;color:#fff;border:none;border-radius:12px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.95rem;transition:background .2s;}
 .contact-form button:hover{background:#1D4ED8;}
+
 footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margin-top:auto;border-top:1px solid var(--border);}
 .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;max-width:1100px;margin:0 auto 40px;}
 .footer-col h4{color:var(--text);font-size:1rem;margin-bottom:18px;font-weight:600;}
@@ -173,6 +206,7 @@ footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margi
 .footer-col ul li a{color:var(--text-muted);text-decoration:none;font-size:.88rem;cursor:pointer;transition:color .2s;}
 .footer-col ul li a:hover{color:var(--text);}
 .footer-bottom{text-align:center;padding-top:20px;border-top:1px solid var(--border);font-size:.82rem;max-width:1100px;margin:0 auto;}
+
 .voice-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:6000;display:none;align-items:center;justify-content:center;padding:20px;}
 .voice-modal.open{display:flex;}
 .voice-modal-content{background:var(--bg-elev);border:1px solid var(--border);border-radius:20px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,.5);animation:slideUp .3s ease;}
@@ -187,7 +221,7 @@ footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margi
 .voice-card:hover{border-color:var(--text-dim);transform:translateY(-2px);}
 .voice-card.selected{border-color:#2563EB;background:rgba(37,99,235,.08);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
 .voice-card.selected::after{content:'✓';position:absolute;top:8px;right:10px;width:20px;height:20px;background:#2563EB;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;z-index:2;}
-.voice-avatar{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;font-weight:700;color:#fff;position:relative;overflow:hidden;text-shadow:0 2px 3px rgba(0,0,0,.35);box-shadow:0 6px 16px rgba(0,0,0,.25),inset 0 -6px 10px rgba(0,0,0,.28),inset 0 4px 8px rgba(255,255,255,.28);background:linear-gradient(160deg,#3B82F6,#1E40AF);}
+.voice-avatar{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;font-weight:700;color:#fff;letter-spacing:0.5px;position:relative;overflow:hidden;text-shadow:0 2px 3px rgba(0,0,0,.35);box-shadow:0 6px 16px rgba(0,0,0,0.25),0 2px 4px rgba(0,0,0,0.15),inset 0 -6px 10px rgba(0,0,0,0.28),inset 0 4px 8px rgba(255,255,255,0.28),inset 0 0 0 1px rgba(255,255,255,0.1);background:linear-gradient(160deg,#3B82F6,#1E40AF);}
 .voice-avatar::before{content:'';position:absolute;top:5%;left:12%;width:48%;height:48%;background:radial-gradient(ellipse at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,0) 65%);border-radius:50%;pointer-events:none;}
 .voice-avatar > span{position:relative;z-index:1;}
 .voice-avatar.v-emma{background:linear-gradient(160deg,#F472B6 0%,#EC4899 45%,#BE185D 100%);}
@@ -205,17 +239,31 @@ footer{background:var(--bg);color:var(--text-muted);padding:50px 40px 20px;margi
 .voice-play-btn:hover{transform:scale(1.1);background:#1D4ED8;}
 .voice-play-btn.playing{background:#EF4444;animation:pulse 1.2s infinite;}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6);}70%{box-shadow:0 0 0 12px rgba(239,68,68,0);}100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}}
-.voice-overlay{--v-bg:#000000;--v-bg-elev:#1A1A1A;--v-bg-hover:#1F2937;--v-border:#2A2A2A;--v-text:#E5E7EB;--v-text-muted:#9CA3AF;--v-input-bg:#1A1A1A;position:fixed;inset:0;background:var(--v-bg);z-index:5000;display:none;flex-direction:column;animation:voiceFadeIn .35s ease;transition:background-color .3s ease;}
-body.light-mode .voice-overlay{--v-bg:#F8FAFC;--v-bg-elev:#FFFFFF;--v-bg-hover:#F1F5F9;--v-border:#E2E8F0;--v-text:#0F172A;--v-text-muted:#64748B;--v-input-bg:#FFFFFF;}
+
+.voice-overlay{
+    --v-bg:#000000;--v-bg-elev:#1A1A1A;--v-bg-hover:#1F2937;--v-border:#2A2A2A;
+    --v-text:#E5E7EB;--v-text-muted:#9CA3AF;--v-input-bg:#1A1A1A;
+    position:fixed;inset:0;background:var(--v-bg);z-index:5000;display:none;flex-direction:column;animation:voiceFadeIn .35s ease;transition:background-color .3s ease;
+}
+body.light-mode .voice-overlay{
+    --v-bg:#F8FAFC;--v-bg-elev:#FFFFFF;--v-bg-hover:#F1F5F9;--v-border:#E2E8F0;
+    --v-text:#0F172A;--v-text-muted:#64748B;--v-input-bg:#FFFFFF;
+}
 .voice-overlay.open{display:flex;}
 @keyframes voiceFadeIn{from{opacity:0;}to{opacity:1;}}
 .voice-topbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:16px 20px;color:var(--v-text);}
 .voice-topbtn{background:transparent;border:none;color:var(--v-text-muted);cursor:pointer;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s ease;font-size:1rem;}
 .voice-topbtn:hover{background:var(--v-bg-hover);color:var(--v-text);}
 .voice-topbtn svg{width:18px;height:18px;}
-.dev-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:22px;background:linear-gradient(135deg,#2563EB 0%,#3B82F6 100%);color:#fff;font-size:.83rem;font-weight:600;text-decoration:none;font-family:inherit;box-shadow:0 4px 16px rgba(37,99,235,.45);transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;}
-.dev-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.6);}
-.dev-btn svg{width:14px;height:14px;}
+
+.dev-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:22px;background:linear-gradient(135deg,#2563EB 0%,#3B82F6 100%);color:#fff;font-size:.83rem;font-weight:600;text-decoration:none;font-family:inherit;box-shadow:0 4px 16px rgba(37,99,235,.45),inset 0 1px 0 rgba(255,255,255,.25);transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;position:relative;overflow:hidden;}
+.dev-btn::before{content:'';position:absolute;inset:0;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.25),transparent 60%);opacity:0;transition:opacity .25s ease;}
+.dev-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.6),inset 0 1px 0 rgba(255,255,255,.35);}
+.dev-btn:hover::before{opacity:1;}
+.dev-btn:active{transform:translateY(0);}
+.dev-btn svg{width:14px;height:14px;position:relative;z-index:1;}
+.dev-btn span{position:relative;z-index:1;}
+
 .voice-messages{flex:1;overflow-y:auto;padding:20px 24px 180px;display:flex;flex-direction:column;gap:22px;max-width:900px;width:100%;margin:0 auto;}
 .voice-messages::-webkit-scrollbar{width:6px;}
 .voice-messages::-webkit-scrollbar-thumb{background:var(--v-border);border-radius:10px;}
@@ -234,24 +282,34 @@ body.light-mode .voice-overlay{--v-bg:#F8FAFC;--v-bg-elev:#FFFFFF;--v-bg-hover:#
 .v-action.active-dislike{color:#EF4444;}
 .v-action svg{width:15px;height:15px;}
 .v-msg.user .v-actions{justify-content:flex-end;}
+.v-msg.user .v-action:hover{background:rgba(255,255,255,.2);color:#FFF;}
+
 .v-think-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:20px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);color:#A78BFA;font-size:.78rem;font-weight:600;margin-bottom:8px;animation:fadeIn .3s ease;}
 .v-think-badge.search{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.35);color:#22D3EE;}
 .v-think-badge .spin{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spinSlow .8s linear infinite;}
+
 .voice-bottom{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:20px;padding:0 20px 24px;pointer-events:none;background:linear-gradient(to top,var(--v-bg) 60%,transparent);}
 .voice-bottom > *{pointer-events:auto;}
+
 .voice-orb-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
 .voice-orb-tooltip{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--v-bg-elev);color:var(--v-text);padding:8px 16px;border-radius:20px;font-size:.82rem;font-weight:500;white-space:nowrap;border:1px solid var(--v-border);box-shadow:0 4px 16px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;}
 .voice-orb-wrap:hover .voice-orb-tooltip{opacity:1;transform:translateX(-50%) translateY(0);}
-.voice-orb{width:130px;height:130px;border-radius:50%;position:relative;cursor:pointer;transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .4s ease,background .4s ease;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#E0E7FF 18%,#93C5FD 40%,#3B82F6 70%,#1E40AF 100%);box-shadow:0 0 60px rgba(59,130,246,.5),0 0 100px rgba(59,130,246,.3),inset 0 -20px 40px rgba(30,64,175,.4),inset 0 20px 30px rgba(255,255,255,.15);animation:orbIdle 4s ease-in-out infinite;overflow:hidden;}
-.voice-orb::before{content:'';position:absolute;inset:-10%;border-radius:50%;background:radial-gradient(circle at 25% 25%,rgba(255,255,255,.7) 0%,transparent 35%),radial-gradient(circle at 75% 60%,rgba(147,197,253,.6) 0%,transparent 45%);animation:orbWaves 6s ease-in-out infinite;mix-blend-mode:screen;}
+.voice-orb{width:130px;height:130px;border-radius:50%;position:relative;cursor:pointer;transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .4s ease,background .4s ease,filter .4s ease;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#E0E7FF 18%,#93C5FD 40%,#3B82F6 70%,#1E40AF 100%);box-shadow:0 0 60px rgba(59,130,246,.5),0 0 100px rgba(59,130,246,.3),inset 0 -20px 40px rgba(30,64,175,.4),inset 0 20px 30px rgba(255,255,255,.15);animation:orbIdle 4s ease-in-out infinite;overflow:hidden;}
+.voice-orb::before{content:'';position:absolute;inset:-10%;border-radius:50%;background:radial-gradient(circle at 25% 25%,rgba(255,255,255,.7) 0%,transparent 35%),radial-gradient(circle at 75% 60%,rgba(147,197,253,.6) 0%,transparent 45%),radial-gradient(circle at 50% 80%,rgba(59,130,246,.5) 0%,transparent 50%);animation:orbWaves 6s ease-in-out infinite;mix-blend-mode:screen;}
+.voice-orb::after{content:'';position:absolute;inset:-15%;border-radius:50%;background:radial-gradient(circle at 60% 40%,rgba(96,165,250,.7) 0%,transparent 60%);animation:orbWaves2 5s ease-in-out infinite reverse;mix-blend-mode:soft-light;}
 @keyframes orbIdle{0%,100%{transform:scale(1);filter:brightness(1);}50%{transform:scale(1.03);filter:brightness(1.08);}}
-@keyframes orbWaves{0%,100%{transform:translate(0,0) rotate(0deg) scale(1);}50%{transform:translate(-2%,3%) rotate(90deg) scale(1.08);}}
-.voice-orb.listening{animation:orbListen 1.2s ease-in-out infinite;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#CFFAFE 18%,#67E8F9 40%,#06B6D4 70%,#0E7490 100%);box-shadow:0 0 70px rgba(6,182,212,.6),0 0 120px rgba(6,182,212,.35);}
+@keyframes orbWaves{0%,100%{transform:translate(0,0) rotate(0deg) scale(1);}25%{transform:translate(3%,-2%) rotate(45deg) scale(1.05);}50%{transform:translate(-2%,3%) rotate(90deg) scale(1.08);}75%{transform:translate(-3%,-2%) rotate(135deg) scale(1.03);}}
+@keyframes orbWaves2{0%,100%{transform:translate(0,0) rotate(0deg);}50%{transform:translate(-4%,4%) rotate(180deg);}}
+.voice-orb.listening{animation:orbListen 1.2s ease-in-out infinite;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#CFFAFE 18%,#67E8F9 40%,#06B6D4 70%,#0E7490 100%);box-shadow:0 0 70px rgba(6,182,212,.6),0 0 120px rgba(6,182,212,.35),inset 0 -20px 40px rgba(14,116,144,.4),inset 0 20px 30px rgba(255,255,255,.2);}
 @keyframes orbListen{0%,100%{transform:scale(1);}30%{transform:scale(1.1);}60%{transform:scale(1.05);}}
-.voice-orb.speaking{animation:orbSpeak .8s ease-in-out infinite;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#DBEAFE 18%,#60A5FA 40%,#2563EB 70%,#1E3A8A 100%);box-shadow:0 0 80px rgba(37,99,235,.6),0 0 140px rgba(37,99,235,.35);}
+.voice-orb.listening::before{animation-duration:2s;}
+.voice-orb.listening::after{animation-duration:1.5s;}
+.voice-orb.speaking{animation:orbSpeak .8s ease-in-out infinite;background:radial-gradient(circle at 30% 30%,#FFFFFF 0%,#DBEAFE 18%,#60A5FA 40%,#2563EB 70%,#1E3A8A 100%);box-shadow:0 0 80px rgba(37,99,235,.6),0 0 140px rgba(37,99,235,.35),inset 0 -20px 40px rgba(30,58,138,.4),inset 0 20px 30px rgba(255,255,255,.2);}
 @keyframes orbSpeak{0%,100%{transform:scale(1);}25%{transform:scale(1.12);}50%{transform:scale(1.05);}75%{transform:scale(1.15);}}
+.voice-orb.speaking::before{animation-duration:1.5s;}
+.voice-orb.speaking::after{animation-duration:1.2s;}
 .voice-orb.thinking{animation:orbThinkPulse 1.5s ease-in-out infinite;background:conic-gradient(from 0deg,#3B82F6,#93C5FD,#E0E7FF,#60A5FA,#2563EB,#3B82F6);}
-@keyframes orbThinkPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.08) rotate(180deg);}}
+@keyframes orbThinkPulse{0%,100%{transform:scale(1) rotate(0deg);filter:hue-rotate(0deg);}50%{transform:scale(1.08) rotate(180deg);filter:hue-rotate(30deg);}}
 .orb-particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.9),transparent 70%);pointer-events:none;mix-blend-mode:screen;}
 .orb-particle.p1{width:30%;height:30%;top:20%;left:25%;animation:float1 4s ease-in-out infinite;}
 .orb-particle.p2{width:20%;height:20%;top:55%;left:60%;animation:float2 3.5s ease-in-out infinite;}
@@ -259,12 +317,18 @@ body.light-mode .voice-overlay{--v-bg:#F8FAFC;--v-bg-elev:#FFFFFF;--v-bg-hover:#
 @keyframes float1{0%,100%{transform:translate(0,0) scale(1);opacity:.7;}50%{transform:translate(30%,-20%) scale(1.3);opacity:1;}}
 @keyframes float2{0%,100%{transform:translate(0,0) scale(1);opacity:.6;}50%{transform:translate(-40%,30%) scale(1.4);opacity:.9;}}
 @keyframes float3{0%,100%{transform:translate(0,0) scale(1);opacity:.5;}50%{transform:translate(50%,-40%) scale(1.2);opacity:.85;}}
-.voice-inputbar{display:flex;align-items:center;gap:10px;background:var(--v-input-bg);border:1px solid var(--v-border);border-radius:30px;padding:8px 12px;width:100%;max-width:700px;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.voice-orb.listening .orb-particle{animation-duration:2s;}
+.voice-orb.speaking .orb-particle{animation-duration:1.5s;}
+.voice-orb.thinking .orb-particle{animation-duration:3s;}
+
+.voice-inputbar{display:flex;align-items:center;gap:10px;background:var(--v-input-bg);border:1px solid var(--v-border);border-radius:30px;padding:8px 12px;width:100%;max-width:700px;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:background-color .3s,border-color .3s;}
 .voice-inputbar input{flex:1;background:transparent;border:none;outline:none;color:var(--v-text);font-family:inherit;font-size:.95rem;padding:8px 4px;min-width:0;}
 .voice-inputbar input::placeholder{color:var(--v-text-muted);}
 .voice-inputbar .vib-mic{background:#10B981;color:#fff;border:none;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .35s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;box-shadow:0 0 0 0 rgba(16,185,129,.5);animation:micPulse 2s infinite;}
-@keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5);}70%{box-shadow:0 0 0 10px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
+@keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5);}70%{box-shadow:0 0 0 10px rgba(16,185,129,0);}}
+.voice-inputbar .vib-mic:hover{transform:scale(1.08);}
 .voice-inputbar .vib-mic.muted{background:#EF4444;animation:none;box-shadow:0 0 0 0 rgba(239,68,68,.4);}
+.voice-inputbar .vib-mic.muted:hover{background:#DC2626;transform:scale(1.05);}
 .voice-inputbar .vib-mic svg{width:18px;height:18px;}
 .voice-inputbar .vib-mic .mic-off-slash{display:none;}
 .voice-inputbar .vib-mic.muted .mic-on-body{display:none;}
@@ -272,16 +336,20 @@ body.light-mode .voice-overlay{--v-bg:#F8FAFC;--v-bg-elev:#FFFFFF;--v-bg-hover:#
 .voice-inputbar .vib-close{background:#2563EB;border:none;color:#fff;cursor:pointer;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s ease;flex-shrink:0;}
 .voice-inputbar .vib-close:hover{background:#1D4ED8;transform:scale(1.08);}
 .voice-inputbar .vib-close svg{width:18px;height:18px;}
+
 .chat-messages::-webkit-scrollbar{width:6px;}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+
 .voice-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1F2937;color:#F9FAFB;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:500;z-index:10000;box-shadow:0 10px 30px rgba(0,0,0,.5);border:1px solid #374151;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .3s;opacity:0;pointer-events:none;max-width:90%;text-align:center;}
 .voice-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
 @media(max-width:768px){
 header{padding:12px 16px;flex-wrap:wrap;gap:10px;}
 .nav-links{order:3;width:100%;justify-content:center;margin-top:8px;gap:4px;font-size:.8rem;}
 .nav-links a{padding:7px 12px;}
 .chat-card{height:calc(100vh - 200px);}
 .message{max-width:92%;}
+.think-panel{max-width:92%;}
 .section-title{font-size:1.5rem;}
 .about-content,.contact-container{padding:20px;}
 footer{padding:40px 20px 20px;}
@@ -289,10 +357,15 @@ footer{padding:40px 20px 20px;}
 .input-bar .bar-btn,.input-bar .bar-send,.input-bar .bar-mic{width:36px;height:36px;}
 .input-bar input[type="text"]{padding:8px 4px;font-size:.9rem;}
 .voice-grid{grid-template-columns:1fr;padding:0 16px 20px;}
+.voice-modal-header{padding:18px 16px 12px;}
+.voice-modal-desc{padding:0 16px 12px;}
 .voice-orb{width:100px;height:100px;}
+.voice-inputbar{max-width:100%;}
 .voice-messages{padding:20px 16px 160px;}
 .v-actions{opacity:1;}
 .msg-actions{opacity:1;}
+.dev-btn{padding:7px 14px;font-size:.78rem;}
+.mode-toggle{padding:6px 11px;font-size:.72rem;}
 }
 </style>
 </head>
@@ -328,9 +401,12 @@ footer{padding:40px 20px 20px;}
                 </div>
             </div>
             <div class="chat-messages" id="chatMessages">
-                <div class="message bot"><div class="msg-content">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে প্রশ্ন করতে পারেন। 🧠 Deep Think বা 🌐 Smart Search চালু করে আরও স্মার্ট উত্তর পান।</div></div>
+                <div class="message bot">
+                    <div class="msg-content">হ্যালো! আমি আপনার AI অ্যাসিস্ট্যান্ট। মেডিকেল অ্যাডমিশন, স্টাডি টিপস বা যেকোনো বিষয়ে প্রশ্ন করতে পারেন। 🧠 Deep Think বা 🌐 Smart Search চালু করে আরও স্মার্ট উত্তর পান।</div>
+                </div>
                 <div class="typing-indicator" id="typingIndicator"><span></span><span></span><span></span></div>
             </div>
+
             <div class="chat-input-wrapper">
                 <div class="voice-pill-row">
                     <button class="voice-pill" onclick="openVoiceModal()">
@@ -338,19 +414,25 @@ footer{padding:40px 20px 20px;}
                         <span id="currentVoiceName">Emma</span>
                         <span style="opacity:.5">▾</span>
                     </button>
-                    <button class="test-voice-btn" id="testVoiceBtn" onclick="testVoice()" title="টেস্ট ভয়েস">
+                    <button class="test-voice-btn" id="testVoiceBtn" onclick="testVoice()" title="টেস্ট ভয়েস — AI কথা বলছে কিনা যাচাই করুন">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                     </button>
                 </div>
+
                 <div class="mode-toggle-row">
-                    <button class="mode-toggle think-mode" id="deepThinkBtn" onclick="toggleDeepThink()" title="Deep reasoning">
+                    <button class="mode-toggle think-mode" id="deepThinkBtn" onclick="toggleDeepThink()" title="Deep reasoning before answering">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2z"></path></svg>
                         Deep Think
                     </button>
-                    <button class="mode-toggle search-mode" id="smartSearchBtn" onclick="toggleSmartSearch()" title="Search the web">
+                    <button class="mode-toggle search-mode" id="smartSearchBtn" onclick="toggleSmartSearch()" title="Search the web for fresh info">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                         Smart Search
                     </button>
+                </div>
+
+                <div class="listening-indicator" id="listeningIndicator">
+                    <span class="pulse-dot"></span>
+                    <span id="listeningText">🎤 শুনছি... কথা বলুন</span>
                 </div>
                 <div class="file-preview" id="filePreview">
                     <img id="previewImg" src="" alt="">
@@ -373,6 +455,7 @@ footer{padding:40px 20px 20px;}
             </div>
         </div>
     </div>
+
     <div id="view-about" class="view">
         <h2 class="section-title">About Us</h2>
         <p class="section-subtitle">আমাদের সম্পর্কে জানুন</p>
@@ -382,27 +465,38 @@ footer{padding:40px 20px 20px;}
                 <p>আমরা একটি স্বেচ্ছাসেবী প্ল্যাটফর্ম, যা মেডিকেল ভর্তিচ্ছু শিক্ষার্থীদের সঠিক তথ্য ও দিকনির্দেশনা দিতে কাজ করে।</p>
                 <p>এই AI অ্যাসিস্ট্যান্টটি শিক্ষার্থীদের সাধারণ প্রশ্নের উত্তর দিতে এবং সঠিক পথে পরিচালিত করতে সাহায্য করবে।</p>
             </div>
-            <div class="about-image"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+            <div class="about-image">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
         </div>
     </div>
+
     <div id="view-faq" class="view">
         <h2 class="section-title">Frequently Asked Questions</h2>
         <p class="section-subtitle">আপনার সাধারণ জিজ্ঞাসাগুলোর উত্তর</p>
         <div class="faq-container">
             <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>এই AI অ্যাসিস্ট্যান্ট কি ফ্রি?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, সম্পূর্ণ ফ্রি। যেকোনো প্রশ্ন করতে পারেন।</div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Deep Think কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Deep Think চালু করলে AI উত্তর দেওয়ার আগে ধাপে ধাপে চিন্তা করে — ঠিক DeepSeek-এর মতো।</div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Smart Search কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Smart Search চালু করলে AI ওয়েব থেকে সাম্প্রতিক তথ্য খুঁজে উত্তর দেবে।</div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>ভয়েস কাজ করছে না কেন?</span><span class="faq-icon">▼</span></div><div class="faq-answer">এখন Google TTS fallback যোগ করা হয়েছে — ব্রাউজারে বাংলা ভয়েস না থাকলেও কাজ করবে। ইন্টারনেট সংযোগ প্রয়োজন।</div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Deep Think কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Deep Think চালু করলে AI উত্তর দেওয়ার আগে ধাপে ধাপে চিন্তা করে — ঠিক DeepSeek-এর মতো। কঠিন প্রশ্নে বেশি নির্ভুল উত্তর পাবেন।</div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>Smart Search কী?</span><span class="faq-icon">▼</span></div><div class="faq-answer">Smart Search চালু করলে AI ওয়েব থেকে সাম্প্রতিক তথ্য খুঁজে উত্তর দেবে। মেডিকেল নোটিশ, পরীক্ষার তারিখ ইত্যাদির জন্য দারুণ।</div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>AI কথা বলছে না কেন?</span><span class="faq-icon">▼</span></div><div class="faq-answer">ভয়েস পিলের পাশে 🔊 বাটনে ক্লিক করে টেস্ট করুন। যদি শব্দ না আসে — আপনার ব্রাউজারে বাংলা ভয়েস ইনস্টল নেই। Chrome → Settings → Languages → Text-to-speech এ গিয়ে বাংলা ভয়েস যোগ করুন। অথবা Windows/Android-এ Google TTS-এ Bengali ডাউনলোড করুন।</div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this.parentElement)"><span>ভয়েস পরিবর্তন করা যাবে?</span><span class="faq-icon">▼</span></div><div class="faq-answer">হ্যাঁ, ইনপুট বক্সের উপরে ভয়েস পিলে ক্লিক করুন। ৭ জন ভয়েস আর্টিস্টের ডেমো শুনে পছন্দমতো বেছে নিন।</div></div>
         </div>
     </div>
+
     <div id="view-contact" class="view">
         <h2 class="section-title">Contact Us</h2>
         <p class="section-subtitle">যেকোনো পরামর্শ বা অভিযোগের জন্য যোগাযোগ করুন</p>
         <div class="contact-container">
             <div class="contact-info">
                 <h3>Get in Touch</h3>
-                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><span>serakib@example.com</span></div>
-                <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><span>+880 1234 567890</span></div>
+                <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>serakib@example.com</span>
+                </div>
+                <div class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>+880 1234 567890</span>
+                </div>
             </div>
             <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent!');">
                 <input type="text" placeholder="Your Name" required>
@@ -426,31 +520,55 @@ footer{padding:40px 20px 20px;}
 
 <div class="voice-overlay" id="voiceOverlay">
     <div class="voice-topbar">
-        <a href="https://rakibhasandc27.blogspot.com/" target="_blank" class="dev-btn">
+        <a href="https://rakibhasandc27.blogspot.com/" target="_blank" class="dev-btn" title="Developer Portfolio">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
             <span>Developer</span>
         </a>
-        <button class="voice-topbtn" onclick="toggleTheme()" title="Theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
-        <button class="voice-topbtn" onclick="shareVoiceMode()" title="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg></button>
-        <button class="voice-topbtn" onclick="closeVoiceMode()" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="6" y1="18" x2="18" y2="6"></line></svg></button>
+        <button class="voice-topbtn" onclick="toggleTheme()" title="Theme" aria-label="Toggle theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <button class="voice-topbtn" onclick="shareVoiceMode()" title="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+        </button>
+        <button class="voice-topbtn" onclick="closeVoiceMode()" title="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="6" y1="18" x2="18" y2="6"></line></svg>
+        </button>
     </div>
+
     <div class="voice-messages" id="voiceMessages"></div>
+
     <div class="voice-bottom">
         <div class="voice-orb-wrap">
             <div class="voice-orb-tooltip">Start Voice</div>
-            <div class="voice-orb" id="voiceOrb" onclick="toggleOrbMic()" role="button" tabindex="0">
-                <span class="orb-particle p1"></span><span class="orb-particle p2"></span><span class="orb-particle p3"></span>
+            <div class="voice-orb" id="voiceOrb" onclick="toggleOrbMic()" role="button" tabindex="0" aria-label="Toggle microphone">
+                <span class="orb-particle p1"></span>
+                <span class="orb-particle p2"></span>
+                <span class="orb-particle p3"></span>
             </div>
         </div>
+
         <div class="voice-inputbar">
             <input type="text" id="voiceTextInput" placeholder="Ask MedTracker" autocomplete="off">
-            <button class="vib-mic" id="vibMic" onclick="toggleOrbMic()" title="Mic ON/OFF">
+            <button class="vib-mic" id="vibMic" onclick="toggleOrbMic()" title="Mic ON/OFF" aria-label="Toggle mic">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <g class="mic-on-body"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></g>
-                    <g class="mic-off-slash"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></g>
+                    <g class="mic-on-body">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </g>
+                    <g class="mic-off-slash">
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                        <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+                        <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </g>
                 </svg>
             </button>
-            <button class="vib-close" onclick="closeVoiceMode()" title="Back to Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="6" y1="18" x2="18" y2="6"></line></svg></button>
+            <button class="vib-close" onclick="closeVoiceMode()" title="Back to Chat" aria-label="Close voice mode">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="6" y1="18" x2="18" y2="6"></line></svg>
+            </button>
         </div>
     </div>
 </div>
@@ -480,23 +598,27 @@ const VOICE_ARTISTS = [
 ];
 
 const BROWSER_VOICE_MAP = {
-    emma:{pitch:1.1,rate:1.0,lang:'bn-BD'},
-    ryan:{pitch:0.9,rate:1.0,lang:'bn-BD'},
-    sophia:{pitch:1.3,rate:1.15,lang:'bn-IN'},
-    david:{pitch:0.7,rate:0.95,lang:'bn-IN'},
-    olivia:{pitch:1.0,rate:0.85,lang:'bn-BD'},
-    james:{pitch:0.6,rate:0.9,lang:'bn-BD'},
-    charlotte:{pitch:1.0,rate:1.0,lang:'en-US'}
+    emma:{gender:'female',pitch:1.1,rate:1.0,lang:'bn-BD'},
+    ryan:{gender:'male',pitch:0.9,rate:1.0,lang:'bn-BD'},
+    sophia:{gender:'female',pitch:1.3,rate:1.15,lang:'bn-IN'},
+    david:{gender:'male',pitch:0.7,rate:0.95,lang:'bn-IN'},
+    olivia:{gender:'female',pitch:1.0,rate:0.85,lang:'bn-BD'},
+    james:{gender:'male',pitch:0.6,rate:0.9,lang:'bn-BD'},
+    charlotte:{gender:'female',pitch:1.0,rate:1.0,lang:'en-US'}
 };
 
 let selectedVoice = localStorage.getItem('voiceArtist') || 'emma';
+let demoAudio = null;
 let returnToView = 'home';
 let msgIdCounter = 0;
 let deepThinkEnabled = localStorage.getItem('deepThink') === 'true';
 let smartSearchEnabled = localStorage.getItem('smartSearch') === 'true';
 
-if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
-else localStorage.setItem('theme', 'dark');
+if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+} else {
+    localStorage.setItem('theme', 'dark');
+}
 
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
@@ -504,9 +626,11 @@ function toggleTheme() {
 }
 function switchView(v) {
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
-    const t = document.getElementById('view-' + v); if (t) t.classList.add('active');
+    const t = document.getElementById('view-' + v);
+    if (t) t.classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const n = document.getElementById('nav-' + v); if (n) n.classList.add('active');
+    const n = document.getElementById('nav-' + v);
+    if (n) n.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function toggleFaq(el) {
@@ -516,6 +640,7 @@ function toggleFaq(el) {
 
 const deepThinkBtn = document.getElementById('deepThinkBtn');
 const smartSearchBtn = document.getElementById('smartSearchBtn');
+
 function updateModeButtons() {
     deepThinkBtn.classList.toggle('active', deepThinkEnabled);
     smartSearchBtn.classList.toggle('active', smartSearchEnabled);
@@ -537,7 +662,9 @@ function flashStatus(text) {
     if (!statusText) return;
     statusText.textContent = text;
     clearTimeout(statusFlashTimer);
-    statusFlashTimer = setTimeout(() => { statusText.textContent = 'Text, Image & Voice — সব একসাথে'; }, 2200);
+    statusFlashTimer = setTimeout(() => {
+        statusText.textContent = 'Text, Image & Voice — সব একসাথে';
+    }, 2200);
 }
 updateModeButtons();
 
@@ -575,9 +702,10 @@ let isSpeaking = false;
 let ttsAbortController = null;
 let pendingTtsResolve = null;
 let micPermissionRequested = false;
+window.currentUtterance = null; // Fixed garbage collection for speech synthesis
 
 // ══════════════════════════════════════════════════════════
-//  🎧 AUDIO ENGINE with Google TTS fallback
+//  🎧 SMOOTH AUDIO ENGINE
 // ══════════════════════════════════════════════════════════
 
 let audioCtx = null;
@@ -594,12 +722,13 @@ function playAudioWithFade(audioEl, { fadeIn = 0.08, fadeOut = 0.12 } = {}) {
     return new Promise((resolve) => {
         const ctx = getAudioCtx();
         if (!ctx) {
-            audioEl.onended = resolve; audioEl.onerror = resolve;
+            audioEl.onended = resolve;
             audioEl.play().catch(resolve);
             return;
         }
+        let srcNode = null;
         try {
-            const srcNode = ctx.createMediaElementSource(audioEl);
+            srcNode = ctx.createMediaElementSource(audioEl);
             const gain = ctx.createGain();
             gain.gain.setValueAtTime(0, ctx.currentTime);
             gain.gain.linearRampToValueAtTime(1, ctx.currentTime + fadeIn);
@@ -619,71 +748,10 @@ function playAudioWithFade(audioEl, { fadeIn = 0.08, fadeOut = 0.12 } = {}) {
                 }
             }).catch(finish);
         } catch (e) {
-            audioEl.onended = resolve; audioEl.onerror = resolve;
+            audioEl.onended = resolve;
             audioEl.play().catch(resolve);
         }
     });
-}
-
-function playAudioElement(audioEl) {
-    return new Promise((resolve) => {
-        let done = false;
-        const finish = () => { if (!done) { done = true; resolve(); } };
-        audioEl.onended = finish;
-        audioEl.onerror = finish;
-        const safety = setTimeout(finish, 30000);
-        audioEl.play().then(() => {}).catch(() => { clearTimeout(safety); finish(); });
-    });
-}
-
-function splitIntoChunks(text, maxLen = 180) {
-    const chunks = [];
-    let remaining = text.trim();
-    while (remaining.length > 0) {
-        if (remaining.length <= maxLen) { chunks.push(remaining); break; }
-        let cut = remaining.lastIndexOf('।', maxLen);
-        if (cut < 50) cut = remaining.lastIndexOf('!', maxLen);
-        if (cut < 50) cut = remaining.lastIndexOf('?', maxLen);
-        if (cut < 50) cut = remaining.lastIndexOf('.', maxLen);
-        if (cut < 50) cut = remaining.lastIndexOf(',', maxLen);
-        if (cut < 50) cut = remaining.lastIndexOf(' ', maxLen);
-        if (cut < 50) cut = maxLen;
-        chunks.push(remaining.slice(0, cut + 1).trim());
-        remaining = remaining.slice(cut + 1).trim();
-    }
-    return chunks.filter(c => c.length > 0);
-}
-
-async function googleTTS(text, lang = 'bn') {
-    const chunks = splitIntoChunks(text, 180);
-    if (chunks.length === 0) return false;
-    for (const chunk of chunks) {
-        if (window.__ttsCancelled) return false;
-        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=${lang}&client=tw-ob`;
-        try {
-            const audio = new Audio(url);
-            audio.crossOrigin = 'anonymous';
-            window.currentAudio = audio;
-            await playAudioElement(audio);
-            window.currentAudio = null;
-        } catch (e) {
-            window.currentAudio = null;
-            return false;
-        }
-    }
-    return true;
-}
-
-async function googleTTSWithFallback(text) {
-    const isBangla = /[\u0980-\u09FF]/.test(text);
-    const langs = isBangla ? ['bn', 'hi', 'en'] : ['en'];
-    for (const lang of langs) {
-        try {
-            const ok = await googleTTS(text, lang);
-            if (ok) return true;
-        } catch(e) {}
-    }
-    return false;
 }
 
 let voicesReady = null;
@@ -692,7 +760,11 @@ function ensureVoicesLoaded() {
     voicesReady = new Promise((resolve) => {
         if (!('speechSynthesis' in window)) { resolve([]); return; }
         let resolved = false;
-        const finish = () => { if (resolved) return; resolved = true; resolve(speechSynthesis.getVoices() || []); };
+        const finish = () => {
+            if (resolved) return;
+            resolved = true;
+            resolve(speechSynthesis.getVoices() || []);
+        };
         const list = speechSynthesis.getVoices();
         if (list && list.length > 0) { resolve(list); return; }
         speechSynthesis.onvoiceschanged = finish;
@@ -706,7 +778,7 @@ async function pickBestVoice(text, preferredLang) {
     const isBangla = /[\u0980-\u09FF]/.test(text);
     const candidates = isBangla
         ? [preferredLang, 'bn-BD', 'bn-IN', 'hi-IN', 'en-IN', 'en-US', 'en-GB']
-        : [preferredLang, 'en-US', 'en-GB', 'en-IN'];
+        : [preferredLang, 'en-US', 'en-GB', 'en-IN', 'en-AU'];
     for (const lang of candidates) {
         if (!lang) continue;
         let v = voices.find(x => x.lang === lang);
@@ -719,7 +791,6 @@ async function pickBestVoice(text, preferredLang) {
     return { voice: null, lang: preferredLang || 'en-US' };
 }
 
-// ─── speakText: Backend → Google TTS → Browser ───
 function speakText(text) {
     return new Promise(async (resolve) => {
         if (!text || !text.trim()) { resolve(); return; }
@@ -730,25 +801,29 @@ function speakText(text) {
         let resolved = false;
         const done = () => { if (!resolved) { resolved = true; pendingTtsResolve = null; resolve(); } };
 
-        // ① Backend TTS
         try {
             const res = await fetch(`${BACKEND_URL}/api/tts`, {
-                method:'POST', headers:{'Content-Type':'application/json'},
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
                 body: JSON.stringify({ text, voice: selectedVoice }),
                 signal: ttsAbortController.signal
             });
-            if (!res.ok) throw new Error('Backend ' + res.status);
+            if (!res.ok) throw new Error('Backend TTS status ' + res.status);
             const blob = await res.blob();
-            if (!blob.type.startsWith('audio/')) throw new Error('Not audio');
+            if (!blob.type.startsWith('audio/')) throw new Error('Not audio: ' + blob.type);
             const url = URL.createObjectURL(blob);
             const audio = new Audio(url);
             audio.preload = 'auto';
+            audio.volume = 1;
             window.currentAudio = audio;
             await new Promise((r) => {
                 if (audio.readyState >= 2) return r();
                 const onReady = () => { cleanup(); r(); };
                 const onErr = () => { cleanup(); r(); };
-                const cleanup = () => { audio.removeEventListener('canplay', onReady); audio.removeEventListener('error', onErr); };
+                const cleanup = () => {
+                    audio.removeEventListener('canplay', onReady);
+                    audio.removeEventListener('error', onErr);
+                };
                 audio.addEventListener('canplay', onReady);
                 audio.addEventListener('error', onErr);
                 setTimeout(() => { cleanup(); r(); }, 1500);
@@ -765,16 +840,7 @@ function speakText(text) {
             }
         } catch (err) {
             if (err.name === 'AbortError') { done(); return; }
-            console.warn('[TTS] Backend failed → Google TTS');
         }
-
-        // ② Google Translate TTS (works without API key, has Bengali)
-        try {
-            const ok = await googleTTSWithFallback(text);
-            if (ok) { done(); return; }
-        } catch(e) {}
-
-        // ③ Browser speech synthesis (last resort)
         await browserSpeak(text);
         done();
     });
@@ -786,41 +852,50 @@ async function browserSpeak(text) {
         try { speechSynthesis.cancel(); } catch(e){}
         const cfg = BROWSER_VOICE_MAP[selectedVoice] || BROWSER_VOICE_MAP.emma;
         const best = await pickBestVoice(text, cfg.lang);
+        const isBangla = /[\u0980-\u09FF]/.test(text);
+        if (isBangla && best.voice && !best.voice.lang.toLowerCase().startsWith('bn')) {
+            showToast('⚠️ বাংলা ভয়েস পাওয়া যায়নি — ডিফল্ট ভয়েসে চেষ্টা হচ্ছে।', 5000);
+        }
         const u = new SpeechSynthesisUtterance(text);
+        window.currentUtterance = u; // Keep reference to prevent garbage collection bug in Chrome
         u.lang = best.lang;
         u.pitch = cfg.pitch;
         u.rate = cfg.rate;
-        u.volume = 0;
+        u.volume = 1; // Set volume directly to 1 to avoid silent playback
         if (best.voice) u.voice = best.voice;
-        const safety = setTimeout(() => resolve(), Math.max(6000, text.length * 180));
-        u.onstart = () => {
-            let v = 0;
-            const step = () => { v = Math.min(1, v + 0.15); try { u.volume = v; } catch(e){} if (v < 1) setTimeout(step, 20); };
-            step();
-        };
-        u.onend = () => { clearTimeout(safety); resolve(); };
-        u.onerror = () => { clearTimeout(safety); resolve(); };
-        try { speechSynthesis.speak(u); } catch(e) { clearTimeout(safety); resolve(); }
+        
+        const safety = setTimeout(() => { window.currentUtterance = null; resolve(); }, Math.max(8000, text.length * 200));
+        
+        u.onend = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
+        u.onerror = () => { clearTimeout(safety); window.currentUtterance = null; resolve(); };
+        
+        try { 
+            speechSynthesis.speak(u); 
+        } catch(e) { 
+            clearTimeout(safety); 
+            window.currentUtterance = null; 
+            resolve(); 
+        }
     });
 }
 
 function stopAllAudio() {
-    window.__ttsCancelled = true;
-    setTimeout(() => { window.__ttsCancelled = false; }, 100);
     if (window.currentAudio) {
         const a = window.currentAudio;
         window.currentAudio = null;
         const startVol = a.volume;
+        const steps = 5;
         let i = 0;
         const fade = () => {
             i++;
-            try { a.volume = Math.max(0, startVol * (1 - i / 5)); } catch(e){}
-            if (i < 5) setTimeout(fade, 20);
-            else { try { a.pause(); a.src = ''; } catch(e){} }
+            try { a.volume = Math.max(0, startVol * (1 - i / steps)); } catch(e){}
+            if (i < steps) setTimeout(fade, 20);
+            else { try { a.pause(); } catch(e){} }
         };
         fade();
     }
     if ('speechSynthesis' in window) { try { speechSynthesis.cancel(); } catch(e){} }
+    window.currentUtterance = null;
     if (ttsAbortController) { try { ttsAbortController.abort(); } catch(e){} ttsAbortController = null; }
     if (pendingTtsResolve) { const r = pendingTtsResolve; pendingTtsResolve = null; r(); }
 }
@@ -838,13 +913,20 @@ async function testVoice() {
     testVoiceBtn.classList.add('playing');
     showToast('🔊 ভয়েস টেস্ট চলছে…', 2500);
     const artist = VOICE_ARTISTS.find(v => v.id === selectedVoice) || VOICE_ARTISTS[0];
+    const testText = artist.demo;
+    const voices = await ensureVoicesLoaded();
+    const hasBangla = voices.some(v => v.lang.toLowerCase().startsWith('bn'));
     try {
-        await speakText(artist.demo);
+        await speakText(testText);
         testVoiceBtn.classList.remove('playing');
-        showToast('✅ ভয়েস কাজ করছে!', 2000);
+        if (!hasBangla && /[\u0980-\u09FF]/.test(testText)) {
+            showToast('⚠️ বাংলা ভয়েস নেই — Chrome Settings → Languages → Text-to-speech এ Bengali ইনস্টল করুন।', 6000);
+        } else {
+            showToast('✅ ভয়েস কাজ করছে!', 2000);
+        }
     } catch (e) {
         testVoiceBtn.classList.remove('playing');
-        showToast('❌ ব্যর্থ: ' + e.message, 5000);
+        showToast('❌ ভয়েস ব্যর্থ: ' + e.message, 5000);
     }
 }
 
@@ -854,7 +936,11 @@ function renderVoiceGrid() {
     voiceGrid.innerHTML = VOICE_ARTISTS.map(v => `
         <div class="voice-card ${v.id === selectedVoice ? 'selected' : ''}" onclick="selectVoice('${v.id}')">
             <div class="voice-avatar v-${v.id}"><span>${v.name.charAt(0)}</span></div>
-            <div class="voice-info"><h4>${v.name}</h4><div class="voice-style">${v.style}</div><div class="voice-lang">${v.lang}</div></div>
+            <div class="voice-info">
+                <h4>${v.name}</h4>
+                <div class="voice-style">${v.style}</div>
+                <div class="voice-lang">${v.lang}</div>
+            </div>
             <button class="voice-play-btn" onclick="event.stopPropagation(); playDemo('${v.id}', this)">▶</button>
         </div>`).join('');
 }
@@ -869,23 +955,33 @@ function updateVoicePill() {
     }
 }
 function openVoiceModal() { renderVoiceGrid(); voiceModal.classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeVoiceModal() { voiceModal.classList.remove('open'); document.body.style.overflow = ''; }
+function closeVoiceModal() { voiceModal.classList.remove('open'); document.body.style.overflow = ''; stopDemo(); }
 function selectVoice(id) {
+    stopDemo();
     selectedVoice = id;
     localStorage.setItem('voiceArtist', id);
     updateVoicePill();
     renderVoiceGrid();
 }
+
 async function playDemo(id, btnEl) {
-    stopAllAudio();
+    stopDemo();
     const artist = VOICE_ARTISTS.find(v => v.id === id);
     if (!artist) return;
     btnEl.classList.add('playing'); btnEl.textContent = '⏸';
     const prev = selectedVoice;
     selectedVoice = id;
-    try { await speakText(artist.demo); }
-    catch (err) {}
-    finally { selectedVoice = prev; btnEl.classList.remove('playing'); btnEl.textContent = '▶'; }
+    try {
+        await speakText(artist.demo);
+        resetDemoBtn(btnEl);
+    } catch (err) { resetDemoBtn(btnEl); }
+    finally { selectedVoice = prev; }
+}
+function resetDemoBtn(b) { if (!b) return; b.classList.remove('playing'); b.textContent = '▶'; demoAudio = null; }
+function stopDemo() {
+    if (demoAudio) { try { demoAudio.pause(); } catch(e){} demoAudio = null; }
+    if ('speechSynthesis' in window) { try { speechSynthesis.cancel(); } catch(e){} }
+    document.querySelectorAll('.voice-play-btn').forEach(b => { b.classList.remove('playing'); b.textContent = '▶'; });
 }
 
 ensureVoicesLoaded();
@@ -897,12 +993,15 @@ async function fetchWithTimeout(url, options = {}, timeout = FETCH_TIMEOUT_MS) {
         const res = await fetch(url, { ...options, signal: ctrl.signal });
         clearTimeout(timer);
         return res;
-    } catch (e) { clearTimeout(timer); throw e; }
+    } catch (e) {
+        clearTimeout(timer);
+        throw e;
+    }
 }
 
 fileInput.addEventListener('change', (e) => {
     const f = e.target.files[0]; if (!f) return;
-    if (!f.type.startsWith('image/')) { alert('শুধু ছবি'); fileInput.value = ''; return; }
+    if (!f.type.startsWith('image/')) { alert('শুধু ছবি পাঠানো যাবে'); fileInput.value = ''; return; }
     if (f.size > 5*1024*1024) { alert('৫ MB এর বেশি নয়'); fileInput.value = ''; return; }
     attachedFile = f;
     const r = new FileReader();
@@ -915,129 +1014,117 @@ function clearFile() {
     previewImg.removeAttribute('src');
 }
 
-// ══════════════════════════════════════════════════════════
-//  🧠 THINKING PANEL — DeepSeek style with LIVE streaming
-// ══════════════════════════════════════════════════════════
-
-const THINK_ICON_THINKING = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" opacity="0.4"/><circle cx="12" cy="12" r="11" opacity="0.15"/></svg>';
-const CHEV_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+// ═══ Deep Think / Smart Search panels ═══
+const THINK_STEPS = {
+    deep: ['প্রশ্নটি বিশ্লেষণ করছি…','প্রাসঙ্গিক ধারণা ও তথ্য মনে করছি…','বিভিন্ন দিক বিবেচনা করছি…','উত্তর গঠন করছি…'],
+    search: ['ওয়েব সার্চ চালাচ্ছি…','নির্ভরযোগ্য সূত্র খুঁজছি…','তথ্য যাচাই করছি…','সাম্প্রতিক তথ্য সংগ্রহ করছি…']
+};
+const MOCK_SOURCES = [
+    { name: 'dgme.gov.bd', label: 'DGME Bangladesh' },
+    { name: 'medical.gov.bd', label: 'Medical Education' },
+    { name: 'bmdc.org.bd', label: 'BMDC' },
+    { name: 'wikipedia.org', label: 'Wikipedia' },
+    { name: 'techtunes.com.bd', label: 'TechTune' },
+    { name: 'prothomalo.com', label: 'Prothom Alo' }
+];
 
 function createThinkingPanel() {
     const panel = document.createElement('div');
     panel.className = 'think-panel open';
+    const isSearch = smartSearchEnabled && !deepThinkEnabled;
+    if (isSearch) panel.classList.add('search-panel');
     panel.dataset.startTime = Date.now();
-
     const header = document.createElement('div');
     header.className = 'think-header';
     header.onclick = () => panel.classList.toggle('open');
-
     const icon = document.createElement('span');
     icon.className = 'think-icon';
-    icon.innerHTML = THINK_ICON_THINKING;
-
+    icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
     const title = document.createElement('span');
-    title.className = 'think-title-text live';
-    title.textContent = 'Thinking…';
-
+    title.className = 'think-title';
+    title.innerHTML = '<span class="think-text">' + (deepThinkEnabled && smartSearchEnabled ? 'Thinking & Searching' : (deepThinkEnabled ? 'Deep Thinking' : 'Searching the web')) + '</span><span class="dot-stream"><span></span><span></span><span></span></span>';
     const chev = document.createElement('span');
     chev.className = 'chev';
-    chev.innerHTML = CHEV_ICON;
-
-    header.appendChild(icon);
-    header.appendChild(title);
-    header.appendChild(chev);
-
-    const body = document.createElement('div');
-    body.className = 'think-body';
-
-    panel.appendChild(header);
-    panel.appendChild(body);
+    chev.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+    header.appendChild(icon); header.appendChild(title); header.appendChild(chev);
+    const body = document.createElement('div'); body.className = 'think-body';
+    panel.appendChild(header); panel.appendChild(body);
     return panel;
 }
-
-function addThinkStep(panel, text, live = false) {
-    const body = panel.querySelector('.think-body');
-    const step = document.createElement('div');
-    step.className = 'think-step' + (live ? ' active' : ' done');
-    const bullet = document.createElement('span'); bullet.className = 'step-bullet';
-    const txt = document.createElement('span'); txt.className = 'step-text'; txt.textContent = text;
-    step.appendChild(bullet); step.appendChild(txt);
-    // Remove active from previous
-    body.querySelectorAll('.think-step').forEach((s, i, arr) => {
-        if (i < arr.length - 1) s.classList.remove('active');
-    });
-    body.appendChild(step);
-    voiceMessages.scrollTop = voiceMessages.scrollHeight;
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    return step;
-}
-
-function markStepDone(step) {
-    if (step) { step.classList.remove('active'); step.classList.add('done'); }
-}
-
-// Show live reasoning from backend (streaming-like)
-function renderBackendThinking(panel, thinkingText) {
-    if (!thinkingText) return;
-    const body = panel.querySelector('.think-body');
-    body.innerHTML = '';
-    // Split into paragraphs or bullet points
-    let steps = [];
-    if (Array.isArray(thinkingText)) {
-        steps = thinkingText;
-    } else {
-        const text = String(thinkingText);
-        // Split by double newline first, else by numbered items, else by single newline
-        steps = text.split(/\n\n+/).map(s => s.trim()).filter(Boolean);
-        if (steps.length < 2) {
-            steps = text.split('\n').map(s => s.trim()).filter(Boolean);
-        }
-    }
-    steps.forEach(s => {
-        const el = document.createElement('div');
-        el.className = 'think-step done';
-        el.innerHTML = '<span class="step-bullet"></span><span class="step-text"></span>';
-        el.querySelector('.step-text').textContent = s.replace(/^\d+\.\s*/, '').replace(/^[-•*]\s*/, '');
-        body.appendChild(el);
+function addThinkStep(panel, text, delayMs = 600) {
+    return new Promise(resolve => {
+        const body = panel.querySelector('.think-body');
+        const step = document.createElement('div');
+        step.className = 'think-step active';
+        step.innerHTML = '<span class="step-bullet"></span><span class="step-text"></span>';
+        step.querySelector('.step-text').textContent = text;
+        body.appendChild(step);
+        body.querySelectorAll('.think-step').forEach((s, i, arr) => { if (i < arr.length - 1) s.classList.remove('active'); });
+        setTimeout(() => { step.classList.remove('active'); step.classList.add('done'); resolve(); }, delayMs);
     });
 }
-
+function addSearchSources(panel) {
+    const body = panel.querySelector('.think-body');
+    const sourcesWrap = document.createElement('div');
+    sourcesWrap.className = 'think-sources';
+    const picks = [...MOCK_SOURCES].sort(() => Math.random() - 0.5).slice(0, 3);
+    picks.forEach(s => {
+        const chip = document.createElement('a');
+        chip.className = 'src-chip';
+        chip.href = 'https://' + s.name;
+        chip.target = '_blank';
+        chip.rel = 'noopener';
+        chip.innerHTML = '<span class="src-favicon">' + s.name.charAt(0).toUpperCase() + '</span><span>' + s.label + '</span>';
+        sourcesWrap.appendChild(chip);
+    });
+    body.appendChild(sourcesWrap);
+}
 function finishThinkingPanel(panel) {
     if (!panel) return;
     const elapsed = Math.max(1, Math.round((Date.now() - parseInt(panel.dataset.startTime || '0')) / 1000));
-    const title = panel.querySelector('.think-title-text');
-    if (title) {
-        title.classList.remove('live');
-        title.textContent = 'Thought for ' + elapsed + ' seconds';
-    }
+    const title = panel.querySelector('.think-text');
+    if (title) title.textContent = 'Thought for ' + elapsed + 's';
     panel.classList.add('done');
     panel.classList.remove('open');
-    panel.querySelectorAll('.think-step.active').forEach(s => { s.classList.remove('active'); s.classList.add('done'); });
+}
+async function runThinkingSequence(panel) {
+    if (deepThinkEnabled) { for (const s of THINK_STEPS.deep) await addThinkStep(panel, s, 550); }
+    if (smartSearchEnabled) { for (const s of THINK_STEPS.search) await addThinkStep(panel, s, 500); addSearchSources(panel); }
 }
 
-// ══════════════════════════════════════════════════════════
-
+// ═══ Orb / state ═══
 function setOrbState(state) {
     voiceOrb.classList.remove('listening','speaking','thinking');
-    if (state) voiceOrb.classList.add(state);
+    if (state === 'listening') voiceOrb.classList.add('listening');
+    else if (state === 'speaking') voiceOrb.classList.add('speaking');
+    else if (state === 'thinking') voiceOrb.classList.add('thinking');
 }
 function safeStartRecognition() {
     if (!recognition || micMuted || isRecognizing || !voiceModeOn) return;
     try {
-        finalTranscript = ''; userInput.value = ''; voiceTextInput.value = '';
+        finalTranscript = '';
+        userInput.value = '';
+        voiceTextInput.value = '';
         recognition.start();
-    } catch (e) { setTimeout(() => safeStartRecognition(), 500); }
+    } catch (e) {
+        setTimeout(() => safeStartRecognition(), 500);
+    }
 }
 
 async function speakAndListen(text) {
     isSpeaking = true;
-    if (isRecognizing) { try { recognition.stop(); } catch(e){} await new Promise(r => setTimeout(r, 280)); }
+    if (isRecognizing) {
+        try { recognition.stop(); } catch(e){}
+        await new Promise(r => setTimeout(r, 280));
+    }
     setOrbState('speaking');
     await new Promise(r => setTimeout(r, 60));
     await speakText(text);
     isSpeaking = false;
     if (micMuted || !voiceModeOn) { setOrbState('idle'); return; }
-    setTimeout(() => { if (voiceModeOn && !micMuted && !isRecognizing) safeStartRecognition(); }, 420);
+    setTimeout(() => {
+        if (voiceModeOn && !micMuted && !isRecognizing) safeStartRecognition();
+    }, 420);
 }
 
 function openVoiceMode() {
@@ -1051,7 +1138,8 @@ function openVoiceMode() {
         const txt = (m.querySelector('.msg-content') || m).innerText.trim();
         if (txt) addVoiceMsg(txt, isUser ? 'user' : 'bot');
     });
-    voiceModeOn = true; micMuted = false;
+    voiceModeOn = true;
+    micMuted = false;
     vibMic.classList.remove('muted');
     setOrbState('thinking');
     setTimeout(async () => {
@@ -1064,11 +1152,13 @@ function openVoiceMode() {
 function closeVoiceMode() {
     voiceOverlay.classList.remove('open');
     document.body.classList.remove('voice-active');
-    voiceModeOn = false; micMuted = false; isSpeaking = false;
+    voiceModeOn = false;
+    micMuted = false;
+    isSpeaking = false;
     stopAllAudio();
     if (isRecognizing) try { recognition.stop(); } catch(e){}
     isRecognizing = false;
-    setOrbState(null);
+    setOrbState('idle');
     switchView(returnToView);
 }
 
@@ -1077,17 +1167,20 @@ function toggleOrbMic() {
     vibMic.classList.toggle('muted', micMuted);
     if (micMuted) {
         if (isRecognizing) { try { recognition.stop(); } catch(e){} }
-        if (!isSpeaking) setOrbState(null);
-        showToast('🔇 মাইক বন্ধ', 1800);
+        if (!isSpeaking) setOrbState('idle');
+        showToast('🔇 মাইক বন্ধ — AI কথা শেষ করবে', 1800);
     } else {
         showToast('🎤 মাইক চালু', 1400);
-        if (!isRecognizing && voiceModeOn && !isSpeaking) setTimeout(() => safeStartRecognition(), 150);
+        if (!isRecognizing && voiceModeOn && !isSpeaking) {
+            setTimeout(() => safeStartRecognition(), 150);
+        }
     }
 }
 
 function shareVoiceMode() {
-    if (navigator.share) navigator.share({ title: 'MedTracker AI', url: location.href }).catch(()=>{});
-    else navigator.clipboard.writeText(location.href).then(() => showToast('✅ কপি হয়েছে', 1800));
+    const text = 'MedTracker AI — Voice Mode';
+    if (navigator.share) navigator.share({ title: 'MedTracker AI', text, url: location.href }).catch(()=>{});
+    else navigator.clipboard.writeText(location.href).then(() => showToast('✅ লিংক কপি হয়েছে!', 1800));
 }
 
 function addVoiceMsg(text, role) {
@@ -1103,13 +1196,15 @@ function addVoiceMsg(text, role) {
     if (role === 'bot') {
         actions.innerHTML = `
             <button class="v-action" title="Copy" onclick="copyVoiceText(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
-            <button class="v-action like-btn" onclick="rateMsg(this,'like')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button>
-            <button class="v-action dislike-btn" onclick="rateMsg(this,'dislike')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button>
+            <button class="v-action like-btn" title="Good" onclick="rateMsg(this,'like')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button>
+            <button class="v-action dislike-btn" title="Bad" onclick="rateMsg(this,'dislike')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button>
+            <button class="v-action" title="Share" onclick="shareVoiceMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg></button>
             <button class="v-action" title="Read aloud" onclick="replayVoice(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button>
             <button class="v-action" title="Regenerate" onclick="regenerateMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg></button>`;
     } else {
         actions.innerHTML = `
             <button class="v-action" title="Copy" onclick="copyVoiceText(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+            <button class="v-action" title="Share" onclick="shareVoiceMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg></button>
             <button class="v-action" title="Edit" onclick="editUserMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>`;
     }
     wrap.appendChild(actions);
@@ -1128,18 +1223,27 @@ function copyVoiceText(btn) {
 async function replayVoice(btn) {
     if (btn.classList.contains('playing')) {
         stopAllAudio();
-        btn.classList.remove('playing'); btn.innerHTML = ICON_SPEAKER;
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
         if (currentPlayingBtn === btn) currentPlayingBtn = null;
         return;
     }
-    if (currentPlayingBtn && currentPlayingBtn !== btn) { currentPlayingBtn.classList.remove('playing'); currentPlayingBtn.innerHTML = ICON_SPEAKER; }
+    if (currentPlayingBtn && currentPlayingBtn !== btn) {
+        currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn.innerHTML = ICON_SPEAKER;
+    }
     stopAllAudio();
     const txt = btn.closest('.v-msg').querySelector('.v-bubble').innerText.trim();
     if (!txt) return;
-    btn.classList.add('playing'); btn.innerHTML = ICON_STOP;
+    btn.classList.add('playing');
+    btn.innerHTML = ICON_STOP;
     currentPlayingBtn = btn;
     try { await speakText(txt); } catch(e) {}
-    finally { btn.classList.remove('playing'); btn.innerHTML = ICON_SPEAKER; if (currentPlayingBtn === btn) currentPlayingBtn = null; }
+    finally {
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
+        if (currentPlayingBtn === btn) currentPlayingBtn = null;
+    }
 }
 function rateMsg(btn, type) {
     const msgEl = btn.closest('.v-msg');
@@ -1153,6 +1257,14 @@ function rateMsg(btn, type) {
         if (dislikeBtn.classList.contains('active-dislike')) dislikeBtn.classList.remove('active-dislike');
         else { dislikeBtn.classList.add('active-dislike'); likeBtn.classList.remove('active-like'); }
     }
+    const feedback = JSON.parse(localStorage.getItem('feedback') || '{}');
+    feedback[msgEl.dataset.msgId] = { type, text: text.slice(0, 100), time: Date.now() };
+    localStorage.setItem('feedback', JSON.stringify(feedback));
+}
+function shareVoiceMsg(btn) {
+    const text = btn.closest('.v-msg').querySelector('.v-bubble').innerText;
+    if (navigator.share) navigator.share({ title: 'MedTracker AI', text }).catch(() => {});
+    else navigator.clipboard.writeText(text).then(() => { btn.style.color = '#10B981'; setTimeout(() => btn.style.color = '', 1200); });
 }
 async function regenerateMsg(btn) {
     const msgEl = btn.closest('.v-msg');
@@ -1163,7 +1275,8 @@ async function regenerateMsg(btn) {
         prev = prev.previousElementSibling;
     }
     if (!prevUserText || isSending) return;
-    isSending = true; msgEl.remove();
+    isSending = true;
+    msgEl.remove();
     setOrbState('thinking');
     try {
         const fd = new FormData();
@@ -1175,9 +1288,9 @@ async function regenerateMsg(btn) {
         if (res.ok && data.reply) {
             addVoiceMsg(data.reply, 'bot');
             if (voiceModeOn) await speakAndListen(data.reply);
-            else setOrbState(null);
-        } else setOrbState(null);
-    } catch(e) { setOrbState(null); }
+            else setOrbState('idle');
+        } else setOrbState('idle');
+    } catch(e) { setOrbState('idle'); }
     finally { isSending = false; }
 }
 function editUserMsg(btn) {
@@ -1187,7 +1300,23 @@ function editUserMsg(btn) {
     const newText = prompt('Edit your message:', oldText);
     if (newText === null || newText.trim() === '' || newText === oldText) return;
     bubble.innerText = newText.trim();
+    msgEl.dataset.edited = 'true';
 }
+
+function showVoiceThinkingBadge() {
+    if (!deepThinkEnabled && !smartSearchEnabled) return null;
+    const wrap = document.createElement('div');
+    wrap.className = 'v-think-badge' + (smartSearchEnabled && !deepThinkEnabled ? ' search' : '');
+    const label = deepThinkEnabled && smartSearchEnabled ? '🧠 Thinking & 🌐 Searching…' :
+                  (deepThinkEnabled ? '🧠 Deep thinking…' : '🌐 Searching the web…');
+    wrap.innerHTML = '<span class="spin"></span><span>' + label + '</span>';
+    const lastUser = voiceMessages.querySelector('.v-msg.user:last-of-type');
+    if (lastUser) lastUser.appendChild(wrap);
+    else voiceMessages.appendChild(wrap);
+    voiceMessages.scrollTop = voiceMessages.scrollHeight;
+    return wrap;
+}
+function removeVoiceThinkingBadge(badge) { if (badge && badge.parentNode) badge.parentNode.removeChild(badge); }
 
 async function sendFromVoice(text) {
     if (!text || isSending) return;
@@ -1195,7 +1324,10 @@ async function sendFromVoice(text) {
     addVoiceMsg(text, 'user');
     addMessage(text, 'user', null, { silent: true });
     setOrbState('thinking');
-    voiceTextInput.value = ''; userInput.value = '';
+    voiceTextInput.value = '';
+    userInput.value = '';
+    const badge = showVoiceThinkingBadge();
+    if (deepThinkEnabled || smartSearchEnabled) await new Promise(r => setTimeout(r, 900));
     try {
         const formData = new FormData();
         formData.append('message', text);
@@ -1203,25 +1335,30 @@ async function sendFromVoice(text) {
         if (smartSearchEnabled) formData.append('smart_search', 'true');
         const res = await fetchWithTimeout(`${BACKEND_URL}/api/chat`, { method:'POST', body: formData });
         const data = await res.json();
+        removeVoiceThinkingBadge(badge);
         if (res.ok && data.reply) {
             addVoiceMsg(data.reply, 'bot');
             addMessage(data.reply, 'bot', null, { silent: true });
             if (voiceModeOn) await speakAndListen(data.reply);
-            else setOrbState(null);
+            else setOrbState('idle');
         } else {
             addVoiceMsg('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
-            setOrbState(null);
+            setOrbState('idle');
         }
     } catch (e) {
-        const errMsg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না' : '❌ নেটওয়ার্ক সমস্যা';
+        removeVoiceThinkingBadge(badge);
+        const errMsg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addVoiceMsg(errMsg, 'bot');
-        setOrbState(null);
+        setOrbState('idle');
     }
     finally { isSending = false; }
 }
 
 voiceTextInput.addEventListener('keypress', e => {
-    if (e.key === 'Enter') { const t = voiceTextInput.value.trim(); if (t) sendFromVoice(t); }
+    if (e.key === 'Enter') {
+        const t = voiceTextInput.value.trim();
+        if (t) sendFromVoice(t);
+    }
 });
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1230,6 +1367,8 @@ if (SpeechRecognition) {
     recognition.lang = (BROWSER_VOICE_MAP[selectedVoice] && BROWSER_VOICE_MAP[selectedVoice].lang) || 'bn-BD';
     recognition.continuous = true;
     recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
     recognition.onstart = () => { isRecognizing = true; finalTranscript = ''; setOrbState('listening'); };
     recognition.onresult = (event) => {
         if (micMuted) return;
@@ -1252,12 +1391,15 @@ if (SpeechRecognition) {
     recognition.onerror = (event) => {
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
             alert('⚠️ মাইক্রোফোনের অনুমতি দিন।');
-            micMuted = true; vibMic.classList.add('muted'); setOrbState(null);
+            micMuted = true;
+            vibMic.classList.add('muted');
+            setOrbState('idle');
         }
     };
     recognition.onend = () => {
-        isRecognizing = false; clearTimeout(silenceTimer);
-        if (micMuted) { if (!isSpeaking) setOrbState(null); return; }
+        isRecognizing = false;
+        clearTimeout(silenceTimer);
+        if (micMuted) { if (!isSpeaking) setOrbState('idle'); return; }
         if (isSpeaking) return;
         const inVoice = voiceOverlay.classList.contains('open');
         const text = (inVoice ? voiceTextInput.value : userInput.value).trim();
@@ -1266,8 +1408,11 @@ if (SpeechRecognition) {
             else if (!inVoice) sendMessage();
         } else if (voiceModeOn && inVoice && !isSending) {
             setTimeout(() => safeStartRecognition(), 400);
-        } else setOrbState(null);
+        } else {
+            setOrbState('idle');
+        }
     };
+
     micBtn.addEventListener('click', async () => {
         if (!micPermissionRequested) {
             micPermissionRequested = true;
@@ -1276,18 +1421,16 @@ if (SpeechRecognition) {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     stream.getTracks().forEach(t => t.stop());
                 }
-            } catch (e) { showToast('⚠️ মাইক ছাড়া চলবে', 2500); }
+            } catch (e) {
+                showToast('⚠️ মাইক ছাড়া চলবে — শুধু কথা শুনতে পাবেন না', 2500);
+            }
         }
         if (voiceOverlay.classList.contains('open')) closeVoiceMode();
         else openVoiceMode();
     });
 } else {
-    micBtn.addEventListener('click', () => alert('Chrome বা Edge ব্যবহার করুন।'));
+    micBtn.addEventListener('click', () => alert('Chrome বা Edge ব্যবহার করুন — ভয়েস সাপোর্ট নেই।'));
 }
-
-// ══════════════════════════════════════════════════════════
-//  MAIN SEND with Deep Think / Smart Search panel
-// ══════════════════════════════════════════════════════════
 
 async function sendMessage() {
     if (isSending) return;
@@ -1300,27 +1443,17 @@ async function sendMessage() {
     userInput.value = '';
     clearFile();
 
-    // ═══ CREATE THINKING PANEL ═══
     let thinkPanel = null;
     if (deepThinkEnabled || smartSearchEnabled) {
         thinkPanel = createThinkingPanel();
         if (typingIndicator && typingIndicator.parentNode === chatMessages) chatMessages.insertBefore(thinkPanel, typingIndicator);
         else chatMessages.appendChild(thinkPanel);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        // Show initial steps based on mode
-        if (deepThinkEnabled && smartSearchEnabled) {
-            addThinkStep(thinkPanel, 'বিশ্লেষণ করছি এবং ওয়েব সার্চ চালাচ্ছি…', true);
-        } else if (deepThinkEnabled) {
-            addThinkStep(thinkPanel, 'প্রশ্নটি বিশ্লেষণ করছি…', true);
-        } else {
-            addThinkStep(thinkPanel, 'ওয়েব সার্চ চালাচ্ছি…', true);
-        }
+        await runThinkingSequence(thinkPanel, text);
     }
 
     typingIndicator.style.display = 'flex';
     chatMessages.scrollTop = chatMessages.scrollHeight;
-
     try {
         const fd = new FormData();
         fd.append('message', text || '');
@@ -1330,20 +1463,13 @@ async function sendMessage() {
         const res = await fetchWithTimeout(`${BACKEND_URL}/api/chat`, { method:'POST', body: fd });
         const data = await res.json();
         typingIndicator.style.display = 'none';
-
-        // If backend returned thinking / reasoning → show it
-        const backendThinking = data.thinking || data.reasoning || data.thought || data.reasoning_steps;
-        if (thinkPanel && backendThinking) {
-            renderBackendThinking(thinkPanel, backendThinking);
-        }
         finishThinkingPanel(thinkPanel);
-
         if (res.ok && data.reply) addMessage(data.reply, 'bot');
         else addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
     } catch (e) {
         typingIndicator.style.display = 'none';
         finishThinkingPanel(thinkPanel);
-        const msg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না' : '❌ নেটওয়ার্ক সমস্যা';
+        const msg = e.name === 'AbortError' ? '⏱️ সার্ভার সাড়া দিচ্ছে না। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addMessage(msg, 'bot');
     }
     isSending = false; sendBtn.disabled = false; userInput.focus();
@@ -1370,12 +1496,13 @@ function addMessage(text, sender, file, opts = {}) {
     if (sender === 'bot') {
         actions.innerHTML = `
             <button class="msg-action" title="Copy" onclick="copyChatMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
-            <button class="msg-action like-btn" onclick="rateChatMsg(this,'like')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button>
-            <button class="msg-action dislike-btn" onclick="rateChatMsg(this,'dislike')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button>
+            <button class="msg-action like-btn" title="Good" onclick="rateChatMsg(this,'like')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button>
+            <button class="msg-action dislike-btn" title="Bad" onclick="rateChatMsg(this,'dislike')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button>
             <button class="msg-action" title="Read aloud" onclick="replayChatMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button>
             <button class="msg-action" title="Regenerate" onclick="regenerateChatMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg></button>`;
     } else {
-        actions.innerHTML = `<button class="msg-action" title="Copy" onclick="copyChatMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>`;
+        actions.innerHTML = `
+            <button class="msg-action" title="Copy" onclick="copyChatMsg(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>`;
     }
     d.appendChild(actions);
 
@@ -1387,28 +1514,41 @@ function addMessage(text, sender, file, opts = {}) {
 
 function copyChatMsg(btn) {
     const txt = btn.closest('.message').querySelector('.msg-content').innerText;
-    navigator.clipboard.writeText(txt).then(() => { btn.style.color = '#10B981'; setTimeout(() => btn.style.color = '', 1200); });
+    navigator.clipboard.writeText(txt).then(() => {
+        btn.style.color = '#10B981';
+        setTimeout(() => btn.style.color = '', 1200);
+    });
 }
 async function replayChatMsg(btn) {
     if (btn.classList.contains('playing')) {
         stopAllAudio();
-        btn.classList.remove('playing'); btn.innerHTML = ICON_SPEAKER;
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
         if (currentPlayingBtn === btn) currentPlayingBtn = null;
         return;
     }
-    if (currentPlayingBtn && currentPlayingBtn !== btn) { currentPlayingBtn.classList.remove('playing'); currentPlayingBtn.innerHTML = ICON_SPEAKER; }
+    if (currentPlayingBtn && currentPlayingBtn !== btn) {
+        currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn.innerHTML = ICON_SPEAKER;
+    }
     stopAllAudio();
     const txt = btn.closest('.message').querySelector('.msg-content').innerText.trim();
     if (!txt) return;
-    btn.classList.add('playing'); btn.innerHTML = ICON_STOP;
+    btn.classList.add('playing');
+    btn.innerHTML = ICON_STOP;
     currentPlayingBtn = btn;
     try { await speakText(txt); } catch(e) {}
-    finally { btn.classList.remove('playing'); btn.innerHTML = ICON_SPEAKER; if (currentPlayingBtn === btn) currentPlayingBtn = null; }
+    finally {
+        btn.classList.remove('playing');
+        btn.innerHTML = ICON_SPEAKER;
+        if (currentPlayingBtn === btn) currentPlayingBtn = null;
+    }
 }
 function rateChatMsg(btn, type) {
     const msgEl = btn.closest('.message');
     const likeBtn = msgEl.querySelector('.like-btn');
     const dislikeBtn = msgEl.querySelector('.dislike-btn');
+    const text = msgEl.querySelector('.msg-content').innerText;
     if (type === 'like') {
         if (likeBtn.classList.contains('active-like')) likeBtn.classList.remove('active-like');
         else { likeBtn.classList.add('active-like'); dislikeBtn.classList.remove('active-dislike'); }
@@ -1416,6 +1556,9 @@ function rateChatMsg(btn, type) {
         if (dislikeBtn.classList.contains('active-dislike')) dislikeBtn.classList.remove('active-dislike');
         else { dislikeBtn.classList.add('active-dislike'); likeBtn.classList.remove('active-like'); }
     }
+    const feedback = JSON.parse(localStorage.getItem('feedback') || '{}');
+    feedback[msgEl.dataset.msgId] = { type, text: text.slice(0, 100), time: Date.now() };
+    localStorage.setItem('feedback', JSON.stringify(feedback));
 }
 async function regenerateChatMsg(btn) {
     if (isSending) return;
@@ -1423,17 +1566,22 @@ async function regenerateChatMsg(btn) {
     let prevUserText = '';
     let prev = msgEl.previousElementSibling;
     while (prev) {
-        if (prev.classList && prev.classList.contains('user')) { prevUserText = prev.querySelector('.msg-content').innerText; break; }
+        if (prev.classList && prev.classList.contains('user')) {
+            prevUserText = prev.querySelector('.msg-content').innerText;
+            break;
+        }
         prev = prev.previousElementSibling;
     }
     if (!prevUserText) return;
-    isSending = true; msgEl.remove();
+    isSending = true;
+    msgEl.remove();
 
     let thinkPanel = null;
     if (deepThinkEnabled || smartSearchEnabled) {
         thinkPanel = createThinkingPanel();
         chatMessages.insertBefore(thinkPanel, typingIndicator);
-        addThinkStep(thinkPanel, 'আবার বিশ্লেষণ করছি…', true);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        await runThinkingSequence(thinkPanel, prevUserText);
     }
 
     typingIndicator.style.display = 'flex';
@@ -1445,8 +1593,6 @@ async function regenerateChatMsg(btn) {
         const res = await fetchWithTimeout(`${BACKEND_URL}/api/chat`, { method:'POST', body: fd });
         const data = await res.json();
         typingIndicator.style.display = 'none';
-        const backendThinking = data.thinking || data.reasoning || data.thought;
-        if (thinkPanel && backendThinking) renderBackendThinking(thinkPanel, backendThinking);
         finishThinkingPanel(thinkPanel);
         if (res.ok && data.reply) addMessage(data.reply, 'bot');
         else addMessage('❌ ' + (data.error || 'উত্তর পাওয়া যায়নি'), 'bot');
@@ -1459,8 +1605,12 @@ async function regenerateChatMsg(btn) {
 }
 
 userInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+
 updateVoicePill();
-voiceOrb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleOrbMic(); } });
+
+voiceOrb.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleOrbMic(); }
+});
 </script>
 </body>
 </html>
