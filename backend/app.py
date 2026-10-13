@@ -90,7 +90,7 @@ def chat():
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": content_parts}
             ],
-            temperature=0.5, max_tokens=700
+            temperature=0.5, max_tokens=1200
         )
         return jsonify({"reply": response.choices[0].message.content, "provider": "groq"})
     except Exception as e:
