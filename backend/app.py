@@ -11,43 +11,54 @@ CORS(app, origins=[
     "https://serakib.github.io",
     "http://localhost:5500", "http://127.0.0.1:5500",
     "http://localhost:5000", "http://127.0.0.1:5000",
-    "*" # ফ্রন্টএন্ড ডেভেলপমেন্টের সুবিধার্থে
+    "*" 
 ])
 
 # ==========================================
-# 🔑 API KEYS & MODELS
+# 🔑 API KEYS & SETUP
 # ==========================================
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY") # Render-এ এটা যোগ করতে হবে
-IMGBB_API_KEY = os.getenv("IMGBB_API_KEY")       # Render-এ এটা যোগ করতে হবে
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+IMGBB_API_KEY = os.getenv("IMGBB_API_KEY")
 
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is not set!")
 
 client = Groq(api_key=GROQ_API_KEY)
-GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
+
+# Render-এ Environment Variable-এ মডেল সেট না থাকলে ডিফল্ট হিসেবে এটি ব্যবহার হবে
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile") 
+GROQ_VISION_MODEL = "llama-3.2-11b-vision-preview" # ছবি বিশ্লেষণের জন্য শক্তিশালী মডেল
 
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
 # ==========================================
-# 📝 SYSTEM PROMPTS
+# 📝 ADVANCED SYSTEM PROMPTS
 # ==========================================
 SYSTEM_PROMPT_GROQ = (
-    "তুমি Medical Admission Tracker-এর একজন সহায়ক AI। "
-    "মেডিকেল ভর্তি, প্রশ্নপত্র, সিলেবাস, প্রস্তুতি সংক্রান্ত প্রশ্নের উত্তর দাও। "
-    "বাংলায় সংক্ষেপে এবং স্পষ্টভাবে উত্তর দাও। "
-    "যদি ছবি পাঠানো হয়, ছবির বিষয়বস্তু বিশ্লেষণ করে সাহায্য কর। "
-    "\n\nগুরুত্বপূর্ণ নিয়ম:\n"
-    "১. কোনো LaTeX বা গাণিতিক চিহ্ন ($, \\, \\frac, \\int, ^, _) ব্যবহার করবে না। "
-    "২. অঙ্ক বা সূত্র সাধারণ বাংলা লেখায় লিখবে। "
-    "৩. উত্তর হবে সহজ, একজন সাধারণ শিক্ষার্থী যেন বুঝতে পারে।"
+    "You are an elite AI assistant integrated into the 'Medical Admission Tracker' app. "
+    "Your capabilities are extremely advanced. You excel at coding (Python, JS, C++, etc.), "
+    "complex problem-solving, mathematics, and logical reasoning. "
+    "You are also an expert medical admission guide for Bangladeshi students. "
+    "\n\nRules:\n"
+    "1. If the user speaks in Bengali, reply in Bengali. If in English, reply in English.\n"
+    "2. For coding questions, provide clean, well-commented, and production-ready code.\n"
+    "3. Do NOT use LaTeX or complex math symbols (like $, \\, \\frac) in Bengali responses. Explain math in simple Bengali text.\n"
+    "4. Keep your answers precise, clear, and highly helpful."
+)
+
+SYSTEM_PROMPT_VISION = (
+    "You are an expert AI vision assistant. Analyze the provided image in detail. "
+    "If it's a medical/biology diagram, explain the parts. "
+    "If it's a math/physics problem, solve it step-by-step in Bengali. "
+    "If it's code, debug or explain it. Be as helpful and accurate as possible."
 )
 
 SYSTEM_PROMPT_DEEPSEEK = (
-    "You are a highly capable AI assistant integrated into the 'Medical Admission Tracker' app. "
-    "You excel at complex problem-solving, coding (Python, JS, etc.), and advanced reasoning. "
-    "You can answer any question the user asks, but keep your tone helpful and concise. "
-    "If the user speaks in Bengali, reply in Bengali. If in English, reply in English."
+    "You are a world-class coding and reasoning AI (DeepSeek V3). "
+    "You are integrated into the 'Medical Admission Tracker' app. "
+    "Provide extremely detailed, step-by-step solutions for the hardest programming and logical problems. "
+    "If the user speaks in Bengali, reply in Bengali."
 )
 
 # ==========================================
@@ -67,61 +78,73 @@ VOICE_FALLBACK = "emma"
 @app.route('/')
 def home():
     return jsonify({
-        "status": "online",
-        "provider": "groq + deepseek",
+        "status": "online (Upgraded)",
         "groq_model": GROQ_MODEL,
+        "vision_model": GROQ_VISION_MODEL,
+        "deepseek": "enabled" if DEEPSEEK_API_KEY else "disabled",
         "tts": "edge-tts",
-        "imgbb": "enabled" if IMGBB_API_KEY else "disabled",
-        "voices": list(VOICE_PRESETS.keys())
+        "imgbb": "enabled" if IMGBB_API_KEY else "disabled"
     })
 
 # ==========================================
-# 🤖 ROUTE 1: GROQ AI CHAT (Text + Image Vision)
+# 🤖 ROUTE 1: GROQ AI CHAT (Text + Smart Vision)
 # ==========================================
 @app.route('/api/chat', methods=['POST'])
 def chat_groq():
     try:
         user_message = request.form.get('message', '').strip()
         image_file = request.files.get('image')
+        
         if not user_message and not image_file:
             return jsonify({"error": "Message or image required"}), 400
 
-        content_parts = []
-        if user_message:
-            content_parts.append({"type": "text", "text": user_message})
-        else:
-            content_parts.append({"type": "text", "text": "এই ছবিটি বিশ্লেষণ করে বাংলায় সংক্ষেপে বলো।"})
-
+        # মাল্টিমোডাল (Vision) হ্যান্ডলিং
         if image_file:
             mime = image_file.mimetype
             if mime not in ['image/jpeg','image/png','image/webp','image/gif']:
-                return jsonify({"error": "শুধু JPG, PNG, WEBP, GIF"}), 400
+                return jsonify({"error": "Only JPG, PNG, WEBP, GIF allowed"}), 400
+            
             image_b64 = base64.b64encode(image_file.read()).decode('utf-8')
-            content_parts.append({
-                "type": "image_url",
-                "image_url": {"url": f"data:{mime};base64,{image_b64}"}
-            })
+            
+            content_parts = [
+                {"type": "text", "text": user_message or "এই ছবিটি বিস্তারিত বিশ্লেষণ করে বাংলায় বলো।"},
+                {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{image_b64}"}}
+            ]
+            
+            response = client.chat.completions.create(
+                model=GROQ_VISION_MODEL,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT_VISION},
+                    {"role": "user", "content": content_parts}
+                ],
+                temperature=0.5, max_tokens=1500
+            )
+            provider = "groq-vision"
+        else:
+            # সাধারণ টেক্সট চ্যাট (কোডিং, রিজনিং, মেডিকেল)
+            response = client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT_GROQ},
+                    {"role": "user", "content": user_message}
+                ],
+                temperature=0.6, max_tokens=2048
+            )
+            provider = "groq-llama"
 
-        response = client.chat.completions.create(
-            model=GROQ_MODEL,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT_GROQ},
-                {"role": "user", "content": content_parts}
-            ],
-            temperature=0.5, max_tokens=1500
-        )
-        return jsonify({"reply": response.choices[0].message.content, "provider": "groq"})
+        return jsonify({"reply": response.choices[0].message.content, "provider": provider})
+        
     except Exception as e:
         print(f"Groq Chat Error: {e}")
         return jsonify({"error": str(e)}), 500
 
 # ==========================================
-# 🧠 ROUTE 2: DEEPSEEK AI CHAT (For Coding/Complex Problems)
+# 🧠 ROUTE 2: DEEPSEEK AI (For Elite Coding & Complex Logic)
 # ==========================================
 @app.route('/api/deepseek', methods=['POST'])
 def chat_deepseek():
     if not DEEPSEEK_API_KEY:
-        return jsonify({"error": "DeepSeek API key missing in server."}), 500
+        return jsonify({"error": "DeepSeek API key missing."}), 500
     try:
         data = request.get_json()
         user_message = data.get('message', '').strip()
@@ -134,23 +157,22 @@ def chat_deepseek():
         }
         
         payload = {
-            "model": "deepseek-chat",
+            "model": "deepseek-coder", # বা "deepseek-chat"
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT_DEEPSEEK},
                 {"role": "user", "content": user_message}
             ],
             "temperature": 0.7,
-            "max_tokens": 2000
+            "max_tokens": 2048
         }
 
         response = requests.post("https://api.deepseek.com/v1/chat/completions", headers=headers, json=payload)
         response_data = response.json()
 
         if response.status_code != 200:
-            raise Exception(response_data.get("error", {}).get("message", "DeepSeek API Error"))
+            raise Exception(response_data.get("error", {}).get("message", "DeepSeek Error"))
 
-        reply = response_data['choices'][0]['message']['content']
-        return jsonify({"reply": reply, "provider": "deepseek"})
+        return jsonify({"reply": response_data['choices'][0]['message']['content'], "provider": "deepseek"})
     except Exception as e:
         print(f"DeepSeek Error: {e}")
         return jsonify({"error": str(e)}), 500
@@ -161,31 +183,24 @@ def chat_deepseek():
 @app.route('/api/upload', methods=['POST'])
 def upload_image():
     if not IMGBB_API_KEY:
-        return jsonify({"error": "ImgBB API key missing in server."}), 500
+        return jsonify({"error": "ImgBB API key missing."}), 500
     try:
         if 'image' not in request.files:
-            return jsonify({"error": "কোনো ছবি পাওয়া যায়নি"}), 400
+            return jsonify({"error": "No image provided"}), 400
 
         image_file = request.files['image']
         if image_file.filename == '':
-            return jsonify({"error": "ফাইল সিলেক্ট করা হয়নি"}), 400
+            return jsonify({"error": "No file selected"}), 400
 
-        # Read and encode to base64
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
-
         payload = {"image": image_data}
         response = requests.post(f"https://api.imgbb.com/1/upload?key={IMGBB_API_KEY}", data=payload)
         response_data = response.json()
 
         if response_data.get('success'):
-            return jsonify({
-                "success": True,
-                "url": response_data['data']['display_url']
-            })
-        else:
-            return jsonify({"error": "ImgBB তে আপলোড ব্যর্থ হয়েছে"}), 500
+            return jsonify({"success": True, "url": response_data['data']['display_url']})
+        return jsonify({"error": "ImgBB upload failed"}), 500
     except Exception as e:
-        print(f"Upload Error: {e}")
         return jsonify({"error": str(e)}), 500
 
 # ==========================================
@@ -231,7 +246,7 @@ def tts():
 
 @app.errorhandler(413)
 def too_large(e):
-    return jsonify({"error": "ফাইল ৫ MB এর বেশি"}), 413
+    return jsonify({"error": "File size exceeds 5MB limit"}), 413
 
 if __name__ == '__main__':
     port = int(os.getenv("PORT", 5000))
