@@ -709,6 +709,8 @@ const vibMic = document.getElementById('vibMic');
 const voiceTextInput = document.getElementById('voiceTextInput');
 const testVoiceBtn = document.getElementById('testVoiceBtn');
 const voiceToast = document.getElementById('voiceToast');
+    const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
+const FETCH_TIMEOUT_MS = 90000;
 
 let attachedFile = null;
 let isSending = false;
@@ -734,6 +736,7 @@ function getAudioCtx() {
     return audioCtx;
 }
 
+    
 function playAudioWithFade(audioEl, { fadeIn = 0.08, fadeOut = 0.12 } = {}) {
     return new Promise((resolve) => {
         const ctx = getAudioCtx();
