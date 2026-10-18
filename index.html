@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Assistant - Medical Admission Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- 🚀 NEW: Markdown & Code Highlight Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
 <style>
 :root{
     --bg:#0A0A0A;--bg-elev:#111111;--bg-elev2:#1A1A1A;--bg-input:#1F1F1F;
@@ -59,6 +64,21 @@ main{flex:1;display:flex;flex-direction:column;padding:24px 20px;max-width:900px
 .message.user{align-self:flex-end;background:var(--user-bubble);color:#fff;padding:12px 18px;border-radius:20px;border-bottom-right-radius:6px;box-shadow:0 2px 8px rgba(37,99,235,.25);}
 .message img{max-width:260px;max-height:260px;border-radius:12px;margin-bottom:10px;display:block;}
 .message.bot img{border-radius:12px;}
+
+/* 🚀 NEW: Markdown & Code Block Styling */
+.msg-content p { margin-bottom: 10px; }
+.msg-content p:last-child { margin-bottom: 0; }
+.msg-content h1, .msg-content h2, .msg-content h3, .msg-content h4 { margin: 15px 0 10px; color: var(--text); font-weight: 700; }
+.msg-content h1 { font-size: 1.4rem; }
+.msg-content h2 { font-size: 1.25rem; }
+.msg-content h3 { font-size: 1.1rem; }
+.msg-content ul, .msg-content ol { margin-left: 20px; margin-bottom: 10px; }
+.msg-content li { margin-bottom: 4px; }
+.msg-content blockquote { border-left: 3px solid var(--primary); padding-left: 12px; color: var(--text-muted); margin: 10px 0; background: rgba(37,99,235,.05); padding: 10px; border-radius: 0 8px 8px 0; }
+.msg-content pre { background: #1e1e1e; padding: 12px; border-radius: 8px; overflow-x: auto; margin: 10px 0; position: relative; border: 1px solid #333; }
+.msg-content pre code { font-family: 'Courier New', Courier, monospace; font-size: 13px; line-height: 1.5; }
+.msg-content strong { color: var(--text); font-weight: 700; }
+.msg-content em { font-style: italic; opacity: 0.9; }
 
 .msg-actions{display:flex;gap:2px;margin-top:8px;opacity:.55;transition:opacity .2s;}
 .message:hover .msg-actions{opacity:1;}
@@ -1464,7 +1484,23 @@ function addMessage(text, sender, file, opts = {}) {
         i.onload = () => setTimeout(() => URL.revokeObjectURL(objUrl), 60000);
         content.appendChild(i);
     }
-    if (text) { const p = document.createElement('div'); p.innerText = text; content.appendChild(p); }
+    
+    // 🚀 NEW: Markdown Parsing for Bot
+    if (text) { 
+        const p = document.createElement('div'); 
+        if (sender === 'bot') {
+            p.innerHTML = marked.parse(text);
+            // Highlight code blocks
+            setTimeout(() => {
+                p.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }, 10);
+        } else {
+            p.innerText = text; 
+        }
+        content.appendChild(p); 
+    }
     d.appendChild(content);
 
     const actions = document.createElement('div');
