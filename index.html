@@ -604,6 +604,9 @@ footer{padding:40px 20px 20px;}
 <div class="voice-toast" id="voiceToast"></div>
 
 <script>
+// ============================================================
+// ✅ FIX: BACKEND_URL ও FETCH_TIMEOUT_MS শুধু এখানেই ডিক্লেয়ার
+// ============================================================
 const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
 const FETCH_TIMEOUT_MS = 90000;
 
@@ -709,8 +712,9 @@ const vibMic = document.getElementById('vibMic');
 const voiceTextInput = document.getElementById('voiceTextInput');
 const testVoiceBtn = document.getElementById('testVoiceBtn');
 const voiceToast = document.getElementById('voiceToast');
-    const BACKEND_URL = "https://ai-assisstant-2.onrender.com";
-const FETCH_TIMEOUT_MS = 90000;
+
+// ❌ রিমুভ করা হয়েছে — এখানে ডুপ্লিকেট BACKEND_URL ও FETCH_TIMEOUT_MS ছিল
+// ✅ এখন উপরে একবারই ডিক্লেয়ার করা আছে
 
 let attachedFile = null;
 let isSending = false;
@@ -736,7 +740,6 @@ function getAudioCtx() {
     return audioCtx;
 }
 
-    
 function playAudioWithFade(audioEl, { fadeIn = 0.08, fadeOut = 0.12 } = {}) {
     return new Promise((resolve) => {
         const ctx = getAudioCtx();
@@ -1342,7 +1345,7 @@ async function sendFromVoice(text) {
         }
     } catch (e) {
         removeVoiceThinkingBadge(badge);
-        const errMsg = e.name === 'AbortError' ? '⏱️ সার্ভার জাগতে সময় নিচ্ছে। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
+        const errMsg = e.name === 'AbortError' ? '⏱️ সার্ভার জাগতে সময় নিচ্ছে। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addVoiceMsg(errMsg, 'bot');
         setOrbState('idle');
     }
@@ -1468,7 +1471,7 @@ async function sendMessage() {
     } catch (e) {
         typingIndicator.style.display = 'none';
         finishThinkingPanel(thinkPanel);
-        const msg = e.name === 'AbortError' ? '⏱️ সার্ভার জাগতে সময় নিচ্ছে (Render Free Tier)। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
+        const msg = e.name === 'AbortError' ? '⏱️ সার্ভার জাগতে সময় নিচ্ছে (Render Free Tier)। আবার চেষ্টা করুন।' : '❌ নেটওয়ার্ক সমস্যা';
         addMessage(msg, 'bot');
     }
     isSending = false; sendBtn.disabled = false; userInput.focus();
@@ -1488,12 +1491,11 @@ function addMessage(text, sender, file, opts = {}) {
         content.appendChild(i);
     }
     
-    // 🚀 NEW: Markdown Parsing for Bot
+    // 🚀 Markdown Parsing for Bot
     if (text) { 
         const p = document.createElement('div'); 
         if (sender === 'bot') {
             p.innerHTML = marked.parse(text);
-            // Highlight code blocks
             setTimeout(() => {
                 p.querySelectorAll('pre code').forEach((block) => {
                     hljs.highlightElement(block);
